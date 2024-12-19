@@ -17,4 +17,5 @@ func NewRepository(db *gorm.DB) *Repository {
 
 type AuthRepository interface {
 	GetByPhoneNumber(phoneNumber string) (*dto.UserDTO, error)
+	CreateUser(data dto.UserDTO) (*dto.UserDTO, error)
 }

@@ -1,5 +1,5 @@
 package request
 
 type LoginRequest struct {
-	PhoneNumber string `json:"phone_number"`
+	PhoneNumber string `json:"phoneNumber"`
 }

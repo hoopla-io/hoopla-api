@@ -33,22 +33,16 @@ func (r *AuthRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*dto.UserDTO,
 	}, nil
 }
 
-// func (r *AuthRepositoryImpl) Login(data dto.CreateTransactionDTO) (*dto.TransactionDTO, error) {
-// 	var createdTransaction dto.TransactionDTO
+func (r *AuthRepositoryImpl) CreateUser(data dto.UserDTO) (*dto.UserDTO, error) {
+	var createUser dto.UserDTO
 
-// 	query := r.db.Create(&model.TransactionModel{
-// 		TransID:       data.TransID,
-// 		ServiceID: int(data.ServiceID),
-// 		Status:        "CREATED",
-// 		AccountNumber: data.Params.Account,
-// 		Amount:        data.Amount / 100,
-// 		CreatedAt:     int64(data.Timestamp),
-// 	}).Scan(&createdTransaction)
-// 	if query.Error != nil {
-// 		return nil, query.Error
-// 	}
+	query := r.db.Create(&model.UserModel{
+		PhoneNumber: data.PhoneNumber,
+		MobileProvider: data.MobileProvider,
+	}).Scan(&createUser)
+	if query.Error != nil {
+		return nil, query.Error
+	}
 
-// 	createdTransaction.TransTime = int64(data.Timestamp)
-
-// 	return &createdTransaction, nil
-// }
+	return &createUser, nil
+}

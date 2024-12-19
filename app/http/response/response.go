@@ -1,8 +1,6 @@
 package response
 
 import (
-	"math"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,8 +26,4 @@ func NewResponse(c *gin.Context, statusCode int, message string, data interface{
 		Data:    data,
 		Meta:    meta,
 	})
-}
-
-func (m *Meta) SetLastPage() {
-	m.LastPage = int(math.Ceil(float64(m.TotalItems) / float64(m.ItemsPerPage)))
 }

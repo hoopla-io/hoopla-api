@@ -34,3 +34,39 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 
 	response.NewResponse(ctx, http.StatusOK, "OK!", results, nil)
 }
+
+func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
+	confirmSmsRequest := request.ConfirmSmsRequest{}
+	if err := ctx.ShouldBindJSON(&confirmSmsRequest); err != nil {
+		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
+		return
+	}
+
+	results, err := ctr.service.ConfirmSms(confirmSmsRequest)
+	if err == nil {
+		if errorResponse, ok := results.(response.ErrorResponse); ok {
+			ctx.JSON(errorResponse.Code, errorResponse)
+			return
+		}
+	}
+
+	response.NewResponse(ctx, http.StatusOK, "OK!", results, nil)
+}
+
+func (ctr *AuthController) ResendSms(ctx *gin.Context) {
+	resendSmsRequest := request.ResendSmsRequest{}
+	if err := ctx.ShouldBindJSON(&resendSmsRequest); err != nil {
+		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
+		return
+	}
+
+	results, err := ctr.service.ResendSms(resendSmsRequest)
+	if err == nil {
+		if errorResponse, ok := results.(response.ErrorResponse); ok {
+			ctx.JSON(errorResponse.Code, errorResponse)
+			return
+		}
+	}
+
+	response.NewResponse(ctx, http.StatusOK, "OK!", results, nil)
+}

@@ -1,13 +1,31 @@
 package response
 
-type ErrorMessages struct {
-	RU string `json:"ru"`
-	UZ string `json:"uz"`
-	EN string `json:"en"`
+type ErrorResponse struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
 }
 
-type ErrorResponse struct {
-	Code    int           `json:"code"`
-	Message ErrorMessages `json:"message"`
-	Data    interface{}   `json:"data"`
+func NewErrorResponse(code int, message string) ErrorResponse {
+	return ErrorResponse{
+		Code:    code,
+		Message: message,
+	}
 }
+
+// var SessionExpired = ErrorResponse{
+// 	Code: 422,
+// 	Message: ErrorMessages{
+// 		RU: "Сессия истекла!",
+// 		UZ: "Seans muddati tugagan!",
+// 		EN: "Session expired!",
+// 	},
+// }
+
+// var InvalidCode = ErrorResponse{
+// 	Code: 422,
+// 	Message: ErrorMessages{
+// 		RU: "Неверный код!",
+// 		UZ: "Notog'ri kod!",
+// 		EN: "Invalid code!",
+// 	},
+// }

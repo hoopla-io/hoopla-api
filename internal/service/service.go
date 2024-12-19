@@ -2,7 +2,6 @@ package service
 
 import (
 	"github.com/qahvazor/qahvazor/app/http/request"
-	"github.com/qahvazor/qahvazor/app/http/response"
 	"github.com/qahvazor/qahvazor/internal/repository"
 )
 
@@ -17,5 +16,7 @@ func NewService(repo *repository.Repository) *Service {
 }
 
 type AuthService interface {
-	Login(data request.LoginRequest) (response.LoginResponse, error)
+	Login(data request.LoginRequest) (interface{}, error)
+    ConfirmSms(data request.ConfirmSmsRequest) (interface{}, error)
+	ResendSms(data request.ResendSmsRequest) (interface{}, error)
 }

@@ -1,8 +1,12 @@
 package dto
 
+import "time"
+
 type UserDTO struct {
-	ID             int    `json:"id"`
-	Name           string `json:"name"`
-	PhoneNumber    string `json:"phone_number"`
-	MobileProvider string `json:"mobile_provider"`
+	ID             int       `json:"id"`
+	Name           string    `json:"name"`
+	PhoneNumber    string    `json:"phone_number"`
+	MobileProvider string    `json:"mobile_provider"`
+	CreateAt       time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }

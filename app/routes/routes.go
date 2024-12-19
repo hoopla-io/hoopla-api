@@ -18,15 +18,9 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 			auth := v1.Group("/auth")
 			{
 				auth.POST("/login", controller.AuthController.Login)
+				auth.POST("/confirm-sms", controller.AuthController.ConfirmSms)
+				auth.POST("/resend-sms", controller.AuthController.ResendSms)
 			}
-			// uzum := v1.Group("/payment_uzum")
-			// {
-			// 	uzum.POST("/check", controller.UzumController.Check)
-			// 	uzum.POST("/create", controller.UzumController.Create)
-			// 	uzum.POST("/confirm", controller.UzumController.Confirm)
-			// 	uzum.POST("/reverse", controller.UzumController.Reverse)
-			// 	uzum.POST("/status", controller.UzumController.Status)
-			// }
 
 			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
