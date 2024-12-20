@@ -18,6 +18,8 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 )
 
+require github.com/pixiv/go-libjpeg v0.0.0-20190822045933-3da21a74767d // indirect
+
 require (
 	github.com/bytedance/sonic v1.12.6 // indirect
 	github.com/bytedance/sonic/loader v0.2.1 // indirect

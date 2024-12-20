@@ -8,3 +8,4 @@
 .env
 configs/config.yaml
 /data/
+uploads/

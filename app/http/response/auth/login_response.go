@@ -1,4 +1,4 @@
-package response
+package auth_response
 
 type LoginResponse struct {
 	PhoneNumber      string `json:"phoneNumber"`

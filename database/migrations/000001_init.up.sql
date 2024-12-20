@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS company (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     image_id BIGINT,
+    description VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_image
@@ -50,6 +51,84 @@ CREATE TABLE IF NOT EXISTS shops (
     CONSTRAINT fk_company
         FOREIGN KEY(company_id) 
         REFERENCES company(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create shop_phones table
+CREATE TABLE IF NOT EXISTS shop_phones (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    phone_number VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shop
+        FOREIGN KEY(shop_id) 
+        REFERENCES shops(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create shop_worktimes table
+CREATE TABLE IF NOT EXISTS shop_worktimes (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    day_range VARCHAR(255) NOT NULL,
+    opening_time VARCHAR(255) NOT NULL,
+    closing_time VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shop
+        FOREIGN KEY(shop_id) 
+        REFERENCES shops(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create shop_worktime table
+CREATE TABLE IF NOT EXISTS shop_socials (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    platform VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shop
+        FOREIGN KEY(shop_id) 
+        REFERENCES shops(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create coffee table
+CREATE TABLE IF NOT EXISTS coffee (
+    id SERIAL PRIMARY KEY,
+    image_id BIGINT,
+    name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_image
+        FOREIGN KEY(image_id) 
+        REFERENCES images(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create shop_coffees table
+CREATE TABLE IF NOT EXISTS shop_coffees (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    coffee_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_shop
+        FOREIGN KEY(shop_id) 
+        REFERENCES shops(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    CONSTRAINT fk_coffee
+        FOREIGN KEY(coffee_id) 
+        REFERENCES coffee(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );

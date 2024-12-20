@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/qahvazor/qahvazor/app/http/request"
+	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
 	"github.com/qahvazor/qahvazor/app/http/response"
 	"github.com/qahvazor/qahvazor/internal/service"
 )
@@ -20,7 +20,7 @@ func NewAuthController(service service.AuthService) *AuthController {
 }
 
 func (ctr *AuthController) Login(ctx *gin.Context) {
-	loginRequest := request.LoginRequest{}
+	loginRequest := auth_request.LoginRequest{}
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
 		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
 		return
@@ -36,7 +36,7 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 }
 
 func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
-	confirmSmsRequest := request.ConfirmSmsRequest{}
+	confirmSmsRequest := auth_request.ConfirmSmsRequest{}
 	if err := ctx.ShouldBindJSON(&confirmSmsRequest); err != nil {
 		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
 		return
@@ -54,7 +54,7 @@ func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 }
 
 func (ctr *AuthController) ResendSms(ctx *gin.Context) {
-	resendSmsRequest := request.ResendSmsRequest{}
+	resendSmsRequest := auth_request.ResendSmsRequest{}
 	if err := ctx.ShouldBindJSON(&resendSmsRequest); err != nil {
 		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
 		return
