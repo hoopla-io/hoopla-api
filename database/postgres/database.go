@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"github.com/qahvazor/qahvazor/internal/model"
 	"log"
 	"time"
 
@@ -29,6 +30,7 @@ func NewPostgresDB(cfg config.Config) *gorm.DB {
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetConnMaxLifetime(time.Hour)
 
+	// Подключение через GORM
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		Conn:                 sqlDB,
 		PreferSimpleProtocol: true,
@@ -38,6 +40,13 @@ func NewPostgresDB(cfg config.Config) *gorm.DB {
 	}
 
 	log.Println("Postgres connection successfully done!")
+
+	// Выполняем миграцию моделей
+	err = db.AutoMigrate(&model.Subscription{}, &model.UserSubscription{})
+	if err != nil {
+		log.Fatalf("Failed to migrate models: %v", err)
+	}
+	log.Println("Migration completed successfully!")
 
 	return db
 }
