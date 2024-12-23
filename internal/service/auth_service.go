@@ -10,8 +10,9 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/patrickmn/go-cache"
-	"github.com/qahvazor/qahvazor/app/http/request"
+	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
 	"github.com/qahvazor/qahvazor/app/http/response"
+	auth_response "github.com/qahvazor/qahvazor/app/http/response/auth"
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/pkg"
 	"github.com/qahvazor/qahvazor/internal/repository"
@@ -32,7 +33,7 @@ func NewAuthService(repository *repository.Repository) AuthService {
 	}
 }
 
-func (s *AuthServiceImpl) Login(data request.LoginRequest) (interface{}, error) {
+func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (interface{}, error) {
 	mobileProvider := utils.PredictProvider(data.PhoneNumber)
 
 	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
@@ -55,7 +56,7 @@ func (s *AuthServiceImpl) Login(data request.LoginRequest) (interface{}, error) 
 		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
 	}
 
-	response := response.LoginResponse{
+	response := auth_response.LoginResponse{
 		PhoneNumber:      data.PhoneNumber,
 		SessionID:        sessionIdStr,
 		SessionExpiresAt: int64(session.Session.ExpiresAt),
@@ -63,7 +64,7 @@ func (s *AuthServiceImpl) Login(data request.LoginRequest) (interface{}, error) 
 	return response, nil
 }
 
-func (s *AuthServiceImpl) ConfirmSms(data request.ConfirmSmsRequest) (interface{}, error){
+func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error){
 	session, found := s.sessionCache.Get(data.SessionID)
 	sessionData, ok := session.(dto.SessionDTO)
 	if !ok {
@@ -108,7 +109,7 @@ func (s *AuthServiceImpl) ConfirmSms(data request.ConfirmSmsRequest) (interface{
 	hash.Write([]byte(uid))
 	refreshToken := hex.EncodeToString(hash.Sum(nil))
 
-	response := response.ConfirmSmsResponse{
+	response := auth_response.ConfirmSmsResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpireAt:  expireAt * 1000, 
@@ -117,7 +118,7 @@ func (s *AuthServiceImpl) ConfirmSms(data request.ConfirmSmsRequest) (interface{
 	return response, nil
 }
 
-func (s *AuthServiceImpl) ResendSms(data request.ResendSmsRequest) (interface{}, error) {
+func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (interface{}, error) {
 	session, found := s.sessionCache.Get(data.SessionID)
 	if !found {
 		return response.NewErrorResponse(422, "Session Expired!"), nil
@@ -141,7 +142,7 @@ func (s *AuthServiceImpl) ResendSms(data request.ResendSmsRequest) (interface{},
 		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
 	}
 
-	response := response.ResendSmsResponse{
+	response := auth_response.ResendSmsResponse{
 		PhoneNumber:      sessionData.PhoneNumber,
 		SessionID:        data.SessionID,
 		SessionExpiresAt: int64(sessionData.Session.ExpiresAt),

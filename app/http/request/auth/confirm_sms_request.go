@@ -1,4 +1,4 @@
-package request
+package auth_request
 
 type ConfirmSmsRequest struct{
 	SessionID string `json:"sessionId"`

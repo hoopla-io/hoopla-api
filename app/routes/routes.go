@@ -22,7 +22,54 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				auth.POST("/resend-sms", controller.AuthController.ResendSms)
 			}
 
+			company := v1.Group("/company")
+			{
+				company.GET("/get", controller.CompanyController.GetCompany)
+				company.GET("/get-list", controller.CompanyController.GetList)
+			}
+
+			// shops := v1.Group("/shop")
+			// {
+			// 	// shops.POST("/create", controller.ShopController.CreateShop)
+			// }
+
 			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
+	}
+
+	dashboard := api.Group("/dashboard")
+	{
+		v1 := api.Group("/v1")
+		{
+			company := dashboard.Group("/company")
+			{
+				company.POST("/create", controller.CompanyController.CreateCompany)
+			}
+
+			shop := v1.Group("/shop")
+			{
+				shop.POST("/create", controller.ShopController.CreateShop)
+
+				worktime := shop.Group("/worktime") 
+				{
+					worktime.POST("/create", controller.ShopController.CreateShopWorkTime)
+				}
+
+				phone := shop.Group("/phone")
+				{
+					phone.POST("/create", controller.ShopController.CreateShopPhone)
+				}
+
+				social := shop.Group("/social")
+				{
+					social.POST("/create", controller.ShopController.CreateShopSocial)
+				}
+			}
+
+			coffee := v1.Group("/coffee")
+			{
+				coffee.POST("/create")
+			}
 		}
 	}
 
