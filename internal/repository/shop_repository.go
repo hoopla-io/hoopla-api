@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/model"
 	"gorm.io/gorm"
@@ -16,31 +14,65 @@ func NewShopRepository(db *gorm.DB) ShopRepository {
 	return &ShopRepositoryImpl{db: db}
 }
 
-func (r *ShopRepositoryImpl) GetShopsByCompanyId(companyId uint) ([]dto.ShopDTO, error) {
-	var shops []dto.ShopDTO
-	err := r.db.Model(&model.ShopModel{}).Where("company_id = ?", companyId).Scan(&shops).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
-		return nil, err
-	}
-
-	return shops, nil
-} 
-
-func (r *ShopRepositoryImpl) CreateShop(data dto.ShopDTO) (*dto.ShopDTO, error) {
-	var createShop dto.ShopDTO
+func (r *ShopRepositoryImpl) Store(data dto.ShopDTO) (uint, error) {
+	var shop dto.ShopDTO
 
 	query := r.db.Create(&model.ShopModel{
-		ImageID: data.ImageID,
-		CompanyID: data.CompanyID,
 		Name: data.Name,
 		Location: data.Location,
-	}).Scan(&createShop)
+		ImageID: data.ImageID,
+		CompanyID: data.CompanyID,
+	}).Scan(&shop)
+	if query.Error != nil {
+		return 0, query.Error
+	}
+
+	return shop.ID, nil
+}
+
+func (r *ShopRepositoryImpl) GetById(shopId uint) (dto.ShopDTO, error) {
+	shopModel := model.ShopModel{}
+
+	query := r.db.Where("id = ?", shopId).
+		First(&shopModel)
+	if query.Error != nil {
+		return dto.ShopDTO{}, query.Error
+	}
+
+	categories := dto.ShopDTO{
+		ID:        shopModel.ID,
+		Name:      shopModel.Name,
+		Location:  shopModel.Location,
+		CompanyID: shopModel.CompanyID,
+		ImageID:   shopModel.ImageID,
+	}
+
+	return categories, nil
+}
+
+func (r *ShopRepositoryImpl) List() ([]dto.ShopDTO, error) {
+	var shops []dto.ShopDTO
+
+	query := r.db.Model(&model.ShopModel{}).Find(&shops)
 	if query.Error != nil {
 		return nil, query.Error
 	}
 
-	return &createShop, nil
+	return shops, nil
+}
+
+func (r *ShopRepositoryImpl) Edit(data dto.ShopDTO) (uint, error){
+	shop := model.ShopModel{
+		Model:    gorm.Model{ID: data.ID},
+		Name:     data.Name,
+		Location: data.Location,
+		ImageID: data.ImageID,
+	}
+
+	query := r.db.Updates(&shop)
+	if query.Error != nil {
+		return 0, query.Error
+	}
+
+	return shop.ID, nil
 }

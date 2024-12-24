@@ -1,8 +1,13 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type ShopModel struct {
+	gorm.Model
 	ID             uint      `gorm:"primaryKey;autoIncrement"`
 	CompanyID      int       `gorm:"column:company_id"`
 	ImageID        int       `gorm:"column:image_id"`

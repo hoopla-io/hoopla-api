@@ -17,58 +17,74 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 
 			auth := v1.Group("/auth")
 			{
-				auth.POST("/login", controller.AuthController.Login)
-				auth.POST("/confirm-sms", controller.AuthController.ConfirmSms)
-				auth.POST("/resend-sms", controller.AuthController.ResendSms)
+				auth.POST("/login", controller.Api.AuthController.Login)
+				auth.POST("/confirm-sms", controller.Api.AuthController.ConfirmSms)
+				auth.POST("/resend-sms", controller.Api.AuthController.ResendSms)
 			}
-
-			company := v1.Group("/company")
-			{
-				company.GET("/get", controller.CompanyController.GetCompany)
-				company.GET("/get-list", controller.CompanyController.GetList)
-			}
-
-			// shops := v1.Group("/shop")
-			// {
-			// 	// shops.POST("/create", controller.ShopController.CreateShop)
-			// }
-
+			
 			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
 	}
 
-	dashboard := api.Group("/dashboard")
+	dashboard := router.Group("/dashboard") 
 	{
-		v1 := api.Group("/v1")
+		v1 := dashboard.Group("/v1")
 		{
-			company := dashboard.Group("/company")
+			company := v1.Group("/company")
 			{
-				company.POST("/create", controller.CompanyController.CreateCompany)
+				company.POST("/store", controller.Dashboard.CompanyController.Store)
+				company.GET("/show/:company_id", controller.Dashboard.CompanyController.Show)
+				company.GET("/list", controller.Dashboard.CompanyController.List)
+				company.PUT("/edit", controller.Dashboard.CompanyController.Edit)
+
+				social := company.Group("/social")
+				{
+					social.POST("/store", controller.Dashboard.CompanyController.StoreCompanySocial)
+					social.GET("/show/:social_id", controller.Dashboard.CompanyController.ShowCompanySocial)
+					social.GET("/list", controller.Dashboard.CompanyController.ListCompanySocials)
+					social.PUT("/edit", controller.Dashboard.CompanyController.EditCompanySocial)
+				}
 			}
 
 			shop := v1.Group("/shop")
 			{
-				shop.POST("/create", controller.ShopController.CreateShop)
+				shop.POST("/store", controller.Dashboard.ShopController.Store)
+				shop.GET("/show/:shop_id", controller.Dashboard.ShopController.Show)
+				shop.GET("/list", controller.Dashboard.ShopController.List)
+				shop.PUT("/edit", controller.Dashboard.ShopController.Edit)
 
 				worktime := shop.Group("/worktime") 
 				{
-					worktime.POST("/create", controller.ShopController.CreateShopWorkTime)
+					worktime.POST("/store", controller.Dashboard.ShopController.StoreShopWorktime)
+					worktime.GET("/list", controller.Dashboard.ShopController.ListShopWorktimes)
+					worktime.GET("/show/:worktime_id", controller.Dashboard.ShopController.ShowWorktime)
+					worktime.PUT("/edit", controller.Dashboard.ShopController.EditShopWorktime)
 				}
 
 				phone := shop.Group("/phone")
 				{
-					phone.POST("/create", controller.ShopController.CreateShopPhone)
+					phone.POST("/create", controller.Dashboard.ShopController.StoreShopPhone)
+					phone.GET("/show/:phone_id", controller.Dashboard.ShopController.ShowShopPhone)
+					phone.GET("/list", controller.Dashboard.ShopController.ListShopPhones)
+					phone.PUT("/edit", controller.Dashboard.ShopController.EditShopPhone)
 				}
 
-				social := shop.Group("/social")
-				{
-					social.POST("/create", controller.ShopController.CreateShopSocial)
-				}
 			}
 
 			coffee := v1.Group("/coffee")
 			{
-				coffee.POST("/create")
+				coffee.POST("/store", controller.Dashboard.CoffeeController.Store)
+				coffee.GET("/show/:coffee_id", controller.Dashboard.CoffeeController.Show)
+				coffee.GET("/list", controller.Dashboard.CoffeeController.List)
+				coffee.PUT("/edit", controller.Dashboard.CoffeeController.Edit)
+			}
+
+			subscription := v1.Group("/subscription")
+			{
+				subscription.POST("/store", controller.Dashboard.SubscriptionController.Store)
+				coffee.GET("/show/:coffee_id", controller.Dashboard.SubscriptionController.Show)
+				coffee.GET("/list", controller.Dashboard.SubscriptionController.List)
+				coffee.PUT("/edit", controller.Dashboard.SubscriptionController.Edit)
 			}
 		}
 	}

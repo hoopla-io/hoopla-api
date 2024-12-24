@@ -1,9 +1,14 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // Subscription представляет данные о подписке
-type Subscription struct {
+type SubscriptionModel struct {
+	gorm.Model
 	ID          uint   `gorm:"primaryKey"`
 	Name        string `gorm:"type:varchar(255);not null"`
 	CoffeeLimit int    `gorm:"not null"`
@@ -13,6 +18,6 @@ type Subscription struct {
 }
 
 // TableName задаёт имя таблицы в базе данных
-func (Subscription) TableName() string {
+func (SubscriptionModel) TableName() string {
 	return "subscription"
 }

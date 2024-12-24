@@ -22,13 +22,13 @@ import (
 
 
 type AuthServiceImpl struct {
-	repository *repository.Repository
-	sessionCache *cache.Cache
+	AuthRepository repository.AuthRepository
+	sessionCache   *cache.Cache
 }
 
-func NewAuthService(repository *repository.Repository) AuthService {
+func NewAuthService(AuthRepository repository.AuthRepository) AuthService {
 	return &AuthServiceImpl{
-		repository: repository,
+		AuthRepository: AuthRepository,
 		sessionCache: cache.New(10*time.Minute, 20*time.Minute),
 	}
 }
@@ -80,7 +80,7 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (inter
 		return response.NewErrorResponse(422, "Session Expired!"), nil
 	}
 
-	user, err := s.repository.GetByPhoneNumber(sessionData.PhoneNumber)
+	user, err := s.AuthRepository.GetByPhoneNumber(sessionData.PhoneNumber)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
 	}
@@ -90,7 +90,7 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (inter
        		PhoneNumber: 	sessionData.PhoneNumber,               
 			MobileProvider: sessionData.MobileProvider,
    		}
-		user, err = s.repository.CreateUser(createUserData)
+		user, err = s.AuthRepository.CreateUser(createUserData)
 		if err != nil {
 			return response.NewErrorResponse(500, "Try later!"), nil
     	}
