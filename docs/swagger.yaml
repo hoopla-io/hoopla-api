@@ -1,0 +1,291 @@
+basePath: /api/v1
+definitions:
+  auth_request.ConfirmSmsRequest:
+    properties:
+      code:
+        type: integer
+      sessionId:
+        type: string
+    type: object
+  auth_request.LoginRequest:
+    properties:
+      phoneNumber:
+        type: string
+    type: object
+  auth_request.ResendSmsRequest:
+    properties:
+      sessionId:
+        type: string
+    type: object
+  auth_response.ConfirmSmsResponse:
+    properties:
+      accessToken:
+        type: string
+      expireAt:
+        type: integer
+      phoneNumber:
+        type: string
+      refreshToken:
+        type: string
+    type: object
+  auth_response.LoginResponse:
+    properties:
+      phoneNumber:
+        type: string
+      sessionExpiresAt:
+        type: integer
+      sessionId:
+        type: string
+    type: object
+  auth_response.ResendSmsResponse:
+    properties:
+      phoneNumber:
+        type: string
+      sessionExpiresAt:
+        type: integer
+      sessionId:
+        type: string
+    type: object
+  company_request.GetCompanyShopsRequest:
+    properties:
+      companyId:
+        type: integer
+    type: object
+  company_response.GetCompanyShopsResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+      shops:
+        items:
+          $ref: '#/definitions/company_response.Shop'
+        type: array
+    type: object
+  company_response.ListResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+    type: object
+  company_response.Shop:
+    properties:
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+  shop_request.GetShopDetailsRequest:
+    properties:
+      shopId:
+        type: integer
+    type: object
+  shop_response.Coffee:
+    properties:
+      id:
+        type: integer
+      imageUrl:
+        type: string
+      name:
+        type: string
+    type: object
+  shop_response.GetShopDetailsResponse:
+    properties:
+      coffees:
+        items:
+          $ref: '#/definitions/shop_response.Coffee'
+        type: array
+      imageUrl:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      phones:
+        items:
+          $ref: '#/definitions/shop_response.Phone'
+        type: array
+      shopId:
+        type: integer
+      socials:
+        items:
+          $ref: '#/definitions/shop_response.Social'
+        type: array
+      worktimes:
+        items:
+          $ref: '#/definitions/shop_response.Worktime'
+        type: array
+    type: object
+  shop_response.Phone:
+    properties:
+      phoneId:
+        type: integer
+      phoneNumber:
+        type: string
+    type: object
+  shop_response.Social:
+    properties:
+      platform:
+        type: string
+      socialId:
+        type: integer
+      url:
+        type: string
+    type: object
+  shop_response.Worktime:
+    properties:
+      closingTime:
+        type: string
+      dayRange:
+        type: string
+      openingTime:
+        type: string
+      worktimeId:
+        type: integer
+    type: object
+host: 192.168.31.72:8000
+info:
+  contact:
+    email: davronbekov.otabek@gmail.com
+  title: Qahvazor | Api
+  version: 1.0.0
+paths:
+  /auth/confirm-sms:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Confirm Sms Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/auth_request.ConfirmSmsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Confirm Sms Response
+          schema:
+            items:
+              $ref: '#/definitions/auth_response.ConfirmSmsResponse'
+            type: array
+      tags:
+      - Auth
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/auth_request.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Login Response
+          schema:
+            items:
+              $ref: '#/definitions/auth_response.LoginResponse'
+            type: array
+      tags:
+      - Auth
+  /auth/resend-sms:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Resend Sms Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/auth_request.ResendSmsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Resend Sms Response
+          schema:
+            items:
+              $ref: '#/definitions/auth_response.ResendSmsResponse'
+            type: array
+      tags:
+      - Auth
+  /company/list:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of companies
+          schema:
+            items:
+              $ref: '#/definitions/company_response.ListResponse'
+            type: array
+      tags:
+      - Company
+  /company/shops:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Get Company Shops Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/company_request.GetCompanyShopsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of company shops
+          schema:
+            items:
+              $ref: '#/definitions/company_response.GetCompanyShopsResponse'
+            type: array
+      tags:
+      - Company
+  /shop/detail:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Get Shop Details Request
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/shop_request.GetShopDetailsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Shop details response
+          schema:
+            items:
+              $ref: '#/definitions/shop_response.GetShopDetailsResponse'
+            type: array
+      tags:
+      - Shop
+swagger: "2.0"

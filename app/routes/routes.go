@@ -3,6 +3,9 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/qahvazor/qahvazor/app/http/controller"
+	_ "github.com/qahvazor/qahvazor/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func NewRoute(controller *controller.Controller) *gin.Engine {
@@ -33,7 +36,7 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				shop.POST("/detail", controller.Api.ShopController.GetShopDetails)
 			}
 			
-			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
 	}
 
