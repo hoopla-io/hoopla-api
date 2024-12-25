@@ -1,8 +1,13 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type UserModel struct {
+	gorm.Model
 	ID             uint      `gorm:"primaryKey;autoIncrement"`
 	Name           string    `gorm:"column:name"`
 	PhoneNumber    string    `gorm:"not null"`

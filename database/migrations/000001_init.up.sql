@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS images (
     ext VARCHAR(255) NOT NULL,
     hash_uid VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
 
 -- Create company table
@@ -27,9 +28,25 @@ CREATE TABLE IF NOT EXISTS company (
     description VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
     CONSTRAINT fk_image
         FOREIGN KEY(image_id) 
         REFERENCES images(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Create company_socials table
+CREATE TABLE IF NOT EXISTS company_socials (
+    id SERIAL PRIMARY KEY,
+    company_id BIGINT,
+    platform VARCHAR(255) NOT NULL,
+    url VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_company
+        FOREIGN KEY(company_id) 
+        REFERENCES company(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -43,6 +60,7 @@ CREATE TABLE IF NOT EXISTS shops (
     location TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
     CONSTRAINT fk_image
         FOREIGN KEY(image_id) 
         REFERENCES images(id)
@@ -85,21 +103,6 @@ CREATE TABLE IF NOT EXISTS shop_worktimes (
         ON UPDATE CASCADE
 );
 
--- Create shop_worktime table
-CREATE TABLE IF NOT EXISTS shop_socials (
-    id SERIAL PRIMARY KEY,
-    shop_id BIGINT,
-    platform VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_shop
-        FOREIGN KEY(shop_id) 
-        REFERENCES shops(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
 -- Create coffee table
 CREATE TABLE IF NOT EXISTS coffee (
     id SERIAL PRIMARY KEY,
@@ -107,6 +110,7 @@ CREATE TABLE IF NOT EXISTS coffee (
     name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL,
     CONSTRAINT fk_image
         FOREIGN KEY(image_id) 
         REFERENCES images(id)
@@ -131,4 +135,14 @@ CREATE TABLE IF NOT EXISTS shop_coffees (
         REFERENCES coffee(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
+);
+
+-- Create subscription table
+CREATE TABLE IF NOT EXISTS subscription (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    coffee_limit INT NOT NULL,
+    interval INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

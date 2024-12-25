@@ -11,7 +11,7 @@ type UserSubscription struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 
-	Subscription Subscription `gorm:"foreignKey:SubscriptionID"`
+	Subscription SubscriptionModel `gorm:"foreignKey:SubscriptionID"`
 }
 
 // TableName задаёт имя таблицы в базе данных

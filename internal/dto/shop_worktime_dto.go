@@ -1,6 +1,6 @@
 package dto
 
-type ShopWorkTimeDTO struct {
+type ShopWorktimeDTO struct {
 	ID          uint   `json:"id"`
 	ShopID      int    `json:"shop_id"`
 	DayRange    string `json:"day_range"`
