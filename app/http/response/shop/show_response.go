@@ -8,9 +8,3 @@ type ShowResponse struct {
 	ImageUrl    string   `json:"imageUrl"`
 	Coffees     []Coffee `json:"coffees"`
 }
-
-type Coffee struct {
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	ImageUrl string `json:"imageUrl"`
-}

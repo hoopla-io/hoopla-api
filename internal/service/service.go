@@ -27,6 +27,7 @@ func NewService(repo *repository.Repository) *Service {
 			repo.CompanyRepository,
 			repo.ImageRepository,
 			repo.CompanySocialRepository,
+			repo.ShopRepository,
 		),
 		ShopService: NewShopService(
 			repo.ShopRepository,
@@ -34,6 +35,7 @@ func NewService(repo *repository.Repository) *Service {
 			repo.ShopWorktimeRepository,
 			repo.ShopPhoneRepository,
 			repo.ShopCoffeeRepository,
+			repo.CompanySocialRepository,
 		),
 		CoffeeService: NewCoffeeService(
 			repo.CoffeeRepository,
@@ -52,6 +54,7 @@ type AuthService interface {
 }
 
 type CompanyService interface {
+	GetCompanyShopsList(data company_request.GetCompanyShopsRequest) (interface{}, error) 
 	Store(data company_request.StoreRequest) (interface{}, error)
 	Show(companyId uint) (interface{}, error)
 	List() (interface{}, error)
@@ -63,6 +66,7 @@ type CompanyService interface {
 }
 
 type ShopService interface {
+	GetShopDetails(data shop_request.GetShopDetailsRequest) (interface{}, error)
 	Store(data shop_request.StoreRequest) (interface{}, error)
 	Show(shopId uint) (interface{}, error)
 	List() (interface{}, error)

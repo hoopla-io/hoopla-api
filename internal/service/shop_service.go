@@ -22,6 +22,7 @@ type ShopServiceImpl struct {
 	ShopWorktimeRepository repository.ShopWorktimeRepository
 	ShopPhoneRepository repository.ShopPhoneRepository
 	ShopCoffeeRepository repository.ShopCoffeeRepository
+	CompanySocialRepository repository.CompanySocialRepository
 }
 
 func NewShopService(
@@ -30,6 +31,7 @@ func NewShopService(
 	ShopWorktimeRepository repository.ShopWorktimeRepository,
 	ShopPhoneRepository repository.ShopPhoneRepository,
 	ShopCoffeeRepository repository.ShopCoffeeRepository,
+	CompanySocialRepository repository.CompanySocialRepository,
 	) ShopService {
 	return &ShopServiceImpl{
 		ShopRepository: ShopRepository,
@@ -37,7 +39,88 @@ func NewShopService(
 		ShopWorktimeRepository: ShopWorktimeRepository,
 		ShopPhoneRepository: ShopPhoneRepository,
 		ShopCoffeeRepository: ShopCoffeeRepository,
+		CompanySocialRepository: CompanySocialRepository,
 	}
+}
+
+func (s *ShopServiceImpl) GetShopDetails(data shop_request.GetShopDetailsRequest) (interface{}, error){
+	shop, err := s.ShopRepository.GetById(data.ShopID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Shop not found. Please check the shop ID and try again."), nil
+	}
+
+	companySocials, err := s.CompanySocialRepository.GetListByCompanyId(uint(shop.CompanyID))
+	if err != nil {
+		return response.NewErrorResponse(404, "Shop coffees not found."), nil
+	}
+
+	var socials []shop_response.Social
+	for _, social := range companySocials {
+		socials = append(socials, shop_response.Social{
+			SocialID: int(social.ID),
+			Platform: social.Platform,
+			Url:      social.Url,
+		})
+	}
+
+	shopWorktimes, err := s.ShopWorktimeRepository.GetListByShopId(data.ShopID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Shop worktimes not found."), nil
+	}
+
+	var worktimes []shop_response.Worktime
+	for _, worktime := range shopWorktimes {
+		worktimes = append(worktimes, shop_response.Worktime{
+			WorktimeID:  int(worktime.ID),
+			DayRange:    worktime.DayRange,
+			OpeningTime: worktime.OpeningTime,
+			ClosingTime: worktime.ClosingTime,
+		})
+	}
+
+	shopCoffees, err := s.ShopCoffeeRepository.GetListByShopId(data.ShopID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Shop coffees not found."), nil
+	}
+
+	var coffees []shop_response.Coffee
+	for _, coffee := range shopCoffees {
+		coffeeImage, _ := s.ImageRepository.GetImageById(uint(*coffee.ImageID))
+		coffeeImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", coffeeImage.FilePath, coffeeImage.FileName, coffeeImage.FileExt)
+		coffees = append(coffees, shop_response.Coffee{
+			ID:       int(coffee.ID),
+			Name:     *coffee.Name,
+			ImageUrl: coffeeImageUrl,
+		})
+	}
+
+	shopPhones, err := s.ShopPhoneRepository.GetListByShopId(data.ShopID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Shop coffees not found."), nil
+	}
+
+	var phones []shop_response.Phone
+	for _, phone := range shopPhones {
+		phones = append(phones, shop_response.Phone{
+			PhoneID:     int(phone.ID),
+			PhoneNumber: phone.PhoneNumber,
+		})
+	}
+
+	image, _ := s.ImageRepository.GetImageById(uint(shop.ImageID))
+	shopImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
+	response := shop_response.GetShopDetailsResponse{
+		ShopID:    int(shop.ID),
+		Name:      shop.Name,
+		Location:  shop.Location,
+		ImageUrl:  shopImageUrl,
+		Worktimes: worktimes,
+		Coffees:   coffees,
+		Phones:    phones,
+		Socials:   socials,
+	}
+
+	return response, nil
 }
 
 func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, error) {

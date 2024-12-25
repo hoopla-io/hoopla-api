@@ -12,6 +12,11 @@ import (
 	"github.com/qahvazor/qahvazor/internal/service"
 )
 
+// @title Qahvazor | Api
+// @version 1.0.0
+// @contact.email davronbekov.otabek@gmail.com
+// @host 192.168.31.72:8000
+// @BasePath /api/v1
 func main() {
 	cfg := config.Load(".")
 	db := postgres.NewPostgresDB(cfg)
@@ -21,6 +26,7 @@ func main() {
 	controller := controller.NewController(service)
 
 	router := routes.NewRoute(controller)
+	router.Static("/uploads", "./uploads")
 
 	srv := new(cmd.Server)
 	if err := srv.Run(cfg.Port, router); err != nil {

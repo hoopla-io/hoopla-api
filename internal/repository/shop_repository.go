@@ -14,6 +14,19 @@ func NewShopRepository(db *gorm.DB) ShopRepository {
 	return &ShopRepositoryImpl{db: db}
 }
 
+func (r *ShopRepositoryImpl) GetByCompanyId(companyId uint) ([]dto.ShopDTO, error) {
+	var shops []dto.ShopDTO
+
+	query := r.db.Model(&model.ShopModel{}).
+		Where("company_id = ?", companyId).
+		Find(&shops)
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
+	return shops, nil
+}
+
 func (r *ShopRepositoryImpl) Store(data dto.ShopDTO) (uint, error) {
 	var shop dto.ShopDTO
 
@@ -39,7 +52,7 @@ func (r *ShopRepositoryImpl) GetById(shopId uint) (dto.ShopDTO, error) {
 		return dto.ShopDTO{}, query.Error
 	}
 
-	categories := dto.ShopDTO{
+	shop := dto.ShopDTO{
 		ID:        shopModel.ID,
 		Name:      shopModel.Name,
 		Location:  shopModel.Location,
@@ -47,7 +60,7 @@ func (r *ShopRepositoryImpl) GetById(shopId uint) (dto.ShopDTO, error) {
 		ImageID:   shopModel.ImageID,
 	}
 
-	return categories, nil
+	return shop, nil
 }
 
 func (r *ShopRepositoryImpl) List() ([]dto.ShopDTO, error) {

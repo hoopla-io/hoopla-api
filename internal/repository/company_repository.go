@@ -29,10 +29,10 @@ func (r *CompanyRepositoryImpl) Store(data dto.CompanyDTO) (uint, error) {
 	return company.ID, nil
 }
 
-func (r *CompanyRepositoryImpl) GetById(companyId uint) (dto.CompanyDTO, error) {
+func (r *CompanyRepositoryImpl) GetById(shopId uint) (dto.CompanyDTO, error) {
 	companyModel := model.CompanyModel{}
 
-	query := r.db.Where("id = ?", companyId).
+	query := r.db.Where("id = ?", shopId).
 		First(&companyModel)
 	if query.Error != nil {
 		return dto.CompanyDTO{}, query.Error

@@ -61,6 +61,7 @@ type CompanySocialRepository interface {
 }
 
 type ShopRepository interface {
+	GetByCompanyId(companyId uint) ([]dto.ShopDTO, error)
 	Store(data dto.ShopDTO) (uint, error)
 	GetById(shopId uint) (dto.ShopDTO, error)
 	List() ([]dto.ShopDTO, error)

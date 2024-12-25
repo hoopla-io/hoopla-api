@@ -13,6 +13,8 @@ type Controller struct {
 
 type Api struct {
 	AuthController    *api.AuthController
+	CompanyController *api.CompanyController
+	ShopController    *api.ShopController
 }
 
 type Dashboard struct {
@@ -26,6 +28,8 @@ func NewController(service *service.Service) *Controller {
 	return &Controller{
 		Api: Api{
 			AuthController: api.NewAuthController(service.AuthService),
+			CompanyController: api.NewCompanyController(service.CompanyService),
+			ShopController: api.NewShopController(service.ShopService),
 		},
 		Dashboard: Dashboard{
 			CompanyController: dashboard.NewCompanyController(service.CompanyService),
