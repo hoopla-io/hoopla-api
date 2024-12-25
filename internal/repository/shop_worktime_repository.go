@@ -8,20 +8,20 @@ import (
 	"gorm.io/gorm"
 )
 
-type ShopWorktimeRepositoryImpl struct {
+type ShopWorkTimeRepositoryImpl struct {
 	db *gorm.DB
 }
 
-func NewShopWorktimeRepository(db *gorm.DB) ShopWorktimeRepository {
-	return &ShopWorktimeRepositoryImpl{db: db}
+func NewShopWorkTimeRepository(db *gorm.DB) ShopWorkTimeRepository {
+	return &ShopWorkTimeRepositoryImpl{db: db}
 }
 
-func (r *ShopWorktimeRepositoryImpl) Store(data dto.ShopWorktimeDTO) (uint, error) {
+func (r *ShopWorkTimeRepositoryImpl) Store(data dto.ShopWorktimeDTO) (uint, error) {
 	var shopWorktime dto.ShopWorktimeDTO
 
 	query := r.db.Create(&model.ShopWorkTimeModel{
-		ShopID: data.ShopID,
-		DayRange: data.DayRange,
+		ShopID:      data.ShopID,
+		DayRange:    data.DayRange,
 		OpeningTime: data.OpeningTime,
 		ClosingTime: data.ClosingTime,
 	}).Scan(&shopWorktime)
@@ -32,7 +32,7 @@ func (r *ShopWorktimeRepositoryImpl) Store(data dto.ShopWorktimeDTO) (uint, erro
 	return shopWorktime.ID, nil
 }
 
-func (r *ShopWorktimeRepositoryImpl) GetById(worktimeId uint) (dto.ShopWorktimeDTO, error) {
+func (r *ShopWorkTimeRepositoryImpl) GetById(worktimeId uint) (dto.ShopWorktimeDTO, error) {
 	shopWorktimeModel := model.ShopWorkTimeModel{}
 
 	query := r.db.Where("id = ?", worktimeId).
@@ -42,9 +42,9 @@ func (r *ShopWorktimeRepositoryImpl) GetById(worktimeId uint) (dto.ShopWorktimeD
 	}
 
 	worktimes := dto.ShopWorktimeDTO{
-		ID:        shopWorktimeModel.ID,
-		ShopID:    shopWorktimeModel.ShopID,
-		DayRange:  shopWorktimeModel.DayRange,
+		ID:          shopWorktimeModel.ID,
+		ShopID:      shopWorktimeModel.ShopID,
+		DayRange:    shopWorktimeModel.DayRange,
 		OpeningTime: shopWorktimeModel.OpeningTime,
 		ClosingTime: shopWorktimeModel.ClosingTime,
 	}
@@ -52,7 +52,7 @@ func (r *ShopWorktimeRepositoryImpl) GetById(worktimeId uint) (dto.ShopWorktimeD
 	return worktimes, nil
 }
 
-func (r *ShopWorktimeRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopWorktimeDTO, error) {
+func (r *ShopWorkTimeRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopWorktimeDTO, error) {
 	var shopWorktimes []dto.ShopWorktimeDTO
 	err := r.db.Model(&model.ShopWorkTimeModel{}).Where("shop_id = ?", shopId).Scan(&shopWorktimes).Error
 	if err != nil {
@@ -65,10 +65,10 @@ func (r *ShopWorktimeRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopWor
 	return shopWorktimes, nil
 }
 
-func (r *ShopWorktimeRepositoryImpl) Edit(data dto.ShopWorktimeDTO) (uint, error){
+func (r *ShopWorkTimeRepositoryImpl) Edit(data dto.ShopWorktimeDTO) (uint, error) {
 	shopWorktime := model.ShopWorkTimeModel{
-		ShopID:   data.ShopID,
-		DayRange: data.DayRange,
+		ShopID:      data.ShopID,
+		DayRange:    data.DayRange,
 		OpeningTime: data.OpeningTime,
 		ClosingTime: data.ClosingTime,
 	}

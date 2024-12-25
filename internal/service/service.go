@@ -19,7 +19,6 @@ type Service struct {
 	SubscriptionService
 	UserSubscriptionService
 	CoffeeService
-	SubscriptionService
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -35,7 +34,7 @@ func NewService(repo *repository.Repository) *Service {
 		ShopService: NewShopService(
 			repo.ShopRepository,
 			repo.ImageRepository,
-			repo.ShopWorktimeRepository,
+			repo.ShopWorkTimeRepository,
 			repo.ShopPhoneRepository,
 			repo.ShopCoffeeRepository,
 			repo.CompanySocialRepository,

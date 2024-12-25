@@ -2,13 +2,17 @@ package service
 
 import (
 	"context"
+	subscription_request "github.com/qahvazor/qahvazor/app/http/request/subscription"
+	"github.com/qahvazor/qahvazor/app/http/response"
+	subscription_response "github.com/qahvazor/qahvazor/app/http/response/subscription"
+	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/model"
 	"github.com/qahvazor/qahvazor/internal/repository"
 )
 
 type SubscriptionService interface {
-	GetAllSubscriptions(ctx context.Context) ([]model.Subscription, error)
-	GetSubscriptionByID(ctx context.Context, id uint) (*model.Subscription, error)
+	GetAllSubscriptions(ctx context.Context) ([]model.SubscriptionModel, error)
+	GetSubscriptionByID(ctx context.Context, id uint) (*model.SubscriptionModel, error)
 }
 
 type subscriptionService struct {
@@ -19,11 +23,11 @@ func NewSubscriptionService(repo repository.SubscriptionRepository) Subscription
 	return &subscriptionService{repo: repo}
 }
 
-func (s *subscriptionService) GetAllSubscriptions(ctx context.Context) ([]model.Subscription, error) {
+func (s *subscriptionService) GetAllSubscriptions(ctx context.Context) ([]model.SubscriptionModel, error) {
 	return s.repo.GetAllSubscriptions(ctx)
 }
 
-func (s *subscriptionService) GetSubscriptionByID(ctx context.Context, id uint) (*model.Subscription, error) {
+func (s *subscriptionService) GetSubscriptionByID(ctx context.Context, id uint) (*model.SubscriptionModel, error) {
 	return s.repo.GetSubscriptionByID(ctx, id)
 	subscription_request "github.com/qahvazor/qahvazor/app/http/request/subscription"
 	"github.com/qahvazor/qahvazor/app/http/response"
