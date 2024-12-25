@@ -21,6 +21,17 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				auth.POST("/confirm-sms", controller.Api.AuthController.ConfirmSms)
 				auth.POST("/resend-sms", controller.Api.AuthController.ResendSms)
 			}
+
+			company := v1.Group("/company") 
+			{
+				company.GET("/list", controller.Api.CompanyController.GetCompanyList)
+				company.POST("/shops", controller.Api.CompanyController.GetCompanyShopsList)
+			}
+
+			shop := v1.Group("/shop")
+			{
+				shop.POST("/detail", controller.Api.ShopController.GetShopDetails)
+			}
 			
 			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}

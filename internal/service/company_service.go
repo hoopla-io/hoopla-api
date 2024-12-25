@@ -18,24 +18,64 @@ type CompanyServiceImpl struct {
 	CompanyRepository repository.CompanyRepository
 	ImageRepository   repository.ImageRepository
 	CompanySocialRepository repository.CompanySocialRepository
+	ShopRepository repository.ShopRepository
 }
 
 func NewCompanyService(
 	CompanyRepository repository.CompanyRepository,
 	ImageRepository repository.ImageRepository,
 	CompanySocialRepository repository.CompanySocialRepository,
+	ShopRepository repository.ShopRepository,
 	) CompanyService {
 	return &CompanyServiceImpl{
 		CompanyRepository: CompanyRepository,
 		ImageRepository: ImageRepository,
 		CompanySocialRepository: CompanySocialRepository,
+		ShopRepository: ShopRepository,
 	}
+}
+
+func (s *CompanyServiceImpl) GetCompanyShopsList(data company_request.GetCompanyShopsRequest) (interface{}, error) {
+	company, err := s.CompanyRepository.GetById(data.CompanyID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Company not found"), nil
+	}
+
+	shops, err := s.ShopRepository.GetByCompanyId(data.CompanyID)
+	if err != nil {
+		return response.NewErrorResponse(404, "Shops not found"), nil
+	}
+
+	image, _ := s.ImageRepository.GetImageById(uint(company.ImageID))
+	companyImageUrl := fmt.Sprintf("http://192.168.31.72:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
+
+	var shopsResponse []company_response.Shop
+	for _, shop := range shops {
+		shopImage, _ := s.ImageRepository.GetImageById(uint(shop.ImageID))
+		shopImageUrl := fmt.Sprintf("http://192.168.31.72:8000/%s/%s.%s", shopImage.FilePath, shopImage.FileName, shopImage.FileExt)
+		shopsResponse = append(shopsResponse, company_response.Shop{
+			ID:       int(shop.ID),
+			Name:     shop.Name,
+			Location: shop.Location,
+			ImageUrl: shopImageUrl,
+		})
+	}
+
+	getCompanyShopsResponse := company_response.GetCompanyShopsResponse{
+		ID:        int(company.ID),
+		Name:      company.Name,
+		Description: company.Description,
+		ImageUrl:  companyImageUrl,
+		Shops: shopsResponse,
+	}
+
+	return getCompanyShopsResponse, nil
 }
 
 func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface{}, error) {
 	fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Failed to process the image. Please try again later."), nil
 	}
 
 	createImageDTO := dto.ImageDTO{
@@ -45,7 +85,7 @@ func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface
 	}
 	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Failed to save the image. Please try again later."), nil
 	}
 
 	createCompanyDTO := dto.CompanyDTO{
@@ -55,7 +95,7 @@ func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface
 	}
 	companyId, err := s.CompanyRepository.Store(createCompanyDTO)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Failed to save the company details."), nil
    	}
 
 	response := company_response.StoreResponse{
@@ -67,10 +107,13 @@ func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface
 func (s *CompanyServiceImpl) Show(companyId uint) (interface{}, error) {
 	company, err := s.CompanyRepository.GetById(companyId)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(404, "Company not found"), nil
 	}
 
-	image, _ := s.ImageRepository.GetImageById(uint(company.ImageID))
+	image, err := s.ImageRepository.GetImageById(uint(company.ImageID))
+	if err != nil {
+		return  response.NewErrorResponse(404, "Company not found"), nil
+	}
 	companyImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 
 	showResponse := company_response.ShowResponse{
@@ -86,7 +129,7 @@ func (s *CompanyServiceImpl) Show(companyId uint) (interface{}, error) {
 func (s *CompanyServiceImpl) List() (interface{}, error) {
 	data, err := s.CompanyRepository.List()
 	if err != nil {
-		return nil, err
+		return response.NewErrorResponse(500, "Failed to fetch companies. Please try again later."), nil
 	}
 
 	var response []company_response.ListResponse
@@ -108,7 +151,7 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 	if data.File != nil {
 		fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to save image: %w", err)
 		}
 
 		createImageDTO := dto.ImageDTO{
@@ -118,7 +161,7 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 		}
 		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to create image record: %w", err)
 		}
 		data.ImageId = imageId
 	}
@@ -131,11 +174,10 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 	}
 	
 	if _, err := s.CompanyRepository.Edit(editDTO); err != nil {
-		return err
+		return fmt.Errorf("failed to edit company record: %w", err)
 	}
 	return nil
 }
-
 
 func (s *CompanyServiceImpl) StoreCompanySocial(data company_social_request.StoreRequest) (interface{}, error) {
 	storeCompanySocialDTO := dto.CompanySocialDTO{
