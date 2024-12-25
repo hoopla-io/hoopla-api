@@ -34,10 +34,10 @@ func (r *SubscriptionRepositoryImpl) Store(data dto.SubscriptionDTO) (uint, erro
 	var subscription dto.SubscriptionDTO
 
 	query := r.db.Create(&model.SubscriptionModel{
-		Name: data.Name,
+		Name:        data.Name,
 		CoffeeLimit: data.CoffeeLimit,
-		Interval: data.Interval,
-		Period: data.Period,
+		Interval:    data.Interval,
+		Period:      data.Period,
 	}).Scan(&subscription)
 	if query.Error != nil {
 		return 0, query.Error
@@ -56,8 +56,8 @@ func (r *SubscriptionRepositoryImpl) GetById(subscriptionId uint) (dto.Subscript
 	}
 
 	subscription := dto.SubscriptionDTO{
-		ID:        subscriptionModel.ID,
-		Name:      subscriptionModel.Name,
+		ID:          subscriptionModel.ID,
+		Name:        subscriptionModel.Name,
 		CoffeeLimit: subscriptionModel.CoffeeLimit,
 		Interval:    subscriptionModel.Interval,
 		Period:      subscriptionModel.Period,
@@ -77,18 +77,18 @@ func (r *SubscriptionRepositoryImpl) List() ([]dto.SubscriptionDTO, error) {
 	return subscriptions, nil
 }
 
-func (r *SubscriptionRepositoryImpl) Edit(data dto.SubscriptionDTO) (uint, error){
+func (r *SubscriptionRepositoryImpl) Edit(data dto.SubscriptionDTO) error {
 	subscription := model.SubscriptionModel{
-		Name:     data.Name,
+		Name:        data.Name,
 		CoffeeLimit: data.CoffeeLimit,
-		Interval: data.Interval,
-		Period: data.Period,
+		Interval:    data.Interval,
+		Period:      data.Period,
 	}
 
-	query := r.db.Model(&subscription).Where("id = ?", data.ID).Updates(subscription)
+	query := r.db.Model(&model.SubscriptionModel{}).Where("id = ?", data.ID).Updates(subscription)
 	if query.Error != nil {
-		return 0, query.Error
+		return query.Error
 	}
 
-	return subscription.ID, nil
+	return nil
 }

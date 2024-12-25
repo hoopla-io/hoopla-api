@@ -103,5 +103,12 @@ type SubscriptionRepository interface {
 	Store(data dto.SubscriptionDTO) (uint, error)
 	GetById(coffeeId uint) (dto.SubscriptionDTO, error)
 	List() ([]dto.SubscriptionDTO, error)
-	Edit(data dto.SubscriptionDTO) (uint, error)
+	Edit(data dto.SubscriptionDTO) error
+}
+
+type ShopWorktimeRepository interface {
+	Store(data dto.ShopWorktimeDTO) (uint, error)
+	GetById(worktimeId uint) (dto.ShopWorktimeDTO, error)
+	GetListByShopId(shopId uint) ([]dto.ShopWorktimeDTO, error)
+	Edit(data dto.ShopWorktimeDTO) (uint, error)
 }
