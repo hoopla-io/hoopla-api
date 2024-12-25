@@ -14,7 +14,7 @@ type Repository struct {
 	CompanyRepository
 	CompanySocialRepository
 	ShopRepository
-	ShopWorktimeRepository
+	ShopWorkTimeRepository
 	ShopPhoneRepository
 	ShopSocialRepository
 	SubscriptionRepository
@@ -72,7 +72,7 @@ type ShopRepository interface {
 	Edit(data dto.ShopDTO) (uint, error)
 }
 
-type ShopWorktimeRepository interface {
+type ShopWorkTimeRepository interface {
 	Store(data dto.ShopWorktimeDTO) (uint, error)
 	GetById(worktimeId uint) (dto.ShopWorktimeDTO, error)
 	GetListByShopId(shopId uint) ([]dto.ShopWorktimeDTO, error)
