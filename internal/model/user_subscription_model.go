@@ -10,7 +10,7 @@ type UserSubscription struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 
-	Subscription Subscription `gorm:"foreignKey:SubscriptionID"`
+	Subscription SubscriptionModel `gorm:"foreignKey:SubscriptionID"`
 }
 
 func (UserSubscription) TableName() string {

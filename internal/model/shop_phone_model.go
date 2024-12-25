@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type ShopPhoneModel struct {
 	ID          uint      `gorm:"primaryKey;autoIncrement"`

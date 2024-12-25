@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 type UserModel struct {
 	ID             uint      `gorm:"primaryKey;autoIncrement"`

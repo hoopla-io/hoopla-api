@@ -9,3 +9,5 @@
 configs/config.yaml
 /data/
 uploads/
+config/app.yaml
+config/database.yaml
