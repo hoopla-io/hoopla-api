@@ -11,19 +11,23 @@ type Service struct {
 	AuthService
 	CompanyService
 	ShopService
+	SubscriptionService
+	UserSubscriptionService
 }
 
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		AuthService: NewAuthService(repo),
-		CompanyService: NewCompanyService(repo),
-		ShopService: NewShopService(repo),
+		AuthService:             NewAuthService(repo),
+		CompanyService:          NewCompanyService(repo),
+		ShopService:             NewShopService(repo),
+		SubscriptionService:     NewSubscriptionService(repo),
+		UserSubscriptionService: NewUserSubscriptionService(repo),
 	}
 }
 
 type AuthService interface {
 	Login(data auth_request.LoginRequest) (interface{}, error)
-    ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
+	ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
 	ResendSms(data auth_request.ResendSmsRequest) (interface{}, error)
 }
 

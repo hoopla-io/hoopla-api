@@ -6,12 +6,16 @@ type Controller struct {
 	AuthController
 	CompanyController
 	ShopController
+	SubscriptionController
+	UserSubscriptionController
 }
 
 func NewController(service *service.Service) *Controller {
 	return &Controller{
-		AuthController: *NewAuthController(service.AuthService),
-		CompanyController: *NewCompanyController(service.CompanyService),
-		ShopController: *NewShopController(service.ShopService),
+		AuthController:             *NewAuthController(service.AuthService),
+		CompanyController:          *NewCompanyController(service.CompanyService),
+		ShopController:             *NewShopController(service.ShopService),
+		SubscriptionController:     *NewSubscriptionController(service.SubscriptionService),
+		UserSubscriptionController: *NewUserSubscriptionController(service.UserSubscriptionService),
 	}
 }

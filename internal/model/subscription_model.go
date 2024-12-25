@@ -2,7 +2,6 @@ package model
 
 import "time"
 
-// Subscription представляет данные о подписке
 type Subscription struct {
 	ID          uint   `gorm:"primaryKey"`
 	Name        string `gorm:"type:varchar(255);not null"`
@@ -12,7 +11,6 @@ type Subscription struct {
 	UpdatedAt   time.Time
 }
 
-// TableName задаёт имя таблицы в базе данных
 func (Subscription) TableName() string {
 	return "subscription"
 }

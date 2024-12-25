@@ -13,17 +13,21 @@ type Repository struct {
 	ShopWorkTimeRepository
 	ShopPhoneRepository
 	ShopSocialRepository
+	SubscriptionRepository
+	UserSubscriptionRepository
 }
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		AuthRepository: NewAuthRepository(db),
-		ImageRepository: NewImageRepository(db),
-		CompanyRepository: NewCompanyRepository(db),
-		ShopRepository: NewShopRepository(db),
-		ShopWorkTimeRepository: NewShopWorktimeRepository(db),
-		ShopPhoneRepository: NewShopPhoneRepository(db),
-		ShopSocialRepository: NewShopSocialRepository(db),
+		AuthRepository:             NewAuthRepository(db),
+		ImageRepository:            NewImageRepository(db),
+		CompanyRepository:          NewCompanyRepository(db),
+		ShopRepository:             NewShopRepository(db),
+		ShopWorkTimeRepository:     NewShopWorktimeRepository(db),
+		ShopPhoneRepository:        NewShopPhoneRepository(db),
+		ShopSocialRepository:       NewShopSocialRepository(db),
+		SubscriptionRepository:     NewSubscriptionRepository(db),
+		UserSubscriptionRepository: NewUserSubscriptionRepository(db),
 	}
 }
 

@@ -28,6 +28,18 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				company.GET("/get-list", controller.CompanyController.GetList)
 			}
 
+			subscriptions := v1.Group("/subscriptions")
+			{
+				subscriptions.GET("/", controller.SubscriptionController.GetAllSubscriptions)
+				subscriptions.GET("/:id", controller.SubscriptionController.GetSubscriptionByID)
+			}
+
+			userSubscriptions := v1.Group("/user-subscriptions")
+			{
+				userSubscriptions.GET("/:user_id", controller.UserSubscriptionController.GetUserActiveSubscription)
+				userSubscriptions.POST("/", controller.UserSubscriptionController.AssignSubscriptionToUser)
+			}
+
 			// shops := v1.Group("/shop")
 			// {
 			// 	// shops.POST("/create", controller.ShopController.CreateShop)
@@ -50,7 +62,7 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 			{
 				shop.POST("/create", controller.ShopController.CreateShop)
 
-				worktime := shop.Group("/worktime") 
+				worktime := shop.Group("/worktime")
 				{
 					worktime.POST("/create", controller.ShopController.CreateShopWorkTime)
 				}
