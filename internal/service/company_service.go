@@ -105,27 +105,31 @@ func (s *CompanyServiceImpl) List() (interface{}, error) {
 }
 
 func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
-	fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
-	if err != nil {
-		return err
-	}
+	if data.File != nil {
+		fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
+		if err != nil {
+			return err
+		}
 
-	createImageDTO := dto.ImageDTO{
-		FileName: fileName,
-		FilePath: filePath,
-		FileExt: fileExt[1:],
-	}
-	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
-	if err != nil {
-		return err
+		createImageDTO := dto.ImageDTO{
+			FileName: fileName,
+			FilePath: filePath,
+			FileExt: fileExt[1:],
+		}
+		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
+		if err != nil {
+			return err
+		}
+		data.ImageId = imageId
 	}
 
 	editDTO := dto.CompanyDTO{
 		ID: uint(data.CompanyID),
 		Name: data.Name,
 		Description: data.Description,
-		ImageID: int(imageId),
+		ImageID: data.ImageId,
 	}
+	
 	if _, err := s.CompanyRepository.Edit(editDTO); err != nil {
 		return err
 	}

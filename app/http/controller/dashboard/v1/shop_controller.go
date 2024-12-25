@@ -213,7 +213,7 @@ func (ctr *ShopController) ListShopPhones(ctx *gin.Context) {
 		return
 	}
 
-	results, err := ctr.service.ListShopPhones(uint(listShopPhoneRequest.PhoneID))
+	results, err := ctr.service.ListShopPhones(uint(listShopPhoneRequest.ShopID))
 	if err == nil {
 		if errorResponse, ok := results.(response.ErrorResponse); ok {
 			ctx.JSON(errorResponse.Code, errorResponse)

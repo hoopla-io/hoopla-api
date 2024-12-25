@@ -26,6 +26,7 @@ func (s *SubscriptionServiceImpl) Store(data subscription_request.StoreRequest) 
 		Name: data.Name,
 		CoffeeLimit: data.CoffeeLimit,
 		Interval: data.Interval,
+		Period: data.Period,
 	}
 	subscriptionId, err := s.SubscriptionRepository.Store(createSubscriptionDTO)
 	if err != nil {
@@ -49,6 +50,7 @@ func (s *SubscriptionServiceImpl) Show(subscriptionId uint) (interface{}, error)
 		Name:     subscription.Name,
 		CoffeeLimit: subscription.CoffeeLimit,
 		Interval: subscription.Interval,
+		Period: subscription.Period,
 	}
 
 	return showResponse, nil
@@ -67,6 +69,7 @@ func (s *SubscriptionServiceImpl) List() (interface{}, error) {
 			Name:        item.Name,
 			CoffeeLimit: item.CoffeeLimit,
 			Interval: item.Interval,
+			Period: item.Period,
 		})
 	}
 
@@ -79,6 +82,7 @@ func (s *SubscriptionServiceImpl) Edit(data subscription_request.EditRequest) er
 		Name: data.Name,
 		CoffeeLimit: data.CoffeeLimit,
 		Interval: data.Interval,
+		Period: data.Period,
 	}
 	if _, err := s.SubscriptionRepository.Edit(editDTO); err != nil {
 		return err

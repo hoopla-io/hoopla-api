@@ -41,7 +41,7 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				{
 					social.POST("/store", controller.Dashboard.CompanyController.StoreCompanySocial)
 					social.GET("/show/:social_id", controller.Dashboard.CompanyController.ShowCompanySocial)
-					social.GET("/list", controller.Dashboard.CompanyController.ListCompanySocials)
+					social.POST("/list", controller.Dashboard.CompanyController.ListCompanySocials)
 					social.PUT("/edit", controller.Dashboard.CompanyController.EditCompanySocial)
 				}
 			}
@@ -56,19 +56,18 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				worktime := shop.Group("/worktime") 
 				{
 					worktime.POST("/store", controller.Dashboard.ShopController.StoreShopWorktime)
-					worktime.GET("/list", controller.Dashboard.ShopController.ListShopWorktimes)
+					worktime.POST("/list", controller.Dashboard.ShopController.ListShopWorktimes)
 					worktime.GET("/show/:worktime_id", controller.Dashboard.ShopController.ShowWorktime)
 					worktime.PUT("/edit", controller.Dashboard.ShopController.EditShopWorktime)
 				}
 
 				phone := shop.Group("/phone")
 				{
-					phone.POST("/create", controller.Dashboard.ShopController.StoreShopPhone)
+					phone.POST("/store", controller.Dashboard.ShopController.StoreShopPhone)
 					phone.GET("/show/:phone_id", controller.Dashboard.ShopController.ShowShopPhone)
-					phone.GET("/list", controller.Dashboard.ShopController.ListShopPhones)
+					phone.POST("/list", controller.Dashboard.ShopController.ListShopPhones)
 					phone.PUT("/edit", controller.Dashboard.ShopController.EditShopPhone)
 				}
-
 			}
 
 			coffee := v1.Group("/coffee")

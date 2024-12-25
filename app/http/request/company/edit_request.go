@@ -7,5 +7,5 @@ type EditRequest struct {
 	Name        string                `form:"name"`
 	Description string                `form:"description"`
 	File        *multipart.FileHeader `form:"file"`
-	ImageId     *int                  `form:"imageId"`
+	ImageId     int                  `form:"imageId"`
 }

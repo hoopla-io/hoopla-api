@@ -43,7 +43,7 @@ type AuthRepository interface {
 
 type ImageRepository interface {
 	GetImageById(id uint) (*dto.ImageDTO, error)
-	CreateImage(data dto.ImageDTO) (uint, error)
+	CreateImage(data dto.ImageDTO) (int, error)
 }
 
 type CompanyRepository interface {

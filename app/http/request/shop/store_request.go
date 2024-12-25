@@ -8,5 +8,5 @@ type StoreRequest struct {
 	File        *multipart.FileHeader `form:"file"`
 	ImageId     *int                  `form:"imageId"`
 	CompanyId   int                   `form:"companyId"`
-	CoffeeIds   *[]uint               `form:"coffeeIds"`
+	CoffeeIds   []uint                `form:"coffeeIds"`
 }

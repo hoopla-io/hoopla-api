@@ -63,12 +63,11 @@ func (r *ShopPhoneRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopPhoneD
 
 func (r *ShopPhoneRepositoryImpl) Edit(data dto.ShopPhoneDTO) (uint, error){
 	shopPhone := model.ShopPhoneModel{
-		Model:    gorm.Model{ID: data.ID},
 		ShopID:   data.ShopID,
 		PhoneNumber: data.PhoneNumber,
 	}
 
-	query := r.db.Updates(&shopPhone)
+	query := r.db.Model(&shopPhone).Where("id = ?", data.ID).Updates(shopPhone)
 	if query.Error != nil {
 		return 0, query.Error
 	}

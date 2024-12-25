@@ -29,10 +29,10 @@ func (r *CompanyRepositoryImpl) Store(data dto.CompanyDTO) (uint, error) {
 	return company.ID, nil
 }
 
-func (r *CompanyRepositoryImpl) GetById(categoryId uint) (dto.CompanyDTO, error) {
+func (r *CompanyRepositoryImpl) GetById(companyId uint) (dto.CompanyDTO, error) {
 	companyModel := model.CompanyModel{}
 
-	query := r.db.Where("id = ?", categoryId).
+	query := r.db.Where("id = ?", companyId).
 		First(&companyModel)
 	if query.Error != nil {
 		return dto.CompanyDTO{}, query.Error
@@ -42,6 +42,7 @@ func (r *CompanyRepositoryImpl) GetById(categoryId uint) (dto.CompanyDTO, error)
 		ID:        companyModel.ID,
 		Name:      companyModel.Name,
 		Description: companyModel.Description,
+		ImageID:     companyModel.ImageID,
 	}
 
 	return companies, nil
@@ -66,7 +67,7 @@ func (r *CompanyRepositoryImpl) Edit(data dto.CompanyDTO) (uint, error){
 		ImageID: data.ImageID,
 	}
 
-	query := r.db.Updates(&company)
+	query :=  r.db.Model(&company).Where("id = ?", data.ID).Updates(company)
 	if query.Error != nil {
 		return 0, query.Error
 	}

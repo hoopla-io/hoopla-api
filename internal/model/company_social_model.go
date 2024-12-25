@@ -2,12 +2,9 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type CompanySocialModel struct {
-	gorm.Model
 	ID        uint      `gorm:"primaryKey;autoIncrement"`
 	CompanyID int       `gorm:"column:company_id"`
 	Platform  string    `gorm:"column:platform"`

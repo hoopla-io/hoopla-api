@@ -6,7 +6,6 @@ import (
 	coffee_request "github.com/qahvazor/qahvazor/app/http/request/coffee"
 	"github.com/qahvazor/qahvazor/app/http/response"
 	coffee_response "github.com/qahvazor/qahvazor/app/http/response/coffee"
-	company_response "github.com/qahvazor/qahvazor/app/http/response/company"
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/repository"
 	"github.com/qahvazor/qahvazor/utils"
@@ -68,7 +67,7 @@ func (s *CoffeeServiceImpl) Show(coffeeId uint) (interface{}, error) {
 	image, _ := s.ImageRepository.GetImageById(uint(coffee.ImageID))
 	coffeeImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 
-	showResponse := company_response.ShowResponse{
+	showResponse := coffee_response.ShowResponse{
 		ID:       int(coffee.ID),
 		Name:     coffee.Name,
 		ImageUrl: coffeeImageUrl,
@@ -98,26 +97,30 @@ func (s *CoffeeServiceImpl) List() (interface{}, error) {
 }
 
 func (s *CoffeeServiceImpl) Edit(data coffee_request.EditRequest) error {
-	fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
-	if err != nil {
-		return err
-	}
+	if data.File != nil {
+		fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
+		if err != nil {
+			return err
+		}
 
-	createImageDTO := dto.ImageDTO{
-		FileName: fileName,
-		FilePath: filePath,
-		FileExt: fileExt[1:],
-	}
-	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
-	if err != nil {
-		return err
+		createImageDTO := dto.ImageDTO{
+			FileName: fileName,
+			FilePath: filePath,
+			FileExt: fileExt[1:],
+		}
+		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
+		if err != nil {
+			return err
+		}
+		data.ImageId = imageId
 	}
 
 	editDTO := dto.CoffeeDTO{
 		ID: uint(data.CoffeeID),
 		Name: data.Name,
-		ImageID: int(imageId),
+		ImageID: data.ImageId,
 	}
+	
 	if _, err := s.CoffeeRepository.Edit(editDTO); err != nil {
 		return err
 	}
