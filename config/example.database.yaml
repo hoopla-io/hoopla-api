@@ -1,7 +1,6 @@
-BILLING:
-  DRIVER: "postgresql"
-  DATABASE: "billing"
-  HOST: "127.0.0.1"
-  PORT: 3306
-  USER: "hello"
-  PASSWORD: "hello"
+DRIVER: "postgresql"
+DATABASE: "billing"
+HOST: "127.0.0.1"
+PORT: 3306
+USER: "hello"
+PASSWORD: "hello"
