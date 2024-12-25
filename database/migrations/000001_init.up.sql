@@ -110,7 +110,6 @@ CREATE TABLE IF NOT EXISTS coffee (
     name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL,
     CONSTRAINT fk_image
         FOREIGN KEY(image_id) 
         REFERENCES images(id)
@@ -143,6 +142,7 @@ CREATE TABLE IF NOT EXISTS subscription (
     name VARCHAR(255) NOT NULL,
     coffee_limit INT NOT NULL,
     interval INT NOT NULL,
+    period   INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

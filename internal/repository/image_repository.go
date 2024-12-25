@@ -33,7 +33,7 @@ func (r *ImageRepositoryImpl) GetImageById(id uint) (*dto.ImageDTO, error){
 	}, nil
 }
 
-func (r *ImageRepositoryImpl) CreateImage(data dto.ImageDTO) (uint, error) {
+func (r *ImageRepositoryImpl) CreateImage(data dto.ImageDTO) (int, error) {
 	image := model.ImageModel{
 		Filename: data.FileName,
 		Path:     data.FilePath,
@@ -46,5 +46,5 @@ func (r *ImageRepositoryImpl) CreateImage(data dto.ImageDTO) (uint, error) {
 		return 0, query.Error
 	}
 
-	return image.ID, nil
+	return int(image.ID), nil
 } 

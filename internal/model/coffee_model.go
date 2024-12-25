@@ -2,12 +2,9 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type CoffeeModel struct {
-	gorm.Model
 	ID             uint      `gorm:"primaryKey;autoIncrement"`
 	ImageID        int       `gorm:"column:image_id"`
 	Name           string    `gorm:"column:name"`

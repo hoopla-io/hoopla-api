@@ -27,9 +27,11 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 	}
 
 	results, err := ctr.service.Login(loginRequest)
-	if err != nil {
-		response.NewResponse(ctx, http.StatusInternalServerError, err.Error(), nil, nil)
-		return
+	if err == nil {
+		if errorResponse, ok := results.(response.ErrorResponse); ok {
+			ctx.JSON(errorResponse.Code, errorResponse)
+			return
+		}
 	}
 
 	response.NewResponse(ctx, http.StatusOK, "OK!", results, nil)

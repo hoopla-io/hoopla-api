@@ -5,4 +5,5 @@ type ShowResponse struct {
 	Name        string `json:"name"`
 	CoffeeLimit int    `json:"coffeeLimit"`
 	Interval    int    `json:"interval"`
+	Period      int    `json:"period"`
 }

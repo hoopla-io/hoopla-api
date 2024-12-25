@@ -37,6 +37,7 @@ func (r *SubscriptionRepositoryImpl) Store(data dto.SubscriptionDTO) (uint, erro
 		Name: data.Name,
 		CoffeeLimit: data.CoffeeLimit,
 		Interval: data.Interval,
+		Period: data.Period,
 	}).Scan(&subscription)
 	if query.Error != nil {
 		return 0, query.Error
@@ -59,6 +60,7 @@ func (r *SubscriptionRepositoryImpl) GetById(subscriptionId uint) (dto.Subscript
 		Name:      subscriptionModel.Name,
 		CoffeeLimit: subscriptionModel.CoffeeLimit,
 		Interval:    subscriptionModel.Interval,
+		Period:      subscriptionModel.Period,
 	}
 
 	return subscription, nil
@@ -77,13 +79,13 @@ func (r *SubscriptionRepositoryImpl) List() ([]dto.SubscriptionDTO, error) {
 
 func (r *SubscriptionRepositoryImpl) Edit(data dto.SubscriptionDTO) (uint, error){
 	subscription := model.SubscriptionModel{
-		Model:    gorm.Model{ID: data.ID},
 		Name:     data.Name,
 		CoffeeLimit: data.CoffeeLimit,
 		Interval: data.Interval,
+		Period: data.Period,
 	}
 
-	query := r.db.Updates(&subscription)
+	query := r.db.Model(&subscription).Where("id = ?", data.ID).Updates(subscription)
 	if query.Error != nil {
 		return 0, query.Error
 	}

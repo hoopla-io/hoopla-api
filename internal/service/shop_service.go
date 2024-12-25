@@ -67,11 +67,12 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 		return response.NewErrorResponse(500, "Failed to create the shop."), nil
    	}
 
-	for _, coffeId := range *data.CoffeeIds {
+	for _, coffeId := range data.CoffeeIds {
 		if err := s.ShopCoffeeRepository.Store(shopId, coffeId); err != nil {
 			return response.NewErrorResponse(500, "Failed to associate coffee items with the shop."), nil
 		}
 	}
+
 	response := shop_response.StoreResponse{
 		ShopID: int(shopId),
 	}
@@ -97,7 +98,7 @@ func (s *ShopServiceImpl) Show(shopId uint) (interface{}, error) {
 		coffeeImage, _ := s.ImageRepository.GetImageById(uint(*coffee.ImageID))
 		coffeeImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", coffeeImage.FilePath, coffeeImage.FileName, coffeeImage.FileExt)
 		coffeeResponses = append(coffeeResponses, shop_response.Coffee{
-			ID:       coffee.CoffeeID,
+			ID:       int(coffee.ID),
 			Name:     *coffee.Name,
 			ImageUrl: coffeeImageUrl,
 		})
@@ -138,19 +139,22 @@ func (s *ShopServiceImpl) List() (interface{}, error) {
 }
 
 func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
-	fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
-	if err != nil {
-		return err
-	}
+	if data.File != nil {
+		fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
+		if err != nil {
+			return err
+		}
 
-	createImageDTO := dto.ImageDTO{
-		FileName: fileName,
-		FilePath: filePath,
-		FileExt: fileExt[1:],
-	}
-	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
-	if err != nil {
-		return err
+		createImageDTO := dto.ImageDTO{
+			FileName: fileName,
+			FilePath: filePath,
+			FileExt: fileExt[1:],
+		}
+		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
+		if err != nil {
+			return err
+		}
+		data.ImageId = imageId
 	}
 
 	editDTO := dto.ShopDTO{
@@ -158,7 +162,7 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 		CompanyID: int(data.CompanyID),
 		Name: data.Name,
 		Location: data.Location,
-		ImageID: int(imageId),
+		ImageID: data.ImageId,
 	}
 	if _, err := s.ShopRepository.Edit(editDTO); err != nil {
 		return err
@@ -169,7 +173,7 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 			return err
 		}
 
-		for _, coffeeId := range *data.CoffeeIds {
+		for _, coffeeId := range data.CoffeeIds {
 			if err := s.ShopCoffeeRepository.Store(data.ShopID, coffeeId); err != nil {
 				return err
 			}

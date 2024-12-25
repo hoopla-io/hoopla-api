@@ -65,13 +65,12 @@ func (r *CompanySocialRepositoryImpl) GetListByCompanyId(companyId uint) ([]dto.
 
 func (r *CompanySocialRepositoryImpl) Edit(data dto.CompanySocialDTO) (uint, error){
 	companySocial := model.CompanySocialModel{
-		Model:    gorm.Model{ID: data.ID},
 		CompanyID: data.CompanyID,
 		Platform:  data.Platform,
 		Url:       data.Url,
 	}
 
-	query := r.db.Updates(&companySocial)
+	query :=  r.db.Model(&companySocial).Where("id = ?", data.ID).Updates(companySocial)
 	if query.Error != nil {
 		return 0, query.Error
 	}

@@ -67,14 +67,13 @@ func (r *ShopWorktimeRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopWor
 
 func (r *ShopWorktimeRepositoryImpl) Edit(data dto.ShopWorktimeDTO) (uint, error){
 	shopWorktime := model.ShopWorkTimeModel{
-		Model:    gorm.Model{ID: data.ID},
 		ShopID:   data.ShopID,
 		DayRange: data.DayRange,
 		OpeningTime: data.OpeningTime,
 		ClosingTime: data.ClosingTime,
 	}
 
-	query := r.db.Updates(&shopWorktime)
+	query := r.db.Model(&shopWorktime).Where("id = ?", data.ID).Updates(shopWorktime)
 	if query.Error != nil {
 		return 0, query.Error
 	}

@@ -63,13 +63,12 @@ func (r *ShopRepositoryImpl) List() ([]dto.ShopDTO, error) {
 
 func (r *ShopRepositoryImpl) Edit(data dto.ShopDTO) (uint, error){
 	shop := model.ShopModel{
-		Model:    gorm.Model{ID: data.ID},
 		Name:     data.Name,
 		Location: data.Location,
 		ImageID: data.ImageID,
 	}
 
-	query := r.db.Updates(&shop)
+	query := r.db.Model(&shop).Where("id = ?", data.ID).Updates(shop)
 	if query.Error != nil {
 		return 0, query.Error
 	}

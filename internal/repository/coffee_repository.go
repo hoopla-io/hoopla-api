@@ -59,12 +59,11 @@ func (r *CoffeeRepositoryImpl) List() ([]dto.CoffeeDTO, error) {
 
 func (r *CoffeeRepositoryImpl) Edit(data dto.CoffeeDTO) (uint, error){
 	coffee := model.CoffeeModel{
-		Model:    gorm.Model{ID: data.ID},
 		Name:     data.Name,
 		ImageID: data.ImageID,
 	}
 
-	query := r.db.Updates(&coffee)
+	query := r.db.Model(&coffee).Where("id = ?", data.ID).Updates(coffee)
 	if query.Error != nil {
 		return 0, query.Error
 	}

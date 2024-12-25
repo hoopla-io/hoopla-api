@@ -8,6 +8,6 @@ type EditRequest struct {
 	Name        string                `form:"name"`
 	Location    string                `form:"location"`
 	File        *multipart.FileHeader `form:"file"`
-	ImageId     *int                  `form:"imageId"`
-	CoffeeIds   *[]uint               `form:"coffeeIds"`
+	ImageId     int                   `form:"imageId"`
+	CoffeeIds   []uint                `form:"coffeeIds"`
 }

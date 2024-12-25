@@ -2,12 +2,9 @@ package model
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type ShopWorkTimeModel struct {
-	gorm.Model
 	ID          uint      `gorm:"primaryKey;autoIncrement"`
 	ShopID      int       `gorm:"column:shop_id"`
 	DayRange    string    `gorm:"column:day_range"`
