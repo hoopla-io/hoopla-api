@@ -17,6 +17,7 @@ type Repository struct {
 	ShopWorktimeRepository
 	ShopPhoneRepository
 	CoffeeRepository
+	ShopCoffeeRepository
 	SubscriptionRepository
 }
 
@@ -30,6 +31,7 @@ func NewRepository(db *gorm.DB) *Repository {
 		ShopWorktimeRepository: NewShopWorktimeRepository(db),
 		ShopPhoneRepository: NewShopPhoneRepository(db),
 		CoffeeRepository: NewCoffeeRepository(db),
+		ShopCoffeeRepository: NewShopCoffeeRepository(db),
 		SubscriptionRepository: NewSubscriptionRepository(db),
 	}
 }
@@ -84,6 +86,12 @@ type CoffeeRepository interface {
 	GetById(coffeeId uint) (dto.CoffeeDTO, error)
 	List() ([]dto.CoffeeDTO, error)
 	Edit(data dto.CoffeeDTO) (uint, error)
+}
+
+type ShopCoffeeRepository interface {
+	Store(shopId uint, coffeeId uint) error
+	GetListByShopId(shopId uint) ([]dto.ShopCoffeeDTO, error)
+	DeleteByShopId(shopId uint) error
 }
 
 type SubscriptionRepository interface {

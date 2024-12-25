@@ -33,6 +33,7 @@ func NewService(repo *repository.Repository) *Service {
 			repo.ImageRepository,
 			repo.ShopWorktimeRepository,
 			repo.ShopPhoneRepository,
+			repo.ShopCoffeeRepository,
 		),
 		CoffeeService: NewCoffeeService(
 			repo.CoffeeRepository,

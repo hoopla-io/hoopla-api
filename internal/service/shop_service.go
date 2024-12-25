@@ -21,6 +21,7 @@ type ShopServiceImpl struct {
 	ImageRepository   repository.ImageRepository
 	ShopWorktimeRepository repository.ShopWorktimeRepository
 	ShopPhoneRepository repository.ShopPhoneRepository
+	ShopCoffeeRepository repository.ShopCoffeeRepository
 }
 
 func NewShopService(
@@ -28,19 +29,21 @@ func NewShopService(
 	ImageRepository repository.ImageRepository,
 	ShopWorktimeRepository repository.ShopWorktimeRepository,
 	ShopPhoneRepository repository.ShopPhoneRepository,
+	ShopCoffeeRepository repository.ShopCoffeeRepository,
 	) ShopService {
 	return &ShopServiceImpl{
 		ShopRepository: ShopRepository,
 		ImageRepository: ImageRepository,
 		ShopWorktimeRepository: ShopWorktimeRepository,
 		ShopPhoneRepository: ShopPhoneRepository,
+		ShopCoffeeRepository: ShopCoffeeRepository,
 	}
 }
 
 func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, error) {
 	fileName, filePath, fileExt, err := utils.ConvertAndSaveImage(data.File)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Invalid file upload. Please check the file and try again."), nil
 	}
 
 	createImageDTO := dto.ImageDTO{
@@ -50,7 +53,7 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 	}
 	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Unable to save image information. Please try again later."), nil
 	}
 
 	createShopDTO := dto.ShopDTO{
@@ -61,9 +64,14 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 	}
 	shopId, err := s.ShopRepository.Store(createShopDTO)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(500, "Failed to create the shop."), nil
    	}
 
+	for _, coffeId := range *data.CoffeeIds {
+		if err := s.ShopCoffeeRepository.Store(shopId, coffeId); err != nil {
+			return response.NewErrorResponse(500, "Failed to associate coffee items with the shop."), nil
+		}
+	}
 	response := shop_response.StoreResponse{
 		ShopID: int(shopId),
 	}
@@ -73,18 +81,35 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 func (s *ShopServiceImpl) Show(shopId uint) (interface{}, error) {
 	shop, err := s.ShopRepository.GetById(shopId)
 	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
+		return response.NewErrorResponse(404, "Shop not found. Please check the shop ID and try again."), nil
+	}
+
+	coffees, err := s.ShopCoffeeRepository.GetListByShopId(shopId)
+	if err != nil {
+		return nil, err
 	}
 
 	image, _ := s.ImageRepository.GetImageById(uint(shop.ImageID))
 	shopImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 
+	var coffeeResponses []shop_response.Coffee
+	for _, coffee := range coffees {
+		coffeeImage, _ := s.ImageRepository.GetImageById(uint(*coffee.ImageID))
+		coffeeImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", coffeeImage.FilePath, coffeeImage.FileName, coffeeImage.FileExt)
+		coffeeResponses = append(coffeeResponses, shop_response.Coffee{
+			ID:       coffee.CoffeeID,
+			Name:     *coffee.Name,
+			ImageUrl: coffeeImageUrl,
+		})
+	}
+
 	showResponse := shop_response.ShowResponse{
-		ID:     int(shop.ID),
+		ID:        int(shop.ID),
 		CompanyID: shop.CompanyID,
-		Name: shop.Name,
-		Location: shop.Location,
-		ImageUrl: shopImageUrl,
+		Name:      shop.Name,
+		Location:  shop.Location,
+		ImageUrl:  shopImageUrl,
+		Coffees:   coffeeResponses,
 	}
 
 	return showResponse, nil
@@ -138,6 +163,19 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 	if _, err := s.ShopRepository.Edit(editDTO); err != nil {
 		return err
 	}
+
+	if data.CoffeeIds != nil {
+		if err := s.ShopCoffeeRepository.DeleteByShopId(data.ShopID); err != nil {
+			return err
+		}
+
+		for _, coffeeId := range *data.CoffeeIds {
+			if err := s.ShopCoffeeRepository.Store(data.ShopID, coffeeId); err != nil {
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
