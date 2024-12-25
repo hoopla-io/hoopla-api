@@ -2,7 +2,6 @@ package model
 
 import "time"
 
-// UserSubscription связывает пользователя с подпиской
 type UserSubscription struct {
 	ID             uint      `gorm:"primaryKey"`
 	UserID         uint      `gorm:"not null"`
@@ -14,7 +13,6 @@ type UserSubscription struct {
 	Subscription SubscriptionModel `gorm:"foreignKey:SubscriptionID"`
 }
 
-// TableName задаёт имя таблицы в базе данных
 func (UserSubscription) TableName() string {
 	return "user_subscriptions"
 }

@@ -16,13 +16,16 @@ type Service struct {
 	AuthService
 	CompanyService
 	ShopService
+	SubscriptionService
+	UserSubscriptionService
 	CoffeeService
 	SubscriptionService
 }
 
 func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		AuthService: NewAuthService(repo.AuthRepository),
+		UserSubscriptionService: NewUserSubscriptionService(repo),
+		AuthService:             NewAuthService(repo.AuthRepository),
 		CompanyService: NewCompanyService(
 			repo.CompanyRepository,
 			repo.ImageRepository,
@@ -49,16 +52,16 @@ func NewService(repo *repository.Repository) *Service {
 
 type AuthService interface {
 	Login(data auth_request.LoginRequest) (interface{}, error)
-    ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
+	ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
 	ResendSms(data auth_request.ResendSmsRequest) (interface{}, error)
 }
 
 type CompanyService interface {
-	GetCompanyShopsList(data company_request.GetCompanyShopsRequest) (interface{}, error) 
+	GetCompanyShopsList(data company_request.GetCompanyShopsRequest) (interface{}, error)
 	Store(data company_request.StoreRequest) (interface{}, error)
 	Show(companyId uint) (interface{}, error)
 	List() (interface{}, error)
-	Edit(data company_request.EditRequest) error 
+	Edit(data company_request.EditRequest) error
 	StoreCompanySocial(data company_social_request.StoreRequest) (interface{}, error)
 	ShowCompanySocial(socialId uint) (interface{}, error)
 	ListCompanySocials(companyId uint) (interface{}, error)
@@ -85,12 +88,12 @@ type CoffeeService interface {
 	Store(data coffee_request.StoreRequest) (interface{}, error)
 	Show(coffeeId uint) (interface{}, error)
 	List() (interface{}, error)
-	Edit(data coffee_request.EditRequest) error 
+	Edit(data coffee_request.EditRequest) error
 }
 
 type SubscriptionService interface {
 	Store(data subscription_request.StoreRequest) (interface{}, error)
 	Show(coffeeId uint) (interface{}, error)
 	List() (interface{}, error)
-	Edit(data subscription_request.EditRequest) error 
+	Edit(data subscription_request.EditRequest) error
 }

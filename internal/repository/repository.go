@@ -16,23 +16,27 @@ type Repository struct {
 	ShopRepository
 	ShopWorktimeRepository
 	ShopPhoneRepository
+	ShopSocialRepository
+	SubscriptionRepository
+	UserSubscriptionRepository
 	CoffeeRepository
 	ShopCoffeeRepository
-	SubscriptionRepository
 }
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		AuthRepository: NewAuthRepository(db),
-		ImageRepository: NewImageRepository(db),
-		CompanyRepository: NewCompanyRepository(db),
-		CompanySocialRepository: NewCompanySocialRepository(db),
-		ShopRepository: NewShopRepository(db),
-		ShopWorktimeRepository: NewShopWorktimeRepository(db),
-		ShopPhoneRepository: NewShopPhoneRepository(db),
-		CoffeeRepository: NewCoffeeRepository(db),
-		ShopCoffeeRepository: NewShopCoffeeRepository(db),
-		SubscriptionRepository: NewSubscriptionRepository(db),
+		AuthRepository:             NewAuthRepository(db),
+		ImageRepository:            NewImageRepository(db),
+		CompanyRepository:          NewCompanyRepository(db),
+		ShopRepository:             NewShopRepository(db),
+		ShopWorkTimeRepository:     NewShopWorktimeRepository(db),
+		ShopPhoneRepository:        NewShopPhoneRepository(db),
+		ShopSocialRepository:       NewShopSocialRepository(db),
+		SubscriptionRepository:     NewSubscriptionRepository(db),
+		UserSubscriptionRepository: NewUserSubscriptionRepository(db),
+		CompanySocialRepository:    NewCompanySocialRepository(db),
+		CoffeeRepository:           NewCoffeeRepository(db),
+		ShopCoffeeRepository:       NewShopCoffeeRepository(db),
 	}
 }
 
@@ -48,7 +52,7 @@ type ImageRepository interface {
 
 type CompanyRepository interface {
 	Store(data dto.CompanyDTO) (uint, error)
-	GetById(categoryId uint) (dto.CompanyDTO, error) 
+	GetById(categoryId uint) (dto.CompanyDTO, error)
 	List() ([]dto.CompanyDTO, error)
 	Edit(data dto.CompanyDTO) (uint, error)
 }
@@ -82,6 +86,11 @@ type ShopPhoneRepository interface {
 	Edit(data dto.ShopPhoneDTO) (uint, error)
 }
 
+type ShopSocialRepository interface {
+	CreateShopSocial(data dto.ShopSocialDTO) (*dto.ShopSocialDTO, error)
+	GetShopSocialByShopId(shopId uint) ([]dto.ShopSocialDTO, error)
+}
+
 type CoffeeRepository interface {
 	Store(data dto.CoffeeDTO) (uint, error)
 	GetById(coffeeId uint) (dto.CoffeeDTO, error)
@@ -96,7 +105,7 @@ type ShopCoffeeRepository interface {
 }
 
 type SubscriptionRepository interface {
-	GetAllSubscriptions(ctx context.Context) ([]model.SubscriptionModel, error)         // Получить все подписки
+	GetAllSubscriptions(ctx context.Context) ([]model.SubscriptionModel, error) // Получить все подписки
 	GetSubscriptionByID(ctx context.Context, id uint) (*model.SubscriptionModel, error)
 	Store(data dto.SubscriptionDTO) (uint, error)
 	GetById(coffeeId uint) (dto.SubscriptionDTO, error)

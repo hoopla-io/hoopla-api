@@ -25,8 +25,40 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				auth.POST("/resend-sms", controller.Api.AuthController.ResendSms)
 			}
 
-			company := v1.Group("/company") 
+			company := v1.Group("/company")
 			{
+				company.GET("/get", controller.CompanyController.GetCompany)
+				company.GET("/get-list", controller.CompanyController.GetList)
+			}
+
+			subscriptions := v1.Group("/subscriptions")
+			{
+				subscriptions.GET("/", controller.SubscriptionController.GetAllSubscriptions)
+				subscriptions.GET("/:id", controller.SubscriptionController.GetSubscriptionByID)
+			}
+
+			userSubscriptions := v1.Group("/user-subscriptions")
+			{
+				userSubscriptions.GET("/:user_id", controller.UserSubscriptionController.GetUserActiveSubscription)
+				userSubscriptions.POST("/", controller.UserSubscriptionController.AssignSubscriptionToUser)
+			}
+
+			// shops := v1.Group("/shop")
+			// {
+			// 	// shops.POST("/create", controller.ShopController.CreateShop)
+			// }
+
+			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
+	}
+
+	dashboard := api.Group("/dashboard")
+	{
+		v1 := api.Group("/v1")
+		{
+			company := dashboard.Group("/company")
+			{
+				company.POST("/create", controller.CompanyController.CreateCompany)
 				company.GET("/list", controller.Api.CompanyController.GetCompanyList)
 				company.POST("/shops", controller.Api.CompanyController.GetCompanyShopsList)
 			}
@@ -35,12 +67,12 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 			{
 				shop.POST("/detail", controller.Api.ShopController.GetShopDetails)
 			}
-			
+
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}
 	}
 
-	dashboard := router.Group("/dashboard") 
+	dashboard := router.Group("/dashboard")
 	{
 		v1 := dashboard.Group("/v1")
 		{
@@ -67,7 +99,7 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				shop.GET("/list", controller.Dashboard.ShopController.List)
 				shop.PUT("/edit", controller.Dashboard.ShopController.Edit)
 
-				worktime := shop.Group("/worktime") 
+				worktime := shop.Group("/worktime")
 				{
 					worktime.POST("/store", controller.Dashboard.ShopController.StoreShopWorktime)
 					worktime.POST("/list", controller.Dashboard.ShopController.ListShopWorktimes)
