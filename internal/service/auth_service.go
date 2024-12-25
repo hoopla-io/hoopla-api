@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"github.com/qahvazor/qahvazor/pkg/itvmsq"
 	"log"
 	"time"
 
@@ -14,12 +15,10 @@ import (
 	"github.com/qahvazor/qahvazor/app/http/response"
 	auth_response "github.com/qahvazor/qahvazor/app/http/response/auth"
 	"github.com/qahvazor/qahvazor/internal/dto"
-	"github.com/qahvazor/qahvazor/internal/pkg"
 	"github.com/qahvazor/qahvazor/internal/repository"
 	"github.com/qahvazor/qahvazor/utils"
 	"golang.org/x/exp/rand"
 )
-
 
 type AuthServiceImpl struct {
 	AuthRepository repository.AuthRepository
@@ -29,7 +28,7 @@ type AuthServiceImpl struct {
 func NewAuthService(AuthRepository repository.AuthRepository) AuthService {
 	return &AuthServiceImpl{
 		AuthRepository: AuthRepository,
-		sessionCache: cache.New(10*time.Minute, 20*time.Minute),
+		sessionCache:   cache.New(10*time.Minute, 20*time.Minute),
 	}
 }
 
@@ -40,17 +39,17 @@ func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (interface{}, er
 	sessionId := md5.Sum([]byte(data.PhoneNumber + uniqueId))
 	sessionIdStr := fmt.Sprintf("%x", sessionId)
 	session := dto.SessionDTO{
-		PhoneNumber: data.PhoneNumber,
+		PhoneNumber:    data.PhoneNumber,
 		MobileProvider: mobileProvider,
 		Session: dto.Session{
-			Attempt: 0,
-			Code: rand.Intn(90000) + 10000,
+			Attempt:   0,
+			Code:      rand.Intn(90000) + 10000,
 			ExpiresAt: int(time.Now().Unix()) + 90,
 		},
 	}
-    s.sessionCache.Set(sessionIdStr, session, 10*time.Minute)
+	s.sessionCache.Set(sessionIdStr, session, 10*time.Minute)
 
-	err := pkg.SendCode(mobileProvider, data.PhoneNumber, session.Session.Code)
+	err := itvmsq.SendCode(mobileProvider, data.PhoneNumber, session.Session.Code)
 	if err != nil {
 		log.Printf("Error sending SMS: %v", err)
 		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
@@ -64,7 +63,7 @@ func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (interface{}, er
 	return response, nil
 }
 
-func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error){
+func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error) {
 	session, found := s.sessionCache.Get(data.SessionID)
 	sessionData, ok := session.(dto.SessionDTO)
 	if !ok {
@@ -87,13 +86,13 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (inter
 
 	if user == nil {
 		createUserData := dto.UserDTO{
-       		PhoneNumber: 	sessionData.PhoneNumber,               
+			PhoneNumber:    sessionData.PhoneNumber,
 			MobileProvider: sessionData.MobileProvider,
-   		}
+		}
 		user, err = s.AuthRepository.CreateUser(createUserData)
 		if err != nil {
 			return response.NewErrorResponse(500, "Try later!"), nil
-    	}
+		}
 	}
 
 	expireAt := time.Now().Add(10 * time.Minute).Unix()
@@ -112,8 +111,8 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (inter
 	response := auth_response.ConfirmSmsResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		ExpireAt:  expireAt * 1000, 
-		PhoneNumber: user.PhoneNumber,
+		ExpireAt:     expireAt * 1000,
+		PhoneNumber:  user.PhoneNumber,
 	}
 	return response, nil
 }
@@ -130,13 +129,13 @@ func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (interfa
 
 	// Update session with new attempt, verification code, and expiration time
 	sessionData.Session.Attempt = sessionData.Session.Attempt + 1
-	sessionData.Session.Code = rand.Intn(90000) + 10000 
-	sessionData.Session.ExpiresAt = int(time.Now().Unix()) + 90 
+	sessionData.Session.Code = rand.Intn(90000) + 10000
+	sessionData.Session.ExpiresAt = int(time.Now().Unix()) + 90
 
 	sessionExpiration := time.Duration(90 * time.Second)
 	s.sessionCache.Set(data.SessionID, sessionData, sessionExpiration)
 
-	err := pkg.SendCode(sessionData.MobileProvider, sessionData.PhoneNumber, sessionData.Session.Code)
+	err := itvmsq.SendCode(sessionData.MobileProvider, sessionData.PhoneNumber, sessionData.Session.Code)
 	if err != nil {
 		log.Printf("Error sending SMS: %v", err)
 		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
@@ -148,4 +147,4 @@ func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (interfa
 		SessionExpiresAt: int64(sessionData.Session.ExpiresAt),
 	}
 	return response, nil
-} 
+}

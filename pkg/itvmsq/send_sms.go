@@ -1,4 +1,4 @@
-package pkg
+package itvmsq
 
 import (
 	"bytes"
@@ -27,15 +27,15 @@ func SendCode(mobileProvider, phoneNumber string, code int) error {
 	}
 
 	client := &http.Client{}
-    resp, err := client.Post("https://msq.itv.uz/api/v1/send", "application/json", bytes.NewBuffer(jsonPayload))
-    if err != nil {
-        return fmt.Errorf("failed to send POST request: %w", err)
-    }
-    defer resp.Body.Close()
+	resp, err := client.Post("https://msq.itv.uz/api/v1/send", "application/json", bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return fmt.Errorf("failed to send POST request: %w", err)
+	}
+	defer resp.Body.Close()
 
-    if resp.StatusCode != http.StatusOK {
-        return fmt.Errorf("result: %d", resp.StatusCode)
-    }
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("result: %d", resp.StatusCode)
+	}
 
-    return nil
+	return nil
 }
