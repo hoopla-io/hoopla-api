@@ -82,9 +82,9 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 			subscription := v1.Group("/subscription")
 			{
 				subscription.POST("/store", controller.Dashboard.SubscriptionController.Store)
-				coffee.GET("/show/:coffee_id", controller.Dashboard.SubscriptionController.Show)
-				coffee.GET("/list", controller.Dashboard.SubscriptionController.List)
-				coffee.PUT("/edit", controller.Dashboard.SubscriptionController.Edit)
+				subscription.GET("/show/:subscription_id", controller.Dashboard.SubscriptionController.Show)
+				subscription.GET("/list", controller.Dashboard.SubscriptionController.List)
+				subscription.PUT("/edit", controller.Dashboard.SubscriptionController.Edit)
 			}
 		}
 	}
