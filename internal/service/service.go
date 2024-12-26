@@ -8,7 +8,6 @@ import (
 	shop_request "github.com/qahvazor/qahvazor/app/http/request/shop"
 	shop_phone_request "github.com/qahvazor/qahvazor/app/http/request/shop/phone"
 	shop_worktime_request "github.com/qahvazor/qahvazor/app/http/request/shop/worktime"
-	subscription_request "github.com/qahvazor/qahvazor/app/http/request/subscription"
 	"github.com/qahvazor/qahvazor/internal/repository"
 )
 
@@ -88,11 +87,4 @@ type CoffeeService interface {
 	Show(coffeeId uint) (interface{}, error)
 	List() (interface{}, error)
 	Edit(data coffee_request.EditRequest) error
-}
-
-type SubscriptionService interface {
-	Store(data subscription_request.StoreRequest) (interface{}, error)
-	Show(coffeeId uint) (interface{}, error)
-	List() (interface{}, error)
-	Edit(data subscription_request.EditRequest) error
 }
