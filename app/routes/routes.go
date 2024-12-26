@@ -27,45 +27,20 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 
 			company := v1.Group("/company")
 			{
-				company.GET("/get", controller.CompanyController.GetCompany)
-				company.GET("/get-list", controller.CompanyController.GetList)
+				company.GET("/list", controller.Api.CompanyController.GetCompanyList)
+				company.GET("/shops", controller.Api.CompanyController.GetCompanyShopsList)
 			}
 
 			subscriptions := v1.Group("/subscriptions")
 			{
-				subscriptions.GET("/", controller.SubscriptionController.GetAllSubscriptions)
-				subscriptions.GET("/:id", controller.SubscriptionController.GetSubscriptionByID)
+				subscriptions.GET("/", controller.Api.SubscriptionController.GetAllSubscriptions)
+				subscriptions.GET("/:id", controller.Api.SubscriptionController.GetSubscriptionByID)
 			}
 
 			userSubscriptions := v1.Group("/user-subscriptions")
 			{
-				userSubscriptions.GET("/:user_id", controller.UserSubscriptionController.GetUserActiveSubscription)
-				userSubscriptions.POST("/", controller.UserSubscriptionController.AssignSubscriptionToUser)
-			}
-
-			// shops := v1.Group("/shop")
-			// {
-			// 	// shops.POST("/create", controller.ShopController.CreateShop)
-			// }
-
-			// v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-		}
-	}
-
-	dashboard := api.Group("/dashboard")
-	{
-		v1 := api.Group("/v1")
-		{
-			company := dashboard.Group("/company")
-			{
-				company.POST("/create", controller.CompanyController.CreateCompany)
-				company.GET("/list", controller.Api.CompanyController.GetCompanyList)
-				company.POST("/shops", controller.Api.CompanyController.GetCompanyShopsList)
-			}
-
-			shop := v1.Group("/shop")
-			{
-				shop.POST("/detail", controller.Api.ShopController.GetShopDetails)
+				userSubscriptions.GET("/:user_id", controller.Api.UserSubscriptionController.GetUserActiveSubscription)
+				userSubscriptions.POST("/", controller.Api.UserSubscriptionController.AssignSubscriptionToUser)
 			}
 
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

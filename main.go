@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	"github.com/qahvazor/qahvazor/app/config"
 	"github.com/qahvazor/qahvazor/pkg/databasego"
-	"log"
 
 	"github.com/qahvazor/qahvazor/app/http/controller"
 	"github.com/qahvazor/qahvazor/app/routes"
@@ -27,7 +28,6 @@ func main() {
 	controller := controller.NewController(service)
 
 	router := routes.NewRoute(controller)
-	//router.Static("/uploads", "./uploads")
 
 	srv := new(cmd.Server)
 	if err := srv.Run(appCfg, router); err != nil {

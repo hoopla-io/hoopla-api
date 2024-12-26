@@ -7,8 +7,6 @@ import (
 )
 
 type Controller struct {
-	SubscriptionController
-	UserSubscriptionController
 	Api
 	Dashboard
 }
@@ -17,6 +15,8 @@ type Api struct {
 	AuthController    *api.AuthController
 	CompanyController *api.CompanyController
 	ShopController    *api.ShopController
+	SubscriptionController *api.SubscriptionController
+	UserSubscriptionController *api.UserSubscriptionController
 }
 
 type Dashboard struct {
@@ -28,12 +28,12 @@ type Dashboard struct {
 
 func NewController(service *service.Service) *Controller {
 	return &Controller{
-		SubscriptionController:     *NewSubscriptionController(service.SubscriptionService),
-		UserSubscriptionController: *NewUserSubscriptionController(service.UserSubscriptionService),
 		Api: Api{
 			AuthController:    api.NewAuthController(service.AuthService),
 			CompanyController: api.NewCompanyController(service.CompanyService),
 			ShopController:    api.NewShopController(service.ShopService),
+			SubscriptionController: api.NewSubscriptionController(service.SubscriptionService),
+			UserSubscriptionController: api.NewUserSubscriptionController(service.UserSubscriptionService),
 		},
 		Dashboard: Dashboard{
 			CompanyController:      dashboard.NewCompanyController(service.CompanyService),

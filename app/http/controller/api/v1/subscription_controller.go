@@ -1,9 +1,10 @@
-package controller
+package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/qahvazor/qahvazor/internal/service"
 )
