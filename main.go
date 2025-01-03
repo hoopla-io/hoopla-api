@@ -21,7 +21,10 @@ import (
 func main() {
 	appCfg := config.NewAppConfig()
 	dbCfg := config.NewDatabaseConfig()
-	db, _ := databasego.NewDatabase(*dbCfg)
+	db, err := databasego.NewDatabase(*dbCfg)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	repository := repository.NewRepository(db)
 	service := service.NewService(repository)
