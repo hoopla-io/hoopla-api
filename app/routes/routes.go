@@ -31,6 +31,11 @@ func NewRoute(controller *controller.Controller) *gin.Engine {
 				company.GET("/shops", controller.Api.CompanyController.GetCompanyShopsList)
 			}
 
+			shop := v1.Group("/shop")
+			{
+				shop.GET("/detail", controller.Api.ShopController.GetShopDetails)
+			}
+
 			subscriptions := v1.Group("/subscriptions")
 			{
 				subscriptions.GET("/", controller.Api.SubscriptionController.GetAllSubscriptions)

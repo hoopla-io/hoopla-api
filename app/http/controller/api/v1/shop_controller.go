@@ -22,12 +22,12 @@ func NewShopController(service service.ShopService) *ShopController {
 // @Tags Shop
 // @Accept  json
 // @Produce  json
-// @Param data body shop_request.GetShopDetailsRequest true "Get Shop Details Request"
+// @Param shopId query int true "Shop ID"
 // @Success 200 {array} shop_response.GetShopDetailsResponse "Shop details response"
-// @Router /shop/detail [post]
+// @Router /shop/detail [get]
 func (ctr *ShopController) GetShopDetails(ctx *gin.Context) {
 	getShopDetailsRequest := shop_request.GetShopDetailsRequest{}
-	if err := ctx.ShouldBind(&getShopDetailsRequest); err != nil {
+	if err := ctx.ShouldBindQuery(&getShopDetailsRequest); err != nil {
 		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
 		return
 	}

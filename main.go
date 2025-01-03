@@ -28,6 +28,7 @@ func main() {
 	controller := controller.NewController(service)
 
 	router := routes.NewRoute(controller)
+	router.Static("/uploads", "./uploads")
 
 	srv := new(cmd.Server)
 	if err := srv.Run(appCfg, router); err != nil {

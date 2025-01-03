@@ -135,7 +135,7 @@ func (s *CompanyServiceImpl) List() (interface{}, error) {
 	var response []company_response.ListResponse
 	for _, item := range data {
 		image, _ := s.ImageRepository.GetImageById(uint(item.ImageID))
-		companyImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
+		companyImageUrl := fmt.Sprintf("http://192.168.31.72:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 		response = append(response, company_response.ListResponse{
 			ID:          int(item.ID),
 			Name:        item.Name,

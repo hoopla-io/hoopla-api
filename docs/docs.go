@@ -147,7 +147,7 @@ const docTemplate = `{
             }
         },
         "/company/shops": {
-            "post": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
@@ -159,13 +159,11 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "description": "Get Company Shops Request",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/company_request.GetCompanyShopsRequest"
-                        }
+                        "type": "integer",
+                        "description": "Company ID",
+                        "name": "companyId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -182,7 +180,7 @@ const docTemplate = `{
             }
         },
         "/shop/detail": {
-            "post": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
@@ -194,13 +192,11 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "description": "Get Shop Details Request",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/shop_request.GetShopDetailsRequest"
-                        }
+                        "type": "integer",
+                        "description": "Shop ID",
+                        "name": "shopId",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -290,14 +286,6 @@ const docTemplate = `{
                 }
             }
         },
-        "company_request.GetCompanyShopsRequest": {
-            "type": "object",
-            "properties": {
-                "companyId": {
-                    "type": "integer"
-                }
-            }
-        },
         "company_response.GetCompanyShopsResponse": {
             "type": "object",
             "properties": {
@@ -352,14 +340,6 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
-                }
-            }
-        },
-        "shop_request.GetShopDetailsRequest": {
-            "type": "object",
-            "properties": {
-                "shopId": {
-                    "type": "integer"
                 }
             }
         },
