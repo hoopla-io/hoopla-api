@@ -16,7 +16,7 @@ import (
 // @title Qahvazor | Api
 // @version 1.0.0
 // @contact.email davronbekov.otabek@gmail.com
-// @host 192.168.31.72:8000
+// @host api.qahvazor.uz
 // @BasePath /api/v1
 func main() {
 	appCfg := config.NewAppConfig()

@@ -146,7 +146,7 @@ definitions:
       worktimeId:
         type: integer
     type: object
-host: 192.168.31.72:8000
+host: api.qahvazor.uz
 info:
   contact:
     email: davronbekov.otabek@gmail.com

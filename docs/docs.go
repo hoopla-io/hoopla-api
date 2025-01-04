@@ -446,7 +446,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "192.168.31.72:8000",
+	Host:             "api.qahvazor.uz",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Qahvazor | Api",
