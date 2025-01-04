@@ -6,6 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type ShopRepository interface {
+	GetByCompanyId(companyId uint) ([]dto.ShopDTO, error)
+	Store(data dto.ShopDTO) (uint, error)
+	GetById(shopId uint) (dto.ShopDTO, error)
+	List() ([]dto.ShopDTO, error)
+	Edit(data dto.ShopDTO) (uint, error)
+}
+
 type ShopRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -31,9 +39,9 @@ func (r *ShopRepositoryImpl) Store(data dto.ShopDTO) (uint, error) {
 	var shop dto.ShopDTO
 
 	query := r.db.Create(&model.ShopModel{
-		Name: data.Name,
-		Location: data.Location,
-		ImageID: data.ImageID,
+		Name:      data.Name,
+		Location:  data.Location,
+		ImageID:   data.ImageID,
 		CompanyID: data.CompanyID,
 	}).Scan(&shop)
 	if query.Error != nil {
@@ -74,11 +82,11 @@ func (r *ShopRepositoryImpl) List() ([]dto.ShopDTO, error) {
 	return shops, nil
 }
 
-func (r *ShopRepositoryImpl) Edit(data dto.ShopDTO) (uint, error){
+func (r *ShopRepositoryImpl) Edit(data dto.ShopDTO) (uint, error) {
 	shop := model.ShopModel{
 		Name:     data.Name,
 		Location: data.Location,
-		ImageID: data.ImageID,
+		ImageID:  data.ImageID,
 	}
 
 	query := r.db.Model(&shop).Where("id = ?", data.ID).Updates(shop)

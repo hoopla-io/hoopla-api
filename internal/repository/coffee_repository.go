@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type CoffeeRepository interface {
+	Store(data dto.CoffeeDTO) (uint, error)
+	GetById(coffeeId uint) (dto.CoffeeDTO, error)
+	List() ([]dto.CoffeeDTO, error)
+	Edit(data dto.CoffeeDTO) (uint, error)
+}
+
 type CoffeeRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -18,7 +25,7 @@ func (r *CoffeeRepositoryImpl) Store(data dto.CoffeeDTO) (uint, error) {
 	var coffee dto.CoffeeDTO
 
 	query := r.db.Create(&model.CoffeeModel{
-		Name: data.Name,
+		Name:    data.Name,
 		ImageID: data.ImageID,
 	}).Scan(&coffee)
 	if query.Error != nil {
@@ -38,9 +45,9 @@ func (r *CoffeeRepositoryImpl) GetById(coffeeId uint) (dto.CoffeeDTO, error) {
 	}
 
 	coffee := dto.CoffeeDTO{
-		ID:        coffeeModel.ID,
-		Name:      coffeeModel.Name,
-		ImageID:   coffeeModel.ImageID,
+		ID:      coffeeModel.ID,
+		Name:    coffeeModel.Name,
+		ImageID: coffeeModel.ImageID,
 	}
 
 	return coffee, nil
@@ -57,9 +64,9 @@ func (r *CoffeeRepositoryImpl) List() ([]dto.CoffeeDTO, error) {
 	return coffees, nil
 }
 
-func (r *CoffeeRepositoryImpl) Edit(data dto.CoffeeDTO) (uint, error){
+func (r *CoffeeRepositoryImpl) Edit(data dto.CoffeeDTO) (uint, error) {
 	coffee := model.CoffeeModel{
-		Name:     data.Name,
+		Name:    data.Name,
 		ImageID: data.ImageID,
 	}
 

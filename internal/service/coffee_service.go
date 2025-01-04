@@ -11,16 +11,22 @@ import (
 	"github.com/qahvazor/qahvazor/utils"
 )
 
+type CoffeeService interface {
+	Store(data coffee_request.StoreRequest) (interface{}, error)
+	Show(coffeeId uint) (interface{}, error)
+	List() (interface{}, error)
+	Edit(data coffee_request.EditRequest) error
+}
 
 type CoffeeServiceImpl struct {
 	CoffeeRepository repository.CoffeeRepository
-	ImageRepository   repository.ImageRepository
+	ImageRepository  repository.ImageRepository
 }
 
 func NewCoffeeService(
 	CoffeeRepository repository.CoffeeRepository,
-	ImageRepository  repository.ImageRepository,
-	) CoffeeService {
+	ImageRepository repository.ImageRepository,
+) CoffeeService {
 	return &CoffeeServiceImpl{
 		CoffeeRepository: CoffeeRepository,
 		ImageRepository:  ImageRepository,
@@ -36,7 +42,7 @@ func (s *CoffeeServiceImpl) Store(data coffee_request.StoreRequest) (interface{}
 	createImageDTO := dto.ImageDTO{
 		FileName: fileName,
 		FilePath: filePath,
-		FileExt: fileExt[1:],
+		FileExt:  fileExt[1:],
 	}
 	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 	if err != nil {
@@ -44,13 +50,13 @@ func (s *CoffeeServiceImpl) Store(data coffee_request.StoreRequest) (interface{}
 	}
 
 	createCoffeeDTO := dto.CoffeeDTO{
-		Name: data.Name,
+		Name:    data.Name,
 		ImageID: int(imageId),
 	}
 	coffeeId, err := s.CoffeeRepository.Store(createCoffeeDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
-   	}
+	}
 
 	response := coffee_response.StoreResponse{
 		CoffeeID: int(coffeeId),
@@ -87,9 +93,9 @@ func (s *CoffeeServiceImpl) List() (interface{}, error) {
 		image, _ := s.ImageRepository.GetImageById(uint(item.ImageID))
 		coffeeImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 		response = append(response, coffee_response.ListResponse{
-			ID:          int(item.ID),
-			Name:        item.Name,
-			ImageUrl:    coffeeImageUrl,
+			ID:       int(item.ID),
+			Name:     item.Name,
+			ImageUrl: coffeeImageUrl,
 		})
 	}
 
@@ -106,7 +112,7 @@ func (s *CoffeeServiceImpl) Edit(data coffee_request.EditRequest) error {
 		createImageDTO := dto.ImageDTO{
 			FileName: fileName,
 			FilePath: filePath,
-			FileExt: fileExt[1:],
+			FileExt:  fileExt[1:],
 		}
 		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 		if err != nil {
@@ -116,11 +122,11 @@ func (s *CoffeeServiceImpl) Edit(data coffee_request.EditRequest) error {
 	}
 
 	editDTO := dto.CoffeeDTO{
-		ID: uint(data.CoffeeID),
-		Name: data.Name,
+		ID:      uint(data.CoffeeID),
+		Name:    data.Name,
 		ImageID: data.ImageId,
 	}
-	
+
 	if _, err := s.CoffeeRepository.Edit(editDTO); err != nil {
 		return err
 	}

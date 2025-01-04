@@ -20,6 +20,12 @@ import (
 	"golang.org/x/exp/rand"
 )
 
+type AuthService interface {
+	Login(data auth_request.LoginRequest) (interface{}, error)
+	ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
+	ResendSms(data auth_request.ResendSmsRequest) (interface{}, error)
+}
+
 type AuthServiceImpl struct {
 	AuthRepository repository.AuthRepository
 	sessionCache   *cache.Cache

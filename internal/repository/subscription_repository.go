@@ -8,6 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
+type SubscriptionRepository interface {
+	GetAllSubscriptions(ctx context.Context) ([]model.SubscriptionModel, error) // Получить все подписки
+	GetSubscriptionByID(ctx context.Context, id uint) (*model.SubscriptionModel, error)
+	Store(data dto.SubscriptionDTO) (uint, error)
+	GetById(coffeeId uint) (dto.SubscriptionDTO, error)
+	List() ([]dto.SubscriptionDTO, error)
+	Edit(data dto.SubscriptionDTO) error
+}
+
 type SubscriptionRepositoryImpl struct {
 	db *gorm.DB
 }

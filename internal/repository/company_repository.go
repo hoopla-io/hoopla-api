@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type CompanyRepository interface {
+	Store(data dto.CompanyDTO) (uint, error)
+	GetById(categoryId uint) (dto.CompanyDTO, error)
+	List() ([]dto.CompanyDTO, error)
+	Edit(data dto.CompanyDTO) (uint, error)
+}
+
 type CompanyRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -18,9 +25,9 @@ func (r *CompanyRepositoryImpl) Store(data dto.CompanyDTO) (uint, error) {
 	var company dto.CompanyDTO
 
 	query := r.db.Create(&model.CompanyModel{
-		Name: data.Name,
+		Name:        data.Name,
 		Description: data.Description,
-		ImageID: data.ImageID,
+		ImageID:     data.ImageID,
 	}).Scan(&company)
 	if query.Error != nil {
 		return 0, query.Error
@@ -39,8 +46,8 @@ func (r *CompanyRepositoryImpl) GetById(shopId uint) (dto.CompanyDTO, error) {
 	}
 
 	companies := dto.CompanyDTO{
-		ID:        companyModel.ID,
-		Name:      companyModel.Name,
+		ID:          companyModel.ID,
+		Name:        companyModel.Name,
 		Description: companyModel.Description,
 		ImageID:     companyModel.ImageID,
 	}
@@ -59,15 +66,15 @@ func (r *CompanyRepositoryImpl) List() ([]dto.CompanyDTO, error) {
 	return companies, nil
 }
 
-func (r *CompanyRepositoryImpl) Edit(data dto.CompanyDTO) (uint, error){
+func (r *CompanyRepositoryImpl) Edit(data dto.CompanyDTO) (uint, error) {
 	company := model.CompanyModel{
-		Model:    gorm.Model{ID: data.ID},
-		Name:     data.Name,
+		Model:       gorm.Model{ID: data.ID},
+		Name:        data.Name,
 		Description: data.Description,
-		ImageID: data.ImageID,
+		ImageID:     data.ImageID,
 	}
 
-	query :=  r.db.Model(&company).Where("id = ?", data.ID).Updates(company)
+	query := r.db.Model(&company).Where("id = ?", data.ID).Updates(company)
 	if query.Error != nil {
 		return 0, query.Error
 	}

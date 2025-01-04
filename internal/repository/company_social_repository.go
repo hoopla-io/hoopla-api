@@ -8,6 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type CompanySocialRepository interface {
+	Store(data dto.CompanySocialDTO) (uint, error)
+	GetById(socialId uint) (dto.CompanySocialDTO, error)
+	GetListByCompanyId(companyId uint) ([]dto.CompanySocialDTO, error)
+	Edit(data dto.CompanySocialDTO) (uint, error)
+}
+
 type CompanySocialRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -21,8 +28,8 @@ func (r *CompanySocialRepositoryImpl) Store(data dto.CompanySocialDTO) (uint, er
 
 	query := r.db.Create(&model.CompanySocialModel{
 		CompanyID: data.CompanyID,
-		Platform: data.Platform,
-		Url: data.Url,
+		Platform:  data.Platform,
+		Url:       data.Url,
 	}).Scan(&companySocial)
 	if query.Error != nil {
 		return 0, query.Error
@@ -63,14 +70,14 @@ func (r *CompanySocialRepositoryImpl) GetListByCompanyId(companyId uint) ([]dto.
 	return companySocials, nil
 }
 
-func (r *CompanySocialRepositoryImpl) Edit(data dto.CompanySocialDTO) (uint, error){
+func (r *CompanySocialRepositoryImpl) Edit(data dto.CompanySocialDTO) (uint, error) {
 	companySocial := model.CompanySocialModel{
 		CompanyID: data.CompanyID,
 		Platform:  data.Platform,
 		Url:       data.Url,
 	}
 
-	query :=  r.db.Model(&companySocial).Where("id = ?", data.ID).Updates(companySocial)
+	query := r.db.Model(&companySocial).Where("id = ?", data.ID).Updates(companySocial)
 	if query.Error != nil {
 		return 0, query.Error
 	}
