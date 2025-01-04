@@ -8,6 +8,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type AuthRepository interface {
+	GetByPhoneNumber(phoneNumber string) (*dto.UserDTO, error)
+	CreateUser(data dto.UserDTO) (*dto.UserDTO, error)
+}
+
 type AuthRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -26,9 +31,9 @@ func (r *AuthRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*dto.UserDTO,
 	}
 
 	return &dto.UserDTO{
-		ID: int(userModel.ID),
-		Name: userModel.Name,
-		PhoneNumber: userModel.PhoneNumber,
+		ID:             int(userModel.ID),
+		Name:           userModel.Name,
+		PhoneNumber:    userModel.PhoneNumber,
 		MobileProvider: userModel.MobileProvider,
 	}, nil
 }
@@ -37,7 +42,7 @@ func (r *AuthRepositoryImpl) CreateUser(data dto.UserDTO) (*dto.UserDTO, error) 
 	var createUser dto.UserDTO
 
 	query := r.db.Create(&model.UserModel{
-		PhoneNumber: data.PhoneNumber,
+		PhoneNumber:    data.PhoneNumber,
 		MobileProvider: data.MobileProvider,
 	}).Scan(&createUser)
 	if query.Error != nil {

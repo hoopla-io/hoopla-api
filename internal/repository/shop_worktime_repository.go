@@ -8,6 +8,13 @@ import (
 	"gorm.io/gorm"
 )
 
+type ShopWorkTimeRepository interface {
+	Store(data dto.ShopWorktimeDTO) (uint, error)
+	GetById(worktimeId uint) (dto.ShopWorktimeDTO, error)
+	GetListByShopId(shopId uint) ([]dto.ShopWorktimeDTO, error)
+	Edit(data dto.ShopWorktimeDTO) (uint, error)
+}
+
 type ShopWorkTimeRepositoryImpl struct {
 	db *gorm.DB
 }

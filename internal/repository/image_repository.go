@@ -9,6 +9,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type ImageRepository interface {
+	GetImageById(id uint) (*dto.ImageDTO, error)
+	CreateImage(data dto.ImageDTO) (int, error)
+}
+
 type ImageRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -17,7 +22,7 @@ func NewImageRepository(db *gorm.DB) ImageRepository {
 	return &ImageRepositoryImpl{db: db}
 }
 
-func (r *ImageRepositoryImpl) GetImageById(id uint) (*dto.ImageDTO, error){
+func (r *ImageRepositoryImpl) GetImageById(id uint) (*dto.ImageDTO, error) {
 	var imageModel model.ImageModel
 	if err := r.db.Where("id = ?", id).First(&imageModel).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -29,7 +34,7 @@ func (r *ImageRepositoryImpl) GetImageById(id uint) (*dto.ImageDTO, error){
 	return &dto.ImageDTO{
 		FileName: imageModel.Filename,
 		FilePath: imageModel.Path,
-		FileExt: imageModel.Ext,
+		FileExt:  imageModel.Ext,
 	}, nil
 }
 
@@ -47,4 +52,4 @@ func (r *ImageRepositoryImpl) CreateImage(data dto.ImageDTO) (int, error) {
 	}
 
 	return int(image.ID), nil
-} 
+}

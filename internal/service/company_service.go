@@ -13,12 +13,23 @@ import (
 	"github.com/qahvazor/qahvazor/utils"
 )
 
+type CompanyService interface {
+	GetCompanyShopsList(data company_request.GetCompanyShopsRequest) (interface{}, error)
+	Store(data company_request.StoreRequest) (interface{}, error)
+	Show(companyId uint) (interface{}, error)
+	List() (interface{}, error)
+	Edit(data company_request.EditRequest) error
+	StoreCompanySocial(data company_social_request.StoreRequest) (interface{}, error)
+	ShowCompanySocial(socialId uint) (interface{}, error)
+	ListCompanySocials(companyId uint) (interface{}, error)
+	EditCompanySocial(data company_social_request.EditRequest) error
+}
 
 type CompanyServiceImpl struct {
-	CompanyRepository repository.CompanyRepository
-	ImageRepository   repository.ImageRepository
+	CompanyRepository       repository.CompanyRepository
+	ImageRepository         repository.ImageRepository
 	CompanySocialRepository repository.CompanySocialRepository
-	ShopRepository repository.ShopRepository
+	ShopRepository          repository.ShopRepository
 }
 
 func NewCompanyService(
@@ -26,12 +37,12 @@ func NewCompanyService(
 	ImageRepository repository.ImageRepository,
 	CompanySocialRepository repository.CompanySocialRepository,
 	ShopRepository repository.ShopRepository,
-	) CompanyService {
+) CompanyService {
 	return &CompanyServiceImpl{
-		CompanyRepository: CompanyRepository,
-		ImageRepository: ImageRepository,
+		CompanyRepository:       CompanyRepository,
+		ImageRepository:         ImageRepository,
 		CompanySocialRepository: CompanySocialRepository,
-		ShopRepository: ShopRepository,
+		ShopRepository:          ShopRepository,
 	}
 }
 
@@ -62,11 +73,11 @@ func (s *CompanyServiceImpl) GetCompanyShopsList(data company_request.GetCompany
 	}
 
 	getCompanyShopsResponse := company_response.GetCompanyShopsResponse{
-		ID:        int(company.ID),
-		Name:      company.Name,
+		ID:          int(company.ID),
+		Name:        company.Name,
 		Description: company.Description,
-		ImageUrl:  companyImageUrl,
-		Shops: shopsResponse,
+		ImageUrl:    companyImageUrl,
+		Shops:       shopsResponse,
 	}
 
 	return getCompanyShopsResponse, nil
@@ -81,7 +92,7 @@ func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface
 	createImageDTO := dto.ImageDTO{
 		FileName: fileName,
 		FilePath: filePath,
-		FileExt: fileExt[1:],
+		FileExt:  fileExt[1:],
 	}
 	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 	if err != nil {
@@ -89,14 +100,14 @@ func (s *CompanyServiceImpl) Store(data company_request.StoreRequest) (interface
 	}
 
 	createCompanyDTO := dto.CompanyDTO{
-		Name: data.Name,
+		Name:        data.Name,
 		Description: data.Description,
-		ImageID: int(imageId),
+		ImageID:     int(imageId),
 	}
 	companyId, err := s.CompanyRepository.Store(createCompanyDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Failed to save the company details."), nil
-   	}
+	}
 
 	response := company_response.StoreResponse{
 		CompanyID: int(companyId),
@@ -112,15 +123,15 @@ func (s *CompanyServiceImpl) Show(companyId uint) (interface{}, error) {
 
 	image, err := s.ImageRepository.GetImageById(uint(company.ImageID))
 	if err != nil {
-		return  response.NewErrorResponse(404, "Company not found"), nil
+		return response.NewErrorResponse(404, "Company not found"), nil
 	}
 	companyImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 
 	showResponse := company_response.ShowResponse{
-		ID:     int(company.ID),
-		Name: company.Name,
+		ID:          int(company.ID),
+		Name:        company.Name,
 		Description: company.Description,
-		ImageUrl: companyImageUrl,
+		ImageUrl:    companyImageUrl,
 	}
 
 	return showResponse, nil
@@ -157,7 +168,7 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 		createImageDTO := dto.ImageDTO{
 			FileName: fileName,
 			FilePath: filePath,
-			FileExt: fileExt[1:],
+			FileExt:  fileExt[1:],
 		}
 		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 		if err != nil {
@@ -167,12 +178,12 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 	}
 
 	editDTO := dto.CompanyDTO{
-		ID: uint(data.CompanyID),
-		Name: data.Name,
+		ID:          uint(data.CompanyID),
+		Name:        data.Name,
 		Description: data.Description,
-		ImageID: data.ImageId,
+		ImageID:     data.ImageId,
 	}
-	
+
 	if _, err := s.CompanyRepository.Edit(editDTO); err != nil {
 		return fmt.Errorf("failed to edit company record: %w", err)
 	}
@@ -182,13 +193,13 @@ func (s *CompanyServiceImpl) Edit(data company_request.EditRequest) error {
 func (s *CompanyServiceImpl) StoreCompanySocial(data company_social_request.StoreRequest) (interface{}, error) {
 	storeCompanySocialDTO := dto.CompanySocialDTO{
 		CompanyID: data.CompanyID,
-		Platform: data.Platform,
-		Url:      data.Url,
+		Platform:  data.Platform,
+		Url:       data.Url,
 	}
 	companySocialId, err := s.CompanySocialRepository.Store(storeCompanySocialDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
-   	}
+	}
 
 	response := company_social_response.StoreResponse{
 		SocialID: int(companySocialId),
@@ -203,7 +214,7 @@ func (s *CompanyServiceImpl) ShowCompanySocial(socialId uint) (interface{}, erro
 	}
 
 	showCompanySocialResponse := company_social_response.ShowResponse{
-		ID:     int(companySocial.ID),
+		ID:        int(companySocial.ID),
 		CompanyID: companySocial.CompanyID,
 		Platform:  companySocial.Platform,
 		Url:       companySocial.Url,
@@ -221,7 +232,7 @@ func (s *CompanyServiceImpl) ListCompanySocials(companyId uint) (interface{}, er
 	var response []company_social_response.ListResponse
 	for _, item := range data {
 		response = append(response, company_social_response.ListResponse{
-			ID:     int(item.ID),
+			ID:        int(item.ID),
 			CompanyID: item.CompanyID,
 			Platform:  item.Platform,
 			Url:       item.Url,
@@ -233,14 +244,14 @@ func (s *CompanyServiceImpl) ListCompanySocials(companyId uint) (interface{}, er
 
 func (s *CompanyServiceImpl) EditCompanySocial(data company_social_request.EditRequest) error {
 	editDTO := dto.CompanySocialDTO{
-		ID: uint(data.SocialID),
+		ID:        uint(data.SocialID),
 		CompanyID: data.CompanyID,
-		Platform: data.Platform,
-		Url: data.Url,
+		Platform:  data.Platform,
+		Url:       data.Url,
 	}
 	if _, err := s.CompanySocialRepository.Edit(editDTO); err != nil {
 		return err
 	}
-	
+
 	return nil
 }

@@ -6,6 +6,12 @@ import (
 	"gorm.io/gorm"
 )
 
+type ShopCoffeeRepository interface {
+	Store(shopId uint, coffeeId uint) error
+	GetListByShopId(shopId uint) ([]dto.ShopCoffeeDTO, error)
+	DeleteByShopId(shopId uint) error
+}
+
 type ShopCoffeeRepositoryImpl struct {
 	db *gorm.DB
 }
@@ -16,8 +22,8 @@ func NewShopCoffeeRepository(db *gorm.DB) ShopCoffeeRepository {
 
 func (r *ShopCoffeeRepositoryImpl) Store(shopId uint, coffeeId uint) error {
 	newShopCoffee := model.ShopCoffeeModel{
-		ShopID: int(shopId),
-		CoffeeID:  int(coffeeId),
+		ShopID:   int(shopId),
+		CoffeeID: int(coffeeId),
 	}
 
 	query := r.db.Create(&newShopCoffee)
@@ -27,7 +33,6 @@ func (r *ShopCoffeeRepositoryImpl) Store(shopId uint, coffeeId uint) error {
 
 	return nil
 }
-
 
 func (r *ShopCoffeeRepositoryImpl) GetListByShopId(shopId uint) ([]dto.ShopCoffeeDTO, error) {
 	var coffeeIDs []uint

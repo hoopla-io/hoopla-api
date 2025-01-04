@@ -15,35 +15,50 @@ import (
 	"github.com/qahvazor/qahvazor/utils"
 )
 
+type ShopService interface {
+	GetShopDetails(data shop_request.GetShopDetailsRequest) (interface{}, error)
+	Store(data shop_request.StoreRequest) (interface{}, error)
+	Show(shopId uint) (interface{}, error)
+	List() (interface{}, error)
+	Edit(data shop_request.EditRequest) error
+	StoreShopWorktime(data shop_worktime_request.StoreRequest) (interface{}, error)
+	ShowWorktime(worktimeId uint) (interface{}, error)
+	ListShopWorktimes(shopId uint) (interface{}, error)
+	EditShopWorktime(data shop_worktime_request.EditRequest) error
+	StoreShopPhone(data shop_phone_request.StoreRequest) (interface{}, error)
+	ShowShopPhone(phoneId uint) (interface{}, error)
+	ListShopPhones(shopId uint) (interface{}, error)
+	EditShopPhone(data shop_phone_request.EditRequest) error
+}
 
 type ShopServiceImpl struct {
-	ShopRepository repository.ShopRepository
-	ImageRepository   repository.ImageRepository
-	ShopWorktimeRepository repository.ShopWorktimeRepository
-	ShopPhoneRepository repository.ShopPhoneRepository
-	ShopCoffeeRepository repository.ShopCoffeeRepository
+	ShopRepository          repository.ShopRepository
+	ImageRepository         repository.ImageRepository
+	ShopWorkTimeRepository  repository.ShopWorkTimeRepository
+	ShopPhoneRepository     repository.ShopPhoneRepository
+	ShopCoffeeRepository    repository.ShopCoffeeRepository
 	CompanySocialRepository repository.CompanySocialRepository
 }
 
 func NewShopService(
-	ShopRepository repository.ShopRepository, 
+	ShopRepository repository.ShopRepository,
 	ImageRepository repository.ImageRepository,
-	ShopWorktimeRepository repository.ShopWorktimeRepository,
+	ShopWorkTimeRepository repository.ShopWorkTimeRepository,
 	ShopPhoneRepository repository.ShopPhoneRepository,
 	ShopCoffeeRepository repository.ShopCoffeeRepository,
 	CompanySocialRepository repository.CompanySocialRepository,
-	) ShopService {
+) ShopService {
 	return &ShopServiceImpl{
-		ShopRepository: ShopRepository,
-		ImageRepository: ImageRepository,
-		ShopWorktimeRepository: ShopWorktimeRepository,
-		ShopPhoneRepository: ShopPhoneRepository,
-		ShopCoffeeRepository: ShopCoffeeRepository,
+		ShopRepository:          ShopRepository,
+		ImageRepository:         ImageRepository,
+		ShopWorkTimeRepository:  ShopWorkTimeRepository,
+		ShopPhoneRepository:     ShopPhoneRepository,
+		ShopCoffeeRepository:    ShopCoffeeRepository,
 		CompanySocialRepository: CompanySocialRepository,
 	}
 }
 
-func (s *ShopServiceImpl) GetShopDetails(data shop_request.GetShopDetailsRequest) (interface{}, error){
+func (s *ShopServiceImpl) GetShopDetails(data shop_request.GetShopDetailsRequest) (interface{}, error) {
 	shop, err := s.ShopRepository.GetById(data.ShopID)
 	if err != nil {
 		return response.NewErrorResponse(404, "Shop not found. Please check the shop ID and try again."), nil
@@ -63,7 +78,7 @@ func (s *ShopServiceImpl) GetShopDetails(data shop_request.GetShopDetailsRequest
 		})
 	}
 
-	shopWorktimes, err := s.ShopWorktimeRepository.GetListByShopId(data.ShopID)
+	shopWorktimes, err := s.ShopWorkTimeRepository.GetListByShopId(data.ShopID)
 	if err != nil {
 		return response.NewErrorResponse(404, "Shop worktimes not found."), nil
 	}
@@ -132,7 +147,7 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 	createImageDTO := dto.ImageDTO{
 		FileName: fileName,
 		FilePath: filePath,
-		FileExt: fileExt[1:],
+		FileExt:  fileExt[1:],
 	}
 	imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 	if err != nil {
@@ -140,15 +155,15 @@ func (s *ShopServiceImpl) Store(data shop_request.StoreRequest) (interface{}, er
 	}
 
 	createShopDTO := dto.ShopDTO{
-		Name: data.Name,
-		Location: data.Location,
+		Name:      data.Name,
+		Location:  data.Location,
 		CompanyID: data.CompanyId,
-		ImageID: int(imageId),
+		ImageID:   int(imageId),
 	}
 	shopId, err := s.ShopRepository.Store(createShopDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Failed to create the shop."), nil
-   	}
+	}
 
 	for _, coffeId := range data.CoffeeIds {
 		if err := s.ShopCoffeeRepository.Store(shopId, coffeId); err != nil {
@@ -210,11 +225,11 @@ func (s *ShopServiceImpl) List() (interface{}, error) {
 		image, _ := s.ImageRepository.GetImageById(uint(item.ImageID))
 		companyImageUrl := fmt.Sprintf("http://127.0.0.1:8000/%s/%s.%s", image.FilePath, image.FileName, image.FileExt)
 		response = append(response, shop_response.ListResponse{
-			ID:          int(item.ID),
-			CompanyID:   item.CompanyID,
-			Name:        item.Name,
-			Location:    item.Location,
-			ImageUrl:    companyImageUrl,
+			ID:        int(item.ID),
+			CompanyID: item.CompanyID,
+			Name:      item.Name,
+			Location:  item.Location,
+			ImageUrl:  companyImageUrl,
 		})
 	}
 
@@ -231,7 +246,7 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 		createImageDTO := dto.ImageDTO{
 			FileName: fileName,
 			FilePath: filePath,
-			FileExt: fileExt[1:],
+			FileExt:  fileExt[1:],
 		}
 		imageId, err := s.ImageRepository.CreateImage(createImageDTO)
 		if err != nil {
@@ -241,11 +256,11 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 	}
 
 	editDTO := dto.ShopDTO{
-		ID: uint(data.CompanyID),
+		ID:        uint(data.CompanyID),
 		CompanyID: int(data.CompanyID),
-		Name: data.Name,
-		Location: data.Location,
-		ImageID: data.ImageId,
+		Name:      data.Name,
+		Location:  data.Location,
+		ImageID:   data.ImageId,
 	}
 	if _, err := s.ShopRepository.Edit(editDTO); err != nil {
 		return err
@@ -268,15 +283,15 @@ func (s *ShopServiceImpl) Edit(data shop_request.EditRequest) error {
 
 func (s *ShopServiceImpl) StoreShopWorktime(data shop_worktime_request.StoreRequest) (interface{}, error) {
 	storeShopWorkTimeDTO := dto.ShopWorktimeDTO{
-		ShopID: data.ShopID, 
-		DayRange: data.DayRange,
+		ShopID:      data.ShopID,
+		DayRange:    data.DayRange,
 		OpeningTime: data.OpeningTime,
 		ClosingTime: data.ClosingTime,
 	}
-	shopWorkTimeId, err := s.ShopWorktimeRepository.Store(storeShopWorkTimeDTO)
+	shopWorkTimeId, err := s.ShopWorkTimeRepository.Store(storeShopWorkTimeDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
-   	}
+	}
 
 	response := shop_worktime_response.StoreResponse{
 		ID: int(shopWorkTimeId),
@@ -285,15 +300,15 @@ func (s *ShopServiceImpl) StoreShopWorktime(data shop_worktime_request.StoreRequ
 }
 
 func (s *ShopServiceImpl) ShowWorktime(worktimeId uint) (interface{}, error) {
-	shopWorktime, err := s.ShopWorktimeRepository.GetById(worktimeId)
+	shopWorktime, err := s.ShopWorkTimeRepository.GetById(worktimeId)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
 	}
 
 	showWorktimeResponse := shop_worktime_response.ShowResponse{
-		ID:     int(shopWorktime.ID),
-		ShopID: shopWorktime.ShopID,
-		DayRange: shopWorktime.DayRange,
+		ID:          int(shopWorktime.ID),
+		ShopID:      shopWorktime.ShopID,
+		DayRange:    shopWorktime.DayRange,
 		OpeningTime: shopWorktime.OpeningTime,
 		ClosingTime: shopWorktime.ClosingTime,
 	}
@@ -301,8 +316,8 @@ func (s *ShopServiceImpl) ShowWorktime(worktimeId uint) (interface{}, error) {
 	return showWorktimeResponse, nil
 }
 
-func (s *ShopServiceImpl) ListShopWorktimes(shopId uint) (interface{}, error){
-	data, err := s.ShopWorktimeRepository.GetListByShopId(shopId)
+func (s *ShopServiceImpl) ListShopWorktimes(shopId uint) (interface{}, error) {
+	data, err := s.ShopWorkTimeRepository.GetListByShopId(shopId)
 	if err != nil {
 		return nil, err
 	}
@@ -311,8 +326,8 @@ func (s *ShopServiceImpl) ListShopWorktimes(shopId uint) (interface{}, error){
 	for _, item := range data {
 		response = append(response, shop_worktime_response.ListResponse{
 			ID:          int(item.ID),
-			ShopID: item.ShopID,
-			DayRange: item.DayRange,
+			ShopID:      item.ShopID,
+			DayRange:    item.DayRange,
 			OpeningTime: item.OpeningTime,
 			ClosingTime: item.ClosingTime,
 		})
@@ -323,28 +338,28 @@ func (s *ShopServiceImpl) ListShopWorktimes(shopId uint) (interface{}, error){
 
 func (s *ShopServiceImpl) EditShopWorktime(data shop_worktime_request.EditRequest) error {
 	editDTO := dto.ShopWorktimeDTO{
-		ID: uint(data.WorktimeID),
-		ShopID: int(data.ShopID),
-		DayRange: data.DayRange,
+		ID:          uint(data.WorktimeID),
+		ShopID:      int(data.ShopID),
+		DayRange:    data.DayRange,
 		OpeningTime: data.OpeningTime,
 		ClosingTime: data.ClosingTime,
 	}
-	if _, err := s.ShopWorktimeRepository.Edit(editDTO); err != nil {
+	if _, err := s.ShopWorkTimeRepository.Edit(editDTO); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
 
 func (s *ShopServiceImpl) StoreShopPhone(data shop_phone_request.StoreRequest) (interface{}, error) {
 	storeShopPhoneDTO := dto.ShopPhoneDTO{
-		ShopID: data.ShopID, 
+		ShopID:      data.ShopID,
 		PhoneNumber: data.PhoneNumber,
 	}
 	shopPhoneId, err := s.ShopPhoneRepository.Store(storeShopPhoneDTO)
 	if err != nil {
 		return response.NewErrorResponse(500, "Try later!"), nil
-   	}
+	}
 
 	response := shop_phone_response.StoreResponse{
 		ID: int(shopPhoneId),
@@ -359,8 +374,8 @@ func (s *ShopServiceImpl) ShowShopPhone(phoneId uint) (interface{}, error) {
 	}
 
 	showShopPhoneResponse := shop_phone_response.ShowResponse{
-		ID:     int(shopPhone.ID),
-		ShopID: shopPhone.ShopID,
+		ID:          int(shopPhone.ID),
+		ShopID:      shopPhone.ShopID,
 		PhoneNumber: shopPhone.PhoneNumber,
 	}
 
@@ -376,8 +391,8 @@ func (s *ShopServiceImpl) ListShopPhones(shopId uint) (interface{}, error) {
 	var response []shop_phone_response.ListResponse
 	for _, item := range data {
 		response = append(response, shop_phone_response.ListResponse{
-			ID:     int(item.ID),
-			ShopID: item.ShopID,
+			ID:          int(item.ID),
+			ShopID:      item.ShopID,
 			PhoneNumber: item.PhoneNumber,
 		})
 	}
@@ -387,13 +402,13 @@ func (s *ShopServiceImpl) ListShopPhones(shopId uint) (interface{}, error) {
 
 func (s *ShopServiceImpl) EditShopPhone(data shop_phone_request.EditRequest) error {
 	editDTO := dto.ShopPhoneDTO{
-		ID: uint(data.PhoneID),
-		ShopID: int(data.ShopID),
+		ID:          uint(data.PhoneID),
+		ShopID:      int(data.ShopID),
 		PhoneNumber: data.PhoneNumber,
 	}
 	if _, err := s.ShopPhoneRepository.Edit(editDTO); err != nil {
 		return err
 	}
-	
+
 	return nil
 }
