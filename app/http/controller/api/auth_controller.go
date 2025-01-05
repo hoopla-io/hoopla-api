@@ -10,12 +10,12 @@ import (
 )
 
 type AuthController struct {
-	service service.AuthService
+	userService service.UserService
 }
 
-func NewAuthController(service service.AuthService) *AuthController {
+func NewAuthController(userService service.UserService) *AuthController {
 	return &AuthController{
-		service: service,
+		userService: userService,
 	}
 }
 
@@ -31,7 +31,7 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	loginResponse, code, err := ctr.service.Login(loginRequest)
+	loginResponse, code, err := ctr.userService.Login(loginRequest)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
 		return
@@ -53,7 +53,7 @@ func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 		return
 	}
 
-	confirmSmsResponse, code, err := ctr.service.ConfirmSms(confirmSmsRequest)
+	confirmSmsResponse, code, err := ctr.userService.ConfirmSms(confirmSmsRequest)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
 		return
@@ -74,7 +74,7 @@ func (ctr *AuthController) ResendSms(ctx *gin.Context) {
 		return
 	}
 
-	resendSmsResponse, code, err := ctr.service.ResendSms(resendSmsRequest)
+	resendSmsResponse, code, err := ctr.userService.ResendSms(resendSmsRequest)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
 		return

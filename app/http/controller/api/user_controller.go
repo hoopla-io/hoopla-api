@@ -1,0 +1,50 @@
+package api
+
+import (
+	"github.com/gin-gonic/gin"
+	user_request "github.com/qahvazor/qahvazor/app/http/request/user"
+	user_resource "github.com/qahvazor/qahvazor/app/http/resource/user"
+	"github.com/qahvazor/qahvazor/app/http/response"
+	"github.com/qahvazor/qahvazor/internal/service"
+	"github.com/qahvazor/qahvazor/utils"
+)
+
+type UserController struct {
+	userService service.UserService
+}
+
+func NewUserController(userService service.UserService) *UserController {
+	return &UserController{
+		userService: userService,
+	}
+}
+
+// @Tags User
+// @Accept  json
+// @Produce  json
+// @Param data body user_request.GetMeRequest true "Get me"
+// @Router /user/get-me [get]
+func (uc *UserController) GetMe(ctx *gin.Context) {
+	var request user_request.GetMeRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	response.SuccessResponse(
+		ctx, "ok!",
+		user_resource.UserBaseResource{
+			UserID:      userHelper.UserID,
+			PhoneNumber: userHelper.PhoneNumber,
+			Name:        "test",
+		},
+		nil)
+	return
+}

@@ -1,14 +1,11 @@
 package model
 
 import (
-	"time"
-
 	"github.com/google/uuid"
-	"gorm.io/gorm"
+	"time"
 )
 
 type ImageModel struct {
-	gorm.Model
 	ID        uint      `gorm:"primaryKey;autoIncrement"`
 	Path      string    `gorm:"type:varchar(255);not null"`
 	Filename  string    `gorm:"type:varchar(255);not null"`

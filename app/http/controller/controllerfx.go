@@ -7,8 +7,6 @@ import (
 
 var Modules = fx.Options(
 	fx.Provide(api.NewAuthController),
-	//fx.Provide(api.NewCompanyController),
-	//fx.Provide(api.NewShopController),
-	//fx.Provide(api.NewSubscriptionController),
-	//fx.Provide(api.NewUserSubscriptionController),
+	fx.Provide(api.NewPartnersController),
+	fx.Provide(api.NewUserController),
 )

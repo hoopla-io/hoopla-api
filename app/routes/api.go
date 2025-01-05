@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/qahvazor/qahvazor/app/http/controller/api"
+	"github.com/qahvazor/qahvazor/app/http/middleware"
 	_ "github.com/qahvazor/qahvazor/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -11,10 +12,8 @@ import (
 func NewApiRoute(
 	router *gin.Engine,
 	AuthController *api.AuthController,
-	// CompanyController *api.CompanyController,
-	// ShopController *api.ShopController,
-	// SubscriptionController *api.SubscriptionController,
-	// UserSubscriptionController *api.UserSubscriptionController,
+	PartnersController *api.PartnersController,
+	UserController *api.UserController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -26,6 +25,17 @@ func NewApiRoute(
 				auth.POST("/login", AuthController.Login)
 				auth.POST("/confirm-sms", AuthController.ConfirmSms)
 				auth.POST("/resend-sms", AuthController.ResendSms)
+			}
+
+			partners := v1.Group("/partners")
+			{
+				partners.GET("/", PartnersController.Partners)
+				partners.GET("/partner", PartnersController.Partner)
+			}
+
+			user := v1.Group("/user")
+			{
+				user.GET("/get-me", middleware.JwtMiddleware(), UserController.GetMe)
 			}
 
 			//company := v1.Group("/company")

@@ -9,6 +9,7 @@ type UserModel struct {
 	Name           string    `gorm:"column:name"`
 	PhoneNumber    string    `gorm:"not null"`
 	MobileProvider string    `gorm:"not null"`
+	RefreshToken   string    `gorm:"not null"`
 	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }

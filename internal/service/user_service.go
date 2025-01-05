@@ -6,39 +6,39 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	auth_resource "github.com/qahvazor/qahvazor/app/http/resource/auth"
 	"github.com/qahvazor/qahvazor/pkg/itvmsq"
+	"golang.org/x/exp/rand"
 	"gorm.io/gorm"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/patrickmn/go-cache"
 	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/repository"
 	"github.com/qahvazor/qahvazor/utils"
-	"golang.org/x/exp/rand"
 )
 
-type AuthService interface {
+type UserService interface {
 	Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error)
 	ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error)
 	ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error)
 }
 
-type AuthServiceImpl struct {
-	AuthRepository repository.AuthRepository
+type UserServiceImpl struct {
+	UserRepository repository.UserRepository
 	sessionCache   *cache.Cache
 }
 
-func NewAuthService(AuthRepository repository.AuthRepository) AuthService {
-	return &AuthServiceImpl{
-		AuthRepository: AuthRepository,
+func NewUserService(UserRepository repository.UserRepository) UserService {
+	return &UserServiceImpl{
+		UserRepository: UserRepository,
 		sessionCache:   cache.New(10*time.Minute, 20*time.Minute),
 	}
 }
 
-func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error) {
+func (s *UserServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error) {
 	mobileProvider := utils.PredictProvider(data.PhoneNumber)
 
 	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
@@ -48,7 +48,7 @@ func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.
 		PhoneNumber:    data.PhoneNumber,
 		MobileProvider: mobileProvider,
 		Session: dto.Session{
-			Code:      rand.Intn(90000) + 10000,
+			Code:      rand.Intn(89999) + 10000,
 			ExpiresAt: time.Now().Unix() + 90,
 		},
 	}
@@ -67,7 +67,7 @@ func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.
 	return sessionResource, 200, nil
 }
 
-func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error) {
+func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error) {
 	session, callback := s.sessionCache.Get(data.SessionID)
 	if !callback {
 		return nil, 404, errors.New("session not found")
@@ -85,18 +85,31 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 		return nil, 422, errors.New("invalid session code")
 	}
 
+	uid := uuid.New().String()
+	hash := sha256.New()
+	hash.Write([]byte(uid))
+	refreshToken := hex.EncodeToString(hash.Sum(nil))
+
 	isNewUser := false
-	user, err := s.AuthRepository.GetByPhoneNumber(sessionData.PhoneNumber)
+	user, err := s.UserRepository.GetByPhoneNumber(sessionData.PhoneNumber)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // new user
 		createUserData := dto.UserDTO{
 			PhoneNumber:    sessionData.PhoneNumber,
 			MobileProvider: sessionData.MobileProvider,
+			RefreshToken:   refreshToken,
 		}
-		user, err = s.AuthRepository.CreateUser(createUserData)
+		user, err = s.UserRepository.CreateUser(createUserData)
 		isNewUser = true
 	}
 	if err != nil {
 		return nil, 500, err
+	}
+
+	if isNewUser == false { // updating token for existing user
+		err = s.UserRepository.UpdateToken(refreshToken, user)
+		if err != nil {
+			return nil, 500, err
+		}
 	}
 
 	// Generate the JWT token
@@ -105,11 +118,6 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 	if err != nil {
 		return nil, 500, err
 	}
-
-	uid := uuid.New().String()
-	hash := sha256.New()
-	hash.Write([]byte(uid))
-	refreshToken := hex.EncodeToString(hash.Sum(nil))
 
 	loginResource := &auth_resource.LoginResource{
 		UserID:       user.ID,
@@ -122,7 +130,7 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 	return loginResource, 200, nil
 }
 
-func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error) {
+func (s *UserServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error) {
 	session, callback := s.sessionCache.Get(data.SessionID)
 	if !callback {
 		return nil, 404, errors.New("session not found")
@@ -132,7 +140,7 @@ func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_r
 		return nil, 400, errors.New("invalid session data")
 	}
 
-	sessionData.Session.Code = rand.Intn(90000) + 10000
+	sessionData.Session.Code = rand.Intn(89999) + 10000
 	sessionData.Session.ExpiresAt = time.Now().Unix() + 90
 
 	s.sessionCache.Delete(data.SessionID)

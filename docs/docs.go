@@ -91,6 +91,81 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/partners": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partners"
+                ],
+                "parameters": [
+                    {
+                        "description": "Partners list",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/partners_request.PartnersRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/partners/partner": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partners"
+                ],
+                "parameters": [
+                    {
+                        "description": "Partner Detail",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/partners_request.PartnerRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/get-me": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "Get me",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_request.GetMeRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -120,6 +195,20 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "partners_request.PartnerRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "partners_request.PartnersRequest": {
+            "type": "object"
+        },
+        "user_request.GetMeRequest": {
+            "type": "object"
         }
     }
 }`
