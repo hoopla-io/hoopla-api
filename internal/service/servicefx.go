@@ -9,6 +9,7 @@ var Modules = fx.Options(
 	fx.Provide(NewShopService),
 	fx.Provide(NewSubscriptionService),
 	fx.Provide(NewUserSubscriptionService),
+	fx.Provide(NewQRCodeService),
 )
 
 //func NewService(repo *repository.Repository) *Service {

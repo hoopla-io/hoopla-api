@@ -15,6 +15,7 @@ func NewApiRoute(
 	ShopController *api.ShopController,
 	SubscriptionController *api.SubscriptionController,
 	UserSubscriptionController *api.UserSubscriptionController,
+	QRCodeController *api.QRCodeController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -49,6 +50,12 @@ func NewApiRoute(
 			{
 				userSubscriptions.GET("/:user_id", UserSubscriptionController.GetUserActiveSubscription)
 				userSubscriptions.POST("/", UserSubscriptionController.AssignSubscriptionToUser)
+			}
+
+			qr := v1.Group("/qr")
+			{
+				qr.GET("/generate", QRCodeController.GenerateQRCode)
+				qr.GET("/decode", QRCodeController.DecodeQRCode)
 			}
 
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
