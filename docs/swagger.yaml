@@ -6,16 +6,23 @@ definitions:
         type: integer
       sessionId:
         type: string
+    required:
+    - code
+    - sessionId
     type: object
   auth_request.LoginRequest:
     properties:
       phoneNumber:
         type: string
+    required:
+    - phoneNumber
     type: object
   auth_request.ResendSmsRequest:
     properties:
       sessionId:
         type: string
+    required:
+    - sessionId
     type: object
   partners_request.PartnerRequest:
     properties:
@@ -25,6 +32,13 @@ definitions:
   partners_request.PartnersRequest:
     type: object
   user_request.GetMeRequest:
+    type: object
+  user_request.RefreshTokenRequest:
+    properties:
+      refreshToken:
+        type: string
+    required:
+    - refreshToken
     type: object
 host: 127.0.0.1:8000
 info:
@@ -124,6 +138,22 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/user_request.GetMeRequest'
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User
+  /user/refresh-token:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Get me
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_request.RefreshTokenRequest'
       produces:
       - application/json
       responses: {}

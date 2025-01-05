@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
+	user_request "github.com/qahvazor/qahvazor/app/http/request/user"
 	auth_resource "github.com/qahvazor/qahvazor/app/http/resource/auth"
 	"github.com/qahvazor/qahvazor/pkg/itvmsq"
 	"golang.org/x/exp/rand"
@@ -24,6 +25,7 @@ type UserService interface {
 	Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error)
 	ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error)
 	ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error)
+	RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error)
 }
 
 type UserServiceImpl struct {
@@ -120,12 +122,14 @@ func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 	}
 
 	loginResource := &auth_resource.LoginResource{
-		UserID:       user.ID,
-		PhoneNumber:  user.PhoneNumber,
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		ExpireAt:     expireAt * 1000,
-		IsNewUser:    isNewUser,
+		UserID:      user.ID,
+		PhoneNumber: user.PhoneNumber,
+		IsNewUser:   isNewUser,
+		Jwt: auth_resource.JwtResource{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+			ExpireAt:     expireAt * 1000,
+		},
 	}
 	return loginResource, 200, nil
 }
@@ -162,4 +166,35 @@ func (s *UserServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_r
 		SessionExpiresAt: sessionData.Session.ExpiresAt,
 	}
 	return sessionResource, 200, nil
+}
+
+func (s *UserServiceImpl) RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error) {
+	user, err := s.UserRepository.GetByRefreshToken(data.RefreshToken)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	uid := uuid.New().String()
+	hash := sha256.New()
+	hash.Write([]byte(uid))
+	refreshToken := hex.EncodeToString(hash.Sum(nil))
+
+	err = s.UserRepository.UpdateToken(refreshToken, user)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	// Generate the JWT token
+	expireAt := time.Now().Add(10 * time.Minute).Unix()
+	accessToken, err := utils.EncodeJWT(user.ID, user.PhoneNumber, expireAt)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	jwtResource := &auth_resource.JwtResource{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		ExpireAt:     expireAt * 1000,
+	}
+	return jwtResource, 200, nil
 }

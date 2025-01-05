@@ -36,6 +36,7 @@ func NewApiRoute(
 			user := v1.Group("/user")
 			{
 				user.GET("/get-me", middleware.JwtMiddleware(), UserController.GetMe)
+				user.GET("/refresh-token", UserController.RefreshToken)
 			}
 
 			//company := v1.Group("/company")

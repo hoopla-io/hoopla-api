@@ -48,3 +48,25 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 		nil)
 	return
 }
+
+// @Tags User
+// @Accept  json
+// @Produce  json
+// @Param data body user_request.RefreshTokenRequest true "Get me"
+// @Router /user/refresh-token [get]
+func (uc *UserController) RefreshToken(ctx *gin.Context) {
+	var request user_request.RefreshTokenRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	jwtResource, code, err := uc.userService.RefreshToken(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", jwtResource, nil)
+	return
+}

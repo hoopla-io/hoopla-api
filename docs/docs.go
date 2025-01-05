@@ -166,11 +166,40 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/user/refresh-token": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "Get me",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_request.RefreshTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
         "auth_request.ConfirmSmsRequest": {
             "type": "object",
+            "required": [
+                "code",
+                "sessionId"
+            ],
             "properties": {
                 "code": {
                     "type": "integer"
@@ -182,6 +211,9 @@ const docTemplate = `{
         },
         "auth_request.LoginRequest": {
             "type": "object",
+            "required": [
+                "phoneNumber"
+            ],
             "properties": {
                 "phoneNumber": {
                     "type": "string"
@@ -190,6 +222,9 @@ const docTemplate = `{
         },
         "auth_request.ResendSmsRequest": {
             "type": "object",
+            "required": [
+                "sessionId"
+            ],
             "properties": {
                 "sessionId": {
                     "type": "string"
@@ -209,6 +244,17 @@ const docTemplate = `{
         },
         "user_request.GetMeRequest": {
             "type": "object"
+        },
+        "user_request.RefreshTokenRequest": {
+            "type": "object",
+            "required": [
+                "refreshToken"
+            ],
+            "properties": {
+                "refreshToken": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`

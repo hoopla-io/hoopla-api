@@ -1,5 +1,5 @@
 package auth_request
 
-type ResendSmsRequest struct{
-	SessionID string `json:"sessionId"`
+type ResendSmsRequest struct {
+	SessionID string `json:"sessionId" binding:"required"`
 }

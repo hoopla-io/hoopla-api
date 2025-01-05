@@ -8,6 +8,7 @@ import (
 
 type UserRepository interface {
 	GetByPhoneNumber(phoneNumber string) (*model.UserModel, error)
+	GetByRefreshToken(refreshToken string) (*model.UserModel, error)
 	CreateUser(data dto.UserDTO) (*model.UserModel, error)
 	UpdateToken(uuid string, user *model.UserModel) error
 }
@@ -23,6 +24,15 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 func (r *UserRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*model.UserModel, error) {
 	var userModel model.UserModel
 	if err := r.db.Where("phone_number = ?", phoneNumber).First(&userModel).Error; err != nil {
+		return nil, err
+	}
+
+	return &userModel, nil
+}
+
+func (r *UserRepositoryImpl) GetByRefreshToken(refreshToken string) (*model.UserModel, error) {
+	var userModel model.UserModel
+	if err := r.db.Where("refresh_token = ?", refreshToken).First(&userModel).Error; err != nil {
 		return nil, err
 	}
 
