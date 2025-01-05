@@ -15,18 +15,19 @@ type JWTConfig struct {
 	Key string
 }
 
-func EncodeJWT(phoneNumber string, expireAt int64) (string, error) {
+func EncodeJWT(userId uint, phoneNumber string, expireAt int64) (string, error) {
 	godotenv.Load("." + "/.env")
 	conf := viper.New()
 
 	conf.AutomaticEnv()
 
 	claims := jwt.MapClaims{
-		"iat": time.Now().Unix(),
-		"nbf": time.Now().Unix(),
-		"exp": expireAt,
-		"jti": fmt.Sprintf("auth-qahvzor-uz-%s", fmt.Sprintf("%v", time.Now().UnixNano())), // Unique ID
-		"phone_number": phoneNumber,
+		"iat":         time.Now().Unix(),
+		"nbf":         time.Now().Unix(),
+		"exp":         expireAt,
+		"jti":         fmt.Sprintf("auth-qahvzor-uz-%s", fmt.Sprintf("%v", time.Now().UnixNano())), // Unique ID
+		"userId":      userId,
+		"phoneNumber": phoneNumber,
 	}
 
 	// Create a new token with the claims

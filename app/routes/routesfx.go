@@ -6,5 +6,4 @@ import (
 
 var Modules = fx.Options(
 	fx.Invoke(NewApiRoute),
-	fx.Invoke(NewDashboardRoute),
 )

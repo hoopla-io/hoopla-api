@@ -4,16 +4,16 @@ import (
 	"crypto/md5"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
+	auth_resource "github.com/qahvazor/qahvazor/app/http/resource/auth"
 	"github.com/qahvazor/qahvazor/pkg/itvmsq"
-	"log"
+	"gorm.io/gorm"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/patrickmn/go-cache"
 	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	auth_response "github.com/qahvazor/qahvazor/app/http/response/auth"
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/repository"
 	"github.com/qahvazor/qahvazor/utils"
@@ -21,9 +21,9 @@ import (
 )
 
 type AuthService interface {
-	Login(data auth_request.LoginRequest) (interface{}, error)
-	ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error)
-	ResendSms(data auth_request.ResendSmsRequest) (interface{}, error)
+	Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error)
+	ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error)
+	ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error)
 }
 
 type AuthServiceImpl struct {
@@ -38,7 +38,7 @@ func NewAuthService(AuthRepository repository.AuthRepository) AuthService {
 	}
 }
 
-func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (interface{}, error) {
+func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.SessionResource, int, error) {
 	mobileProvider := utils.PredictProvider(data.PhoneNumber)
 
 	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
@@ -48,65 +48,62 @@ func (s *AuthServiceImpl) Login(data auth_request.LoginRequest) (interface{}, er
 		PhoneNumber:    data.PhoneNumber,
 		MobileProvider: mobileProvider,
 		Session: dto.Session{
-			Attempt:   0,
 			Code:      rand.Intn(90000) + 10000,
-			ExpiresAt: int(time.Now().Unix()) + 90,
+			ExpiresAt: time.Now().Unix() + 90,
 		},
 	}
 	s.sessionCache.Set(sessionIdStr, session, 10*time.Minute)
 
 	err := itvmsq.SendCode(mobileProvider, data.PhoneNumber, session.Session.Code)
 	if err != nil {
-		log.Printf("Error sending SMS: %v", err)
-		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
+		return nil, 500, err
 	}
 
-	response := auth_response.LoginResponse{
+	sessionResource := &auth_resource.SessionResource{
 		PhoneNumber:      data.PhoneNumber,
 		SessionID:        sessionIdStr,
-		SessionExpiresAt: int64(session.Session.ExpiresAt),
+		SessionExpiresAt: session.Session.ExpiresAt,
 	}
-	return response, nil
+	return sessionResource, 200, nil
 }
 
-func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (interface{}, error) {
-	session, found := s.sessionCache.Get(data.SessionID)
-	sessionData, ok := session.(dto.SessionDTO)
-	if !ok {
-		return response.NewErrorResponse(422, "Invalid session data!"), nil
+func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error) {
+	session, callback := s.sessionCache.Get(data.SessionID)
+	if !callback {
+		return nil, 404, errors.New("session not found")
 	}
-	if !found || session == nil {
-		return response.NewErrorResponse(422, "Session Expired!"), nil
+	sessionData, callback := session.(dto.SessionDTO)
+	if !callback {
+		return nil, 400, errors.New("invalid session data")
 	}
+
+	if sessionData.Session.ExpiresAt < time.Now().Unix() {
+		return nil, 422, errors.New("session expired")
+	}
+
 	if sessionData.Session.Code != data.Code {
-		return response.NewErrorResponse(422, "Invalid code!"), nil
-	}
-	if int64(sessionData.Session.ExpiresAt) < time.Now().Unix() {
-		return response.NewErrorResponse(422, "Session Expired!"), nil
+		return nil, 422, errors.New("invalid session code")
 	}
 
+	isNewUser := false
 	user, err := s.AuthRepository.GetByPhoneNumber(sessionData.PhoneNumber)
-	if err != nil {
-		return response.NewErrorResponse(500, "Try later!"), nil
-	}
-
-	if user == nil {
+	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) { // new user
 		createUserData := dto.UserDTO{
 			PhoneNumber:    sessionData.PhoneNumber,
 			MobileProvider: sessionData.MobileProvider,
 		}
 		user, err = s.AuthRepository.CreateUser(createUserData)
-		if err != nil {
-			return response.NewErrorResponse(500, "Try later!"), nil
-		}
+		isNewUser = true
+	}
+	if err != nil {
+		return nil, 500, err
 	}
 
-	expireAt := time.Now().Add(10 * time.Minute).Unix()
 	// Generate the JWT token
-	accessToken, err := utils.EncodeJWT(user.PhoneNumber, expireAt)
+	expireAt := time.Now().Add(10 * time.Minute).Unix()
+	accessToken, err := utils.EncodeJWT(user.ID, user.PhoneNumber, expireAt)
 	if err != nil {
-		log.Printf("Error encoding JWT: %v", err)
-		return response.NewErrorResponse(500, "Failed to generate access token!"), nil
+		return nil, 500, err
 	}
 
 	uid := uuid.New().String()
@@ -114,43 +111,47 @@ func (s *AuthServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (inter
 	hash.Write([]byte(uid))
 	refreshToken := hex.EncodeToString(hash.Sum(nil))
 
-	response := auth_response.ConfirmSmsResponse{
+	loginResource := &auth_resource.LoginResource{
+		UserID:       user.ID,
+		PhoneNumber:  user.PhoneNumber,
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 		ExpireAt:     expireAt * 1000,
-		PhoneNumber:  user.PhoneNumber,
+		IsNewUser:    isNewUser,
 	}
-	return response, nil
+	return loginResource, 200, nil
 }
 
-func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (interface{}, error) {
-	session, found := s.sessionCache.Get(data.SessionID)
-	if !found {
-		return response.NewErrorResponse(422, "Session Expired!"), nil
+func (s *AuthServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error) {
+	session, callback := s.sessionCache.Get(data.SessionID)
+	if !callback {
+		return nil, 404, errors.New("session not found")
 	}
-	sessionData, ok := session.(dto.SessionDTO)
-	if !ok {
-		return response.NewErrorResponse(422, "Invalid session data!"), nil
+	sessionData, callback := session.(dto.SessionDTO)
+	if !callback {
+		return nil, 400, errors.New("invalid session data")
 	}
 
-	// Update session with new attempt, verification code, and expiration time
-	sessionData.Session.Attempt = sessionData.Session.Attempt + 1
 	sessionData.Session.Code = rand.Intn(90000) + 10000
-	sessionData.Session.ExpiresAt = int(time.Now().Unix()) + 90
+	sessionData.Session.ExpiresAt = time.Now().Unix() + 90
 
-	sessionExpiration := time.Duration(90 * time.Second)
-	s.sessionCache.Set(data.SessionID, sessionData, sessionExpiration)
+	s.sessionCache.Delete(data.SessionID)
+
+	uniqueId := fmt.Sprintf("%d", time.Now().UnixNano())
+	sessionId := md5.Sum([]byte(sessionData.PhoneNumber + uniqueId))
+	sessionIdStr := fmt.Sprintf("%x", sessionId)
+
+	s.sessionCache.Set(sessionIdStr, sessionData, 10*time.Minute)
 
 	err := itvmsq.SendCode(sessionData.MobileProvider, sessionData.PhoneNumber, sessionData.Session.Code)
 	if err != nil {
-		log.Printf("Error sending SMS: %v", err)
-		return response.NewErrorResponse(500, "Try later! Error sending SMS"), nil
+		return nil, 500, err
 	}
 
-	response := auth_response.ResendSmsResponse{
+	sessionResource := &auth_resource.SessionResource{
 		PhoneNumber:      sessionData.PhoneNumber,
-		SessionID:        data.SessionID,
-		SessionExpiresAt: int64(sessionData.Session.ExpiresAt),
+		SessionID:        sessionIdStr,
+		SessionExpiresAt: sessionData.Session.ExpiresAt,
 	}
-	return response, nil
+	return sessionResource, 200, nil
 }

@@ -11,10 +11,10 @@ import (
 func NewApiRoute(
 	router *gin.Engine,
 	AuthController *api.AuthController,
-	CompanyController *api.CompanyController,
-	ShopController *api.ShopController,
-	SubscriptionController *api.SubscriptionController,
-	UserSubscriptionController *api.UserSubscriptionController,
+	// CompanyController *api.CompanyController,
+	// ShopController *api.ShopController,
+	// SubscriptionController *api.SubscriptionController,
+	// UserSubscriptionController *api.UserSubscriptionController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -28,28 +28,28 @@ func NewApiRoute(
 				auth.POST("/resend-sms", AuthController.ResendSms)
 			}
 
-			company := v1.Group("/company")
-			{
-				company.GET("/list", CompanyController.GetCompanyList)
-				company.GET("/shops", CompanyController.GetCompanyShopsList)
-			}
-
-			shop := v1.Group("/shop")
-			{
-				shop.GET("/detail", ShopController.GetShopDetails)
-			}
-
-			subscriptions := v1.Group("/subscriptions")
-			{
-				subscriptions.GET("/", SubscriptionController.GetAllSubscriptions)
-				subscriptions.GET("/:id", SubscriptionController.GetSubscriptionByID)
-			}
-
-			userSubscriptions := v1.Group("/user-subscriptions")
-			{
-				userSubscriptions.GET("/:user_id", UserSubscriptionController.GetUserActiveSubscription)
-				userSubscriptions.POST("/", UserSubscriptionController.AssignSubscriptionToUser)
-			}
+			//company := v1.Group("/company")
+			//{
+			//	company.GET("/list", CompanyController.GetCompanyList)
+			//	company.GET("/shops", CompanyController.GetCompanyShopsList)
+			//}
+			//
+			//shop := v1.Group("/shop")
+			//{
+			//	shop.GET("/detail", ShopController.GetShopDetails)
+			//}
+			//
+			//subscriptions := v1.Group("/subscriptions")
+			//{
+			//	subscriptions.GET("/", SubscriptionController.GetAllSubscriptions)
+			//	subscriptions.GET("/:id", SubscriptionController.GetSubscriptionByID)
+			//}
+			//
+			//userSubscriptions := v1.Group("/user-subscriptions")
+			//{
+			//	userSubscriptions.GET("/:user_id", UserSubscriptionController.GetUserActiveSubscription)
+			//	userSubscriptions.POST("/", UserSubscriptionController.AssignSubscriptionToUser)
+			//}
 
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 		}

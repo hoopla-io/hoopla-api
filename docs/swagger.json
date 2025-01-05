@@ -7,7 +7,7 @@
         },
         "version": "1.0.0"
     },
-    "host": "api.qahvazor.uz",
+    "host": "127.0.0.1:8000",
     "basePath": "/api/v1",
     "paths": {
         "/auth/confirm-sms": {
@@ -32,17 +32,7 @@
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Confirm Sms Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.ConfirmSmsResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/auth/login": {
@@ -67,17 +57,7 @@
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Login Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.LoginResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/auth/resend-sms": {
@@ -102,107 +82,7 @@
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Resend Sms Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.ResendSmsResponse"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/company/list": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Company"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of companies",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/company_response.ListResponse"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/company/shops": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Company"
-                ],
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Company ID",
-                        "name": "companyId",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "List of company shops",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/company_response.GetCompanyShopsResponse"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/shop/detail": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Shop"
-                ],
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Shop ID",
-                        "name": "shopId",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Shop details response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/shop_response.GetShopDetailsResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         }
     },
@@ -231,205 +111,6 @@
             "properties": {
                 "sessionId": {
                     "type": "string"
-                }
-            }
-        },
-        "auth_response.ConfirmSmsResponse": {
-            "type": "object",
-            "properties": {
-                "accessToken": {
-                    "type": "string"
-                },
-                "expireAt": {
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "refreshToken": {
-                    "type": "string"
-                }
-            }
-        },
-        "auth_response.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "sessionExpiresAt": {
-                    "type": "integer"
-                },
-                "sessionId": {
-                    "type": "string"
-                }
-            }
-        },
-        "auth_response.ResendSmsResponse": {
-            "type": "object",
-            "properties": {
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "sessionExpiresAt": {
-                    "type": "integer"
-                },
-                "sessionId": {
-                    "type": "string"
-                }
-            }
-        },
-        "company_response.GetCompanyShopsResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "shops": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/company_response.Shop"
-                    }
-                }
-            }
-        },
-        "company_response.ListResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "company_response.Shop": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "location": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Coffee": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.GetShopDetailsResponse": {
-            "type": "object",
-            "properties": {
-                "coffees": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Coffee"
-                    }
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "location": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phones": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Phone"
-                    }
-                },
-                "shopId": {
-                    "type": "integer"
-                },
-                "socials": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Social"
-                    }
-                },
-                "worktimes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Worktime"
-                    }
-                }
-            }
-        },
-        "shop_response.Phone": {
-            "type": "object",
-            "properties": {
-                "phoneId": {
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Social": {
-            "type": "object",
-            "properties": {
-                "platform": {
-                    "type": "string"
-                },
-                "socialId": {
-                    "type": "integer"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Worktime": {
-            "type": "object",
-            "properties": {
-                "closingTime": {
-                    "type": "string"
-                },
-                "dayRange": {
-                    "type": "string"
-                },
-                "openingTime": {
-                    "type": "string"
-                },
-                "worktimeId": {
-                    "type": "integer"
                 }
             }
         }

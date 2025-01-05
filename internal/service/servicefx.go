@@ -4,11 +4,11 @@ import "go.uber.org/fx"
 
 var Modules = fx.Options(
 	fx.Provide(NewAuthService),
-	fx.Provide(NewCoffeeService),
-	fx.Provide(NewCompanyService),
-	fx.Provide(NewShopService),
-	fx.Provide(NewSubscriptionService),
-	fx.Provide(NewUserSubscriptionService),
+	//fx.Provide(NewCoffeeService),
+	//fx.Provide(NewCompanyService),
+	//fx.Provide(NewShopService),
+	//fx.Provide(NewSubscriptionService),
+	//fx.Provide(NewUserSubscriptionService),
 )
 
 //func NewService(repo *repository.Repository) *Service {

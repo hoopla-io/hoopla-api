@@ -1,16 +1,14 @@
 package repository
 
 import (
-	"errors"
-
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/model"
 	"gorm.io/gorm"
 )
 
 type AuthRepository interface {
-	GetByPhoneNumber(phoneNumber string) (*dto.UserDTO, error)
-	CreateUser(data dto.UserDTO) (*dto.UserDTO, error)
+	GetByPhoneNumber(phoneNumber string) (*model.UserModel, error)
+	CreateUser(data dto.UserDTO) (*model.UserModel, error)
 }
 
 type AuthRepositoryImpl struct {
@@ -21,33 +19,25 @@ func NewAuthRepository(db *gorm.DB) AuthRepository {
 	return &AuthRepositoryImpl{db: db}
 }
 
-func (r *AuthRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*dto.UserDTO, error) {
+func (r *AuthRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*model.UserModel, error) {
 	var userModel model.UserModel
 	if err := r.db.Where("phone_number = ?", phoneNumber).First(&userModel).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, err
 	}
 
-	return &dto.UserDTO{
-		ID:             int(userModel.ID),
-		Name:           userModel.Name,
-		PhoneNumber:    userModel.PhoneNumber,
-		MobileProvider: userModel.MobileProvider,
-	}, nil
+	return &userModel, nil
 }
 
-func (r *AuthRepositoryImpl) CreateUser(data dto.UserDTO) (*dto.UserDTO, error) {
-	var createUser dto.UserDTO
-
-	query := r.db.Create(&model.UserModel{
+func (r *AuthRepositoryImpl) CreateUser(data dto.UserDTO) (*model.UserModel, error) {
+	userModel := &model.UserModel{
+		Name:           "qahvazor",
 		PhoneNumber:    data.PhoneNumber,
 		MobileProvider: data.MobileProvider,
-	}).Scan(&createUser)
+	}
+	query := r.db.Create(userModel)
 	if query.Error != nil {
 		return nil, query.Error
 	}
 
-	return &createUser, nil
+	return userModel, nil
 }
