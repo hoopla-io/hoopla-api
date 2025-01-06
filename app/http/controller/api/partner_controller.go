@@ -7,12 +7,12 @@ import (
 	"github.com/qahvazor/qahvazor/internal/service"
 )
 
-type PartnersController struct {
+type PartnerController struct {
 	partnerService service.PartnerService
 }
 
-func NewPartnersController(PartnerService service.PartnerService) *PartnersController {
-	return &PartnersController{
+func NewPartnerController(PartnerService service.PartnerService) *PartnerController {
+	return &PartnerController{
 		partnerService: PartnerService,
 	}
 }
@@ -22,7 +22,7 @@ func NewPartnersController(PartnerService service.PartnerService) *PartnersContr
 // @Produce  json
 // @Param data query partners_request.PartnersRequest true "Partners list"
 // @Router /partners [get]
-func (c PartnersController) Partners(ctx *gin.Context) {
+func (c PartnerController) Partners(ctx *gin.Context) {
 	var request partners_request.PartnersRequest
 	if err := ctx.ShouldBind(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
@@ -44,7 +44,7 @@ func (c PartnersController) Partners(ctx *gin.Context) {
 // @Produce  json
 // @Param data query partners_request.PartnerRequest true "Partner Detail"
 // @Router /partners/partner [get]
-func (c PartnersController) Partner(ctx *gin.Context) {
+func (c PartnerController) Partner(ctx *gin.Context) {
 	var request partners_request.PartnerRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())

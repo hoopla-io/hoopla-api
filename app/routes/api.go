@@ -12,7 +12,7 @@ import (
 func NewApiRoute(
 	router *gin.Engine,
 	AuthController *api.AuthController,
-	PartnersController *api.PartnersController,
+	PartnerController *api.PartnerController,
 	UserController *api.UserController,
 ) {
 	api_routes := router.Group("/api")
@@ -29,8 +29,8 @@ func NewApiRoute(
 
 			partners := v1.Group("/partners")
 			{
-				partners.GET("/", PartnersController.Partners)
-				partners.GET("/partner", PartnersController.Partner)
+				partners.GET("/", PartnerController.Partners)
+				partners.GET("/partner", PartnerController.Partner)
 			}
 
 			user := v1.Group("/user")
