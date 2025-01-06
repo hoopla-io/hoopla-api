@@ -53,7 +53,7 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data body user_request.RefreshTokenRequest true "Get me"
-// @Router /user/refresh-token [get]
+// @Router /user/refresh-token [patch]
 func (uc *UserController) RefreshToken(ctx *gin.Context) {
 	var request user_request.RefreshTokenRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
