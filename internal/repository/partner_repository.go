@@ -6,7 +6,7 @@ import (
 )
 
 type PartnerRepository interface {
-	PartnersList() ([]model.PartnerModel, error)
+	PartnersList() (*[]model.PartnerModel, error)
 	PartnerDetailById(id uint) (*model.PartnerModel, error)
 }
 
@@ -20,8 +20,8 @@ func NewPartnerRepository(db *gorm.DB) PartnerRepository {
 	}
 }
 
-func (p *PartnerRepositoryImpl) PartnersList() ([]model.PartnerModel, error) {
-	var partners []model.PartnerModel
+func (p *PartnerRepositoryImpl) PartnersList() (*[]model.PartnerModel, error) {
+	var partners *[]model.PartnerModel
 	if err := p.db.Model(&model.PartnerModel{}).Preload("Logo").Find(&partners).Error; err != nil {
 		return nil, err
 	}

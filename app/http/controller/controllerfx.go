@@ -9,4 +9,5 @@ var Modules = fx.Options(
 	fx.Provide(api.NewAuthController),
 	fx.Provide(api.NewPartnerController),
 	fx.Provide(api.NewUserController),
+	fx.Provide(api.NewShopController),
 )

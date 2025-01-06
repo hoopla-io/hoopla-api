@@ -13,7 +13,7 @@ type ShopModel struct {
 	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Attributes []ShopAttributeModel
+	Attributes *[]ShopAttributeModel `gorm:"foreignKey:shop_id;references:id"`
 }
 
 func (ShopModel) TableName() string {

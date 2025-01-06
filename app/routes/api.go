@@ -14,6 +14,7 @@ func NewApiRoute(
 	AuthController *api.AuthController,
 	PartnerController *api.PartnerController,
 	UserController *api.UserController,
+	ShopController *api.ShopController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -31,6 +32,11 @@ func NewApiRoute(
 			{
 				partners.GET("/", PartnerController.Partners)
 				partners.GET("/partner", PartnerController.Partner)
+			}
+
+			shops := v1.Group("/shops")
+			{
+				shops.GET("/partner-shops", ShopController.PartnerShopList)
 			}
 
 			user := v1.Group("/user")

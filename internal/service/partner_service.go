@@ -1,14 +1,16 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 	partners_request "github.com/qahvazor/qahvazor/app/http/request/partners"
 	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
 	"github.com/qahvazor/qahvazor/internal/repository"
+	"gorm.io/gorm"
 )
 
 type PartnerService interface {
-	PartnersList(data partners_request.PartnersRequest) ([]partner_resource.PartnersCollection, int, error)
+	PartnersList(data partners_request.PartnersRequest) (*[]partner_resource.PartnersCollection, int, error)
 	PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error)
 }
 
@@ -22,14 +24,14 @@ func NewPartnerService(PartnerRepository repository.PartnerRepository) PartnerSe
 	}
 }
 
-func (s *PartnerServiceImpl) PartnersList(data partners_request.PartnersRequest) ([]partner_resource.PartnersCollection, int, error) {
+func (s *PartnerServiceImpl) PartnersList(data partners_request.PartnersRequest) (*[]partner_resource.PartnersCollection, int, error) {
 	list, err := s.PartnerRepository.PartnersList()
 	if err != nil {
 		return nil, 500, err
 	}
 	fmt.Print(list)
 	var partners []partner_resource.PartnersCollection
-	for _, item := range list {
+	for _, item := range *list {
 		var logoUrl *string
 		if item.Logo != nil {
 			logoUrl = item.Logo.GetUrl()
@@ -42,12 +44,15 @@ func (s *PartnerServiceImpl) PartnersList(data partners_request.PartnersRequest)
 		})
 	}
 
-	return partners, 200, nil
+	return &partners, 200, nil
 }
 
 func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error) {
 	partner, err := s.PartnerRepository.PartnerDetailById(data.ID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, err
+		}
 		return nil, 500, err
 	}
 

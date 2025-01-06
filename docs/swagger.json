@@ -7,7 +7,7 @@
         },
         "version": "1.0.0"
     },
-    "host": "api.qahvazor.uz",
+    "host": "127.0.0.1:8000",
     "basePath": "/api/v1",
     "paths": {
         "/auth/confirm-sms": {
@@ -114,6 +114,28 @@
                     {
                         "type": "integer",
                         "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/shops/partner-shops": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Partners"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "partnerId",
                         "in": "query",
                         "required": true
                     }

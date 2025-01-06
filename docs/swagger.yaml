@@ -33,7 +33,7 @@ definitions:
     required:
     - refreshToken
     type: object
-host: api.qahvazor.uz
+host: 127.0.0.1:8000
 info:
   contact:
     email: davronbekov.o@itv.uz
@@ -104,6 +104,20 @@ paths:
       parameters:
       - in: query
         name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Partners
+  /shops/partner-shops:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: partnerId
         required: true
         type: integer
       produces:
