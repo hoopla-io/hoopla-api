@@ -104,39 +104,6 @@ create index shop_attributes_attribute_key_index
 create index shop_attributes_deleted_at_index
     on shop_attributes (deleted_at);
 
--- Create coffee table
-CREATE TABLE IF NOT EXISTS coffee (
-    id SERIAL PRIMARY KEY,
-    image_id BIGINT,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_image
-        FOREIGN KEY(image_id) 
-        REFERENCES images(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
--- Create shop_coffees table
-CREATE TABLE IF NOT EXISTS shop_coffees (
-    id SERIAL PRIMARY KEY,
-    shop_id BIGINT,
-    coffee_id BIGINT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_shop
-        FOREIGN KEY(shop_id) 
-        REFERENCES shops(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_coffee
-        FOREIGN KEY(coffee_id) 
-        REFERENCES coffee(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
 -- Create subscription table
 CREATE TABLE IF NOT EXISTS subscription (
     id SERIAL PRIMARY KEY,
