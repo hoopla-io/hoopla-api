@@ -103,17 +103,6 @@ const docTemplate = `{
                 "tags": [
                     "Partners"
                 ],
-                "parameters": [
-                    {
-                        "description": "Partners list",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/partners_request.PartnersRequest"
-                        }
-                    }
-                ],
                 "responses": {}
             }
         },
@@ -238,9 +227,6 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
-        },
-        "partners_request.PartnersRequest": {
-            "type": "object"
         },
         "user_request.GetMeRequest": {
             "type": "object"

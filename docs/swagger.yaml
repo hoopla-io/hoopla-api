@@ -29,8 +29,6 @@ definitions:
       id:
         type: integer
     type: object
-  partners_request.PartnersRequest:
-    type: object
   user_request.GetMeRequest:
     type: object
   user_request.RefreshTokenRequest:
@@ -99,13 +97,6 @@ paths:
     get:
       consumes:
       - application/json
-      parameters:
-      - description: Partners list
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/partners_request.PartnersRequest'
       produces:
       - application/json
       responses: {}

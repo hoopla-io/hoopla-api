@@ -11,24 +11,32 @@ type PartnersController struct {
 	partnerService service.PartnerService
 }
 
-func NewPartnersController(partnerService service.PartnerService) *PartnersController {
+func NewPartnersController(PartnerService service.PartnerService) *PartnersController {
 	return &PartnersController{
-		partnerService: partnerService,
+		partnerService: PartnerService,
 	}
 }
 
 // @Tags Partners
 // @Accept  json
 // @Produce  json
-// @Param data body partners_request.PartnersRequest true "Partners list"
+// @Param data query partners_request.PartnersRequest true "Partners list"
 // @Router /partners [get]
 func (c PartnersController) Partners(ctx *gin.Context) {
 	var request partners_request.PartnersRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	if err := ctx.ShouldBind(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
 
+	partners, code, err := c.partnerService.PartnersList(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", partners, nil)
+	return
 }
 
 // @Tags Partners

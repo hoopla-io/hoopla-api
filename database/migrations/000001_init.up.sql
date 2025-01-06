@@ -2,11 +2,22 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    phone_number VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(255) NOT NULL UNIQUE,
     mobile_provider VARCHAR(100) NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
+
+create index users_deleted_at_index
+    on users (deleted_at);
+
+create index users_phone_number_index
+    on users (phone_number);
+
+create index users_refresh_token_index
+    on users (refresh_token);
 
 -- Create images table
 CREATE TABLE IF NOT EXISTS images (
@@ -20,21 +31,22 @@ CREATE TABLE IF NOT EXISTS images (
     deleted_at TIMESTAMP NULL
 );
 
--- Create company table
-CREATE TABLE IF NOT EXISTS company (
+create index images_deleted_at_index
+    on images (deleted_at);
+
+-- Create partners table
+CREATE TABLE IF NOT EXISTS partners (
     id SERIAL PRIMARY KEY,
+    logo_id BIGINT,
     name VARCHAR(255),
-    image_id BIGINT,
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL,
-    CONSTRAINT fk_image
-        FOREIGN KEY(image_id) 
-        REFERENCES images(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    deleted_at TIMESTAMP NULL
 );
+
+create index partners_deleted_at_index
+    on partners (deleted_at);
 
 -- Create company_socials table
 CREATE TABLE IF NOT EXISTS company_socials (
