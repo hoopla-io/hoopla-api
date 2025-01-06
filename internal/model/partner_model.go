@@ -13,6 +13,8 @@ type PartnerModel struct {
 	CreatedAt   time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
+
+	Logo *ImageModel
 }
 
 func (PartnerModel) TableName() string {

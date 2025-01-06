@@ -22,7 +22,7 @@ func NewPartnerRepository(db *gorm.DB) PartnerRepository {
 
 func (p *PartnerRepositoryImpl) PartnersList() ([]model.PartnerModel, error) {
 	var partners []model.PartnerModel
-	if err := p.db.Model(&model.PartnerModel{}).Find(&partners).Error; err != nil {
+	if err := p.db.Model(&model.PartnerModel{}).Preload("Logo").Find(&partners).Error; err != nil {
 		return nil, err
 	}
 
