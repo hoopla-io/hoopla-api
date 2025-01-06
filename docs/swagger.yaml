@@ -144,7 +144,7 @@ paths:
       tags:
       - User
   /user/refresh-token:
-    get:
+    patch:
       consumes:
       - application/json
       parameters:

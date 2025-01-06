@@ -168,7 +168,7 @@ const docTemplate = `{
             }
         },
         "/user/refresh-token": {
-            "get": {
+            "patch": {
                 "consumes": [
                     "application/json"
                 ],
