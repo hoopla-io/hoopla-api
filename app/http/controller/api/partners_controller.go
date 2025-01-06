@@ -42,12 +42,21 @@ func (c PartnersController) Partners(ctx *gin.Context) {
 // @Tags Partners
 // @Accept  json
 // @Produce  json
-// @Param data body partners_request.PartnerRequest true "Partner Detail"
+// @Param data query partners_request.PartnerRequest true "Partner Detail"
 // @Router /partners/partner [get]
 func (c PartnersController) Partner(ctx *gin.Context) {
 	var request partners_request.PartnerRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	if err := ctx.ShouldBindQuery(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
+
+	partner, code, err := c.partnerService.PartnerDetail(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", partner, nil)
+	return
 }

@@ -24,11 +24,6 @@ definitions:
     required:
     - sessionId
     type: object
-  partners_request.PartnerRequest:
-    properties:
-      id:
-        type: integer
-    type: object
   user_request.GetMeRequest:
     type: object
   user_request.RefreshTokenRequest:
@@ -107,12 +102,10 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Partner Detail
-        in: body
-        name: data
+      - in: query
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/partners_request.PartnerRequest'
+        type: integer
       produces:
       - application/json
       responses: {}

@@ -119,13 +119,10 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "description": "Partner Detail",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/partners_request.PartnerRequest"
-                        }
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -217,14 +214,6 @@ const docTemplate = `{
             "properties": {
                 "sessionId": {
                     "type": "string"
-                }
-            }
-        },
-        "partners_request.PartnerRequest": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
                 }
             }
         },

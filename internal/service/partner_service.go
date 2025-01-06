@@ -9,7 +9,7 @@ import (
 
 type PartnerService interface {
 	PartnersList(data partners_request.PartnersRequest) ([]partner_resource.PartnersCollection, int, error)
-	PartnerDetail(data partners_request.PartnerRequest)
+	PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error)
 }
 
 type PartnerServiceImpl struct {
@@ -45,6 +45,47 @@ func (s *PartnerServiceImpl) PartnersList(data partners_request.PartnersRequest)
 	return partners, 200, nil
 }
 
-func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest) {
+func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error) {
+	partner, err := s.PartnerRepository.PartnerDetailById(data.ID)
+	if err != nil {
+		return nil, 500, err
+	}
 
+	partnerResource := partner_resource.PartnerResource{
+		ID:          partner.ID,
+		Name:        partner.Name,
+		Description: partner.Description,
+		LogoUrl:     nil,
+	}
+
+	var logoUrl *string
+	if partner.Logo != nil {
+		logoUrl = partner.Logo.GetUrl()
+	}
+
+	partnerResource.LogoUrl = logoUrl
+
+	var phoneNumbers []partner_resource.PartnerPhoneNumbersCollection
+	var urls []partner_resource.PartnerUrlsCollection
+	for _, item := range partner.Attributes {
+		fmt.Print(item)
+		switch item.AttributeKey {
+		case "phone_number":
+			phoneNumbers = append(phoneNumbers, partner_resource.PartnerPhoneNumbersCollection{
+				PhoneNumber: item.AttributeValue,
+			})
+			break
+		case "web", "instagram":
+			urls = append(urls, partner_resource.PartnerUrlsCollection{
+				UrlType: item.AttributeKey,
+				Url:     item.AttributeValue,
+			})
+			break
+		}
+	}
+
+	partnerResource.PartnerPhoneNumbers = phoneNumbers
+	partnerResource.PartnerUrls = urls
+
+	return &partnerResource, 200, nil
 }
