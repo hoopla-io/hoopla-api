@@ -1,44 +1,40 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	shop_request "github.com/qahvazor/qahvazor/app/http/request/shop"
+	shops_request "github.com/qahvazor/qahvazor/app/http/request/shops"
 	"github.com/qahvazor/qahvazor/app/http/response"
 	"github.com/qahvazor/qahvazor/internal/service"
 )
 
 type ShopController struct {
-	service service.ShopService
+	shopService service.ShopService
 }
 
-func NewShopController(service service.ShopService) *ShopController {
+func NewShopController(shopService service.ShopService) *ShopController {
 	return &ShopController{
-		service: service,
+		shopService: shopService,
 	}
 }
 
-// @Tags Shop
+// @Tags Partners
 // @Accept  json
 // @Produce  json
-// @Param shopId query int true "Shop ID"
-// @Success 200 {array} shop_response.GetShopDetailsResponse "Shop details response"
-// @Router /shop/detail [get]
-func (ctr *ShopController) GetShopDetails(ctx *gin.Context) {
-	getShopDetailsRequest := shop_request.GetShopDetailsRequest{}
-	if err := ctx.ShouldBindQuery(&getShopDetailsRequest); err != nil {
-		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
+// @Param data query shops_request.PartnerShopsRequest true "Partner shops"
+// @Router /shops/partner-shops [get]
+func (c *ShopController) PartnerShopList(ctx *gin.Context) {
+	var request shops_request.PartnerShopsRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
 
-	results, err := ctr.service.GetShopDetails(getShopDetailsRequest)
-	if err == nil {
-		if errorResponse, ok := results.(response.ErrorResponse); ok {
-			ctx.JSON(errorResponse.Code, errorResponse)
-			return
-		}
+	shops, code, err := c.shopService.PartnerShopsList(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
 	}
 
-	response.NewResponse(ctx, http.StatusOK, "OK!", results, nil)
+	response.SuccessResponse(ctx, "ok!", shops, nil)
+	return
 }

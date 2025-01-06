@@ -6,6 +6,8 @@ type AppConfig struct {
 	APP  string `yaml:"APP"`
 	HOST string `yaml:"HOST"`
 	PORT int    `yaml:"PORT"`
+
+	JwtKey string `yaml:"JWT_KEY"`
 }
 
 func NewAppConfig() *AppConfig {

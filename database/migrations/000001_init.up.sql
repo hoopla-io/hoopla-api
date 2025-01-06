@@ -2,11 +2,22 @@
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    phone_number VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(255) NOT NULL UNIQUE,
     mobile_provider VARCHAR(100) NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
+
+create index users_deleted_at_index
+    on users (deleted_at);
+
+create index users_phone_number_index
+    on users (phone_number);
+
+create index users_refresh_token_index
+    on users (refresh_token);
 
 -- Create images table
 CREATE TABLE IF NOT EXISTS images (
@@ -20,121 +31,78 @@ CREATE TABLE IF NOT EXISTS images (
     deleted_at TIMESTAMP NULL
 );
 
--- Create company table
-CREATE TABLE IF NOT EXISTS company (
+create index images_deleted_at_index
+    on images (deleted_at);
+
+-- Create partners table
+CREATE TABLE IF NOT EXISTS partners (
     id SERIAL PRIMARY KEY,
+    logo_id BIGINT,
     name VARCHAR(255),
-    image_id BIGINT,
-    description VARCHAR(255),
+    description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL,
-    CONSTRAINT fk_image
-        FOREIGN KEY(image_id) 
-        REFERENCES images(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    deleted_at TIMESTAMP NULL
 );
 
--- Create company_socials table
-CREATE TABLE IF NOT EXISTS company_socials (
+create index partners_deleted_at_index
+    on partners (deleted_at);
+
+-- Create partner_attributes table
+CREATE TABLE IF NOT EXISTS partner_attributes (
     id SERIAL PRIMARY KEY,
-    company_id BIGINT,
-    platform VARCHAR(255) NOT NULL,
-    url VARCHAR(255) NOT NULL,
+    partner_id BIGINT,
+    attribute_key VARCHAR(100) NOT NULL,
+    attribute_value VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_company
-        FOREIGN KEY(company_id) 
-        REFERENCES company(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    deleted_at TIMESTAMP NULL
 );
+
+create index partner_attributes_partner_id_index
+    on partner_attributes (partner_id);
+
+create index partner_attributes_attribute_key_index
+    on partner_attributes (attribute_key);
+
+create index partner_attributes_deleted_at_index
+    on partner_attributes (deleted_at);
 
 -- Create shops table
 CREATE TABLE IF NOT EXISTS shops (
     id SERIAL PRIMARY KEY,
-    image_id BIGINT,
-    company_id BIGINT,
-    name VARCHAR(255),
-    location TEXT,
+    partner_id BIGINT,
+    name VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP NULL,
-    CONSTRAINT fk_image
-        FOREIGN KEY(image_id) 
-        REFERENCES images(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_company
-        FOREIGN KEY(company_id) 
-        REFERENCES company(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    deleted_at TIMESTAMP NULL
 );
 
--- Create shop_phones table
-CREATE TABLE IF NOT EXISTS shop_phones (
+create index shops_partner_id_index
+    on shops (partner_id);
+
+create index shops_deleted_at_index
+    on shops (deleted_at);
+
+-- Create shop_attributes table
+CREATE TABLE IF NOT EXISTS shop_attributes (
     id SERIAL PRIMARY KEY,
     shop_id BIGINT,
-    phone_number VARCHAR(255) NOT NULL,
+    attribute_key VARCHAR(100) NOT NULL,
+    attribute_value VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_shop
-        FOREIGN KEY(shop_id) 
-        REFERENCES shops(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+    deleted_at TIMESTAMP NULL
 );
 
--- Create shop_worktimes table
-CREATE TABLE IF NOT EXISTS shop_worktimes (
-    id SERIAL PRIMARY KEY,
-    shop_id BIGINT,
-    day_range VARCHAR(255) NOT NULL,
-    opening_time VARCHAR(255) NOT NULL,
-    closing_time VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_shop
-        FOREIGN KEY(shop_id) 
-        REFERENCES shops(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
+create index shop_attributes_partner_id_index
+    on shop_attributes (shop_id);
 
--- Create coffee table
-CREATE TABLE IF NOT EXISTS coffee (
-    id SERIAL PRIMARY KEY,
-    image_id BIGINT,
-    name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_image
-        FOREIGN KEY(image_id) 
-        REFERENCES images(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
+create index shop_attributes_attribute_key_index
+    on shop_attributes (attribute_key);
 
--- Create shop_coffees table
-CREATE TABLE IF NOT EXISTS shop_coffees (
-    id SERIAL PRIMARY KEY,
-    shop_id BIGINT,
-    coffee_id BIGINT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_shop
-        FOREIGN KEY(shop_id) 
-        REFERENCES shops(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_coffee
-        FOREIGN KEY(coffee_id) 
-        REFERENCES coffee(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
+create index shop_attributes_deleted_at_index
+    on shop_attributes (deleted_at);
 
 -- Create subscription table
 CREATE TABLE IF NOT EXISTS subscription (

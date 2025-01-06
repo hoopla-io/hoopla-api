@@ -39,17 +39,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Confirm Sms Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.ConfirmSmsResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/auth/login": {
@@ -74,17 +64,7 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Login Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.LoginResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/auth/resend-sms": {
@@ -109,20 +89,10 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Resend Sms Response",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/auth_response.ResendSmsResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
-        "/company/list": {
+        "/partners": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -131,22 +101,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Company"
+                    "Partners"
                 ],
-                "responses": {
-                    "200": {
-                        "description": "List of companies",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/company_response.ListResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
-        "/company/shops": {
+        "/partners/partner": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -155,31 +115,20 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Company"
+                    "Partners"
                 ],
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Company ID",
-                        "name": "companyId",
+                        "name": "id",
                         "in": "query",
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "List of company shops",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/company_response.GetCompanyShopsResponse"
-                            }
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
-        "/shop/detail": {
+        "/shops/partner-shops": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -188,34 +137,77 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Shop"
+                    "Partners"
                 ],
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Shop ID",
-                        "name": "shopId",
+                        "name": "partnerId",
                         "in": "query",
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Shop details response",
+                "responses": {}
+            }
+        },
+        "/user/get-me": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "Get me",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/shop_response.GetShopDetailsResponse"
-                            }
+                            "$ref": "#/definitions/user_request.GetMeRequest"
                         }
                     }
-                }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/refresh-token": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "Get me",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_request.RefreshTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {}
             }
         }
     },
     "definitions": {
         "auth_request.ConfirmSmsRequest": {
             "type": "object",
+            "required": [
+                "code",
+                "sessionId"
+            ],
             "properties": {
                 "code": {
                     "type": "integer"
@@ -227,6 +219,9 @@ const docTemplate = `{
         },
         "auth_request.LoginRequest": {
             "type": "object",
+            "required": [
+                "phoneNumber"
+            ],
             "properties": {
                 "phoneNumber": {
                     "type": "string"
@@ -235,208 +230,26 @@ const docTemplate = `{
         },
         "auth_request.ResendSmsRequest": {
             "type": "object",
+            "required": [
+                "sessionId"
+            ],
             "properties": {
                 "sessionId": {
                     "type": "string"
                 }
             }
         },
-        "auth_response.ConfirmSmsResponse": {
+        "user_request.GetMeRequest": {
+            "type": "object"
+        },
+        "user_request.RefreshTokenRequest": {
             "type": "object",
+            "required": [
+                "refreshToken"
+            ],
             "properties": {
-                "accessToken": {
-                    "type": "string"
-                },
-                "expireAt": {
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                },
                 "refreshToken": {
                     "type": "string"
-                }
-            }
-        },
-        "auth_response.LoginResponse": {
-            "type": "object",
-            "properties": {
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "sessionExpiresAt": {
-                    "type": "integer"
-                },
-                "sessionId": {
-                    "type": "string"
-                }
-            }
-        },
-        "auth_response.ResendSmsResponse": {
-            "type": "object",
-            "properties": {
-                "phoneNumber": {
-                    "type": "string"
-                },
-                "sessionExpiresAt": {
-                    "type": "integer"
-                },
-                "sessionId": {
-                    "type": "string"
-                }
-            }
-        },
-        "company_response.GetCompanyShopsResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "shops": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/company_response.Shop"
-                    }
-                }
-            }
-        },
-        "company_response.ListResponse": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "company_response.Shop": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "location": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Coffee": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.GetShopDetailsResponse": {
-            "type": "object",
-            "properties": {
-                "coffees": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Coffee"
-                    }
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "location": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "phones": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Phone"
-                    }
-                },
-                "shopId": {
-                    "type": "integer"
-                },
-                "socials": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Social"
-                    }
-                },
-                "worktimes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/shop_response.Worktime"
-                    }
-                }
-            }
-        },
-        "shop_response.Phone": {
-            "type": "object",
-            "properties": {
-                "phoneId": {
-                    "type": "integer"
-                },
-                "phoneNumber": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Social": {
-            "type": "object",
-            "properties": {
-                "platform": {
-                    "type": "string"
-                },
-                "socialId": {
-                    "type": "integer"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "shop_response.Worktime": {
-            "type": "object",
-            "properties": {
-                "closingTime": {
-                    "type": "string"
-                },
-                "dayRange": {
-                    "type": "string"
-                },
-                "openingTime": {
-                    "type": "string"
-                },
-                "worktimeId": {
-                    "type": "integer"
                 }
             }
         }

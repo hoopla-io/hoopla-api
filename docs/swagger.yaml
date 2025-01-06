@@ -6,145 +6,32 @@ definitions:
         type: integer
       sessionId:
         type: string
+    required:
+    - code
+    - sessionId
     type: object
   auth_request.LoginRequest:
     properties:
       phoneNumber:
         type: string
+    required:
+    - phoneNumber
     type: object
   auth_request.ResendSmsRequest:
     properties:
       sessionId:
         type: string
+    required:
+    - sessionId
     type: object
-  auth_response.ConfirmSmsResponse:
+  user_request.GetMeRequest:
+    type: object
+  user_request.RefreshTokenRequest:
     properties:
-      accessToken:
-        type: string
-      expireAt:
-        type: integer
-      phoneNumber:
-        type: string
       refreshToken:
         type: string
-    type: object
-  auth_response.LoginResponse:
-    properties:
-      phoneNumber:
-        type: string
-      sessionExpiresAt:
-        type: integer
-      sessionId:
-        type: string
-    type: object
-  auth_response.ResendSmsResponse:
-    properties:
-      phoneNumber:
-        type: string
-      sessionExpiresAt:
-        type: integer
-      sessionId:
-        type: string
-    type: object
-  company_response.GetCompanyShopsResponse:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-      imageUrl:
-        type: string
-      name:
-        type: string
-      shops:
-        items:
-          $ref: '#/definitions/company_response.Shop'
-        type: array
-    type: object
-  company_response.ListResponse:
-    properties:
-      description:
-        type: string
-      id:
-        type: integer
-      imageUrl:
-        type: string
-      name:
-        type: string
-    type: object
-  company_response.Shop:
-    properties:
-      id:
-        type: integer
-      imageUrl:
-        type: string
-      location:
-        type: string
-      name:
-        type: string
-    type: object
-  shop_response.Coffee:
-    properties:
-      id:
-        type: integer
-      imageUrl:
-        type: string
-      name:
-        type: string
-    type: object
-  shop_response.GetShopDetailsResponse:
-    properties:
-      coffees:
-        items:
-          $ref: '#/definitions/shop_response.Coffee'
-        type: array
-      imageUrl:
-        type: string
-      location:
-        type: string
-      name:
-        type: string
-      phones:
-        items:
-          $ref: '#/definitions/shop_response.Phone'
-        type: array
-      shopId:
-        type: integer
-      socials:
-        items:
-          $ref: '#/definitions/shop_response.Social'
-        type: array
-      worktimes:
-        items:
-          $ref: '#/definitions/shop_response.Worktime'
-        type: array
-    type: object
-  shop_response.Phone:
-    properties:
-      phoneId:
-        type: integer
-      phoneNumber:
-        type: string
-    type: object
-  shop_response.Social:
-    properties:
-      platform:
-        type: string
-      socialId:
-        type: integer
-      url:
-        type: string
-    type: object
-  shop_response.Worktime:
-    properties:
-      closingTime:
-        type: string
-      dayRange:
-        type: string
-      openingTime:
-        type: string
-      worktimeId:
-        type: integer
+    required:
+    - refreshToken
     type: object
 host: api.qahvazor.uz
 info:
@@ -166,13 +53,7 @@ paths:
           $ref: '#/definitions/auth_request.ConfirmSmsRequest'
       produces:
       - application/json
-      responses:
-        "200":
-          description: Confirm Sms Response
-          schema:
-            items:
-              $ref: '#/definitions/auth_response.ConfirmSmsResponse'
-            type: array
+      responses: {}
       tags:
       - Auth
   /auth/login:
@@ -188,13 +69,7 @@ paths:
           $ref: '#/definitions/auth_request.LoginRequest'
       produces:
       - application/json
-      responses:
-        "200":
-          description: Login Response
-          schema:
-            items:
-              $ref: '#/definitions/auth_response.LoginResponse'
-            type: array
+      responses: {}
       tags:
       - Auth
   /auth/resend-sms:
@@ -210,70 +85,76 @@ paths:
           $ref: '#/definitions/auth_request.ResendSmsRequest'
       produces:
       - application/json
-      responses:
-        "200":
-          description: Resend Sms Response
-          schema:
-            items:
-              $ref: '#/definitions/auth_response.ResendSmsResponse'
-            type: array
+      responses: {}
       tags:
       - Auth
-  /company/list:
+  /partners:
     get:
       consumes:
       - application/json
       produces:
       - application/json
-      responses:
-        "200":
-          description: List of companies
-          schema:
-            items:
-              $ref: '#/definitions/company_response.ListResponse'
-            type: array
+      responses: {}
       tags:
-      - Company
-  /company/shops:
+      - Partners
+  /partners/partner:
     get:
       consumes:
       - application/json
       parameters:
-      - description: Company ID
-        in: query
-        name: companyId
+      - in: query
+        name: id
         required: true
         type: integer
       produces:
       - application/json
-      responses:
-        "200":
-          description: List of company shops
-          schema:
-            items:
-              $ref: '#/definitions/company_response.GetCompanyShopsResponse'
-            type: array
+      responses: {}
       tags:
-      - Company
-  /shop/detail:
+      - Partners
+  /shops/partner-shops:
     get:
       consumes:
       - application/json
       parameters:
-      - description: Shop ID
-        in: query
-        name: shopId
+      - in: query
+        name: partnerId
         required: true
         type: integer
       produces:
       - application/json
-      responses:
-        "200":
-          description: Shop details response
-          schema:
-            items:
-              $ref: '#/definitions/shop_response.GetShopDetailsResponse'
-            type: array
+      responses: {}
       tags:
-      - Shop
+      - Partners
+  /user/get-me:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Get me
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_request.GetMeRequest'
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User
+  /user/refresh-token:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Get me
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_request.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User
 swagger: "2.0"
