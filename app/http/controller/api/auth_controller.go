@@ -1,8 +1,6 @@
 package api
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
 	"github.com/qahvazor/qahvazor/app/http/response"
@@ -49,7 +47,7 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 	confirmSmsRequest := auth_request.ConfirmSmsRequest{}
 	if err := ctx.ShouldBindJSON(&confirmSmsRequest); err != nil {
-		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
+		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
 
@@ -70,7 +68,7 @@ func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 func (ctr *AuthController) ResendSms(ctx *gin.Context) {
 	resendSmsRequest := auth_request.ResendSmsRequest{}
 	if err := ctx.ShouldBindJSON(&resendSmsRequest); err != nil {
-		response.NewResponse(ctx, http.StatusBadRequest, err.Error(), nil, nil)
+		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
 

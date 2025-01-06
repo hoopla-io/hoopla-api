@@ -72,7 +72,7 @@ func (s *UserServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.
 func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error) {
 	session, callback := s.sessionCache.Get(data.SessionID)
 	if !callback {
-		return nil, 404, errors.New("session not found")
+		return nil, 422, errors.New("session not found")
 	}
 	sessionData, callback := session.(dto.SessionDTO)
 	if !callback {
@@ -115,7 +115,7 @@ func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 	}
 
 	// Generate the JWT token
-	expireAt := time.Now().Add(10 * time.Minute).Unix()
+	expireAt := time.Now().Add(1 * time.Hour).Unix()
 	accessToken, err := utils.EncodeJWT(user.ID, user.PhoneNumber, expireAt)
 	if err != nil {
 		return nil, 500, err
@@ -185,7 +185,7 @@ func (s *UserServiceImpl) RefreshToken(data user_request.RefreshTokenRequest) (*
 	}
 
 	// Generate the JWT token
-	expireAt := time.Now().Add(10 * time.Minute).Unix()
+	expireAt := time.Now().Add(1 * time.Hour).Unix()
 	accessToken, err := utils.EncodeJWT(user.ID, user.PhoneNumber, expireAt)
 	if err != nil {
 		return nil, 500, err
