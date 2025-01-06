@@ -62,9 +62,10 @@ func (s *UserServiceImpl) Login(data auth_request.LoginRequest) (*auth_resource.
 	}
 
 	sessionResource := &auth_resource.SessionResource{
-		PhoneNumber:      data.PhoneNumber,
-		SessionID:        sessionIdStr,
-		SessionExpiresAt: session.Session.ExpiresAt,
+		PhoneNumber:       data.PhoneNumber,
+		SessionID:         sessionIdStr,
+		SessionExpiresAt:  session.Session.ExpiresAt,
+		SessionExpireAtMs: session.Session.ExpiresAt * 1000,
 	}
 	return sessionResource, 200, nil
 }
@@ -128,7 +129,8 @@ func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 		Jwt: auth_resource.JwtResource{
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
-			ExpireAt:     expireAt * 1000,
+			ExpireAt:     expireAt,
+			ExpireAtMs:   expireAt * 1000,
 		},
 	}
 	return loginResource, 200, nil
@@ -137,7 +139,7 @@ func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 func (s *UserServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error) {
 	session, callback := s.sessionCache.Get(data.SessionID)
 	if !callback {
-		return nil, 404, errors.New("session not found")
+		return nil, 422, errors.New("session not found")
 	}
 	sessionData, callback := session.(dto.SessionDTO)
 	if !callback {
@@ -161,9 +163,10 @@ func (s *UserServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_r
 	}
 
 	sessionResource := &auth_resource.SessionResource{
-		PhoneNumber:      sessionData.PhoneNumber,
-		SessionID:        sessionIdStr,
-		SessionExpiresAt: sessionData.Session.ExpiresAt,
+		PhoneNumber:       sessionData.PhoneNumber,
+		SessionID:         sessionIdStr,
+		SessionExpiresAt:  sessionData.Session.ExpiresAt,
+		SessionExpireAtMs: sessionData.Session.ExpiresAt * 1000,
 	}
 	return sessionResource, 200, nil
 }
@@ -194,7 +197,8 @@ func (s *UserServiceImpl) RefreshToken(data user_request.RefreshTokenRequest) (*
 	jwtResource := &auth_resource.JwtResource{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
-		ExpireAt:     expireAt * 1000,
+		ExpireAt:     expireAt,
+		ExpireAtMs:   expireAt * 1000,
 	}
 	return jwtResource, 200, nil
 }
