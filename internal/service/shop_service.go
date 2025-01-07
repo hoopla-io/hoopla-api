@@ -9,7 +9,7 @@ import (
 )
 
 type ShopService interface {
-	PartnerShopsList(data shops_request.PartnerShopsRequest) ([]partner_resource.ShopsCollections, int, error)
+	PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error)
 }
 
 type ShopServiceImpl struct {
@@ -22,7 +22,7 @@ func NewShopService(shopRepository repository.ShopRepository) ShopService {
 	}
 }
 
-func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsRequest) ([]partner_resource.ShopsCollections, int, error) {
+func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error) {
 	shops, err := s.ShopRepository.GetPartnerShops(data.PartnerID)
 	if err != nil {
 		return nil, 500, err
@@ -67,5 +67,5 @@ func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsReques
 		shopsCollection = append(shopsCollection, shopResource)
 	}
 
-	return shopsCollection, 200, nil
+	return &shopsCollection, 200, nil
 }
