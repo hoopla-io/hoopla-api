@@ -38,3 +38,25 @@ func (c *ShopController) PartnerShopList(ctx *gin.Context) {
 	response.SuccessResponse(ctx, "ok!", shops, nil)
 	return
 }
+
+// @Tags Shops
+// @Accept  json
+// @Produce  json
+// @Param data query shops_request.ShopRequest true "Partner shops"
+// @Router /shops/shop [get]
+func (c *ShopController) Shop(ctx *gin.Context) {
+	var request shops_request.ShopRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	shop, code, err := c.shopService.ShopDetail(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", shop, nil)
+	return
+}

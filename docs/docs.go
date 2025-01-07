@@ -150,6 +150,28 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/shops/shop": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Shops"
+                ],
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "shopId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/user/get-me": {
             "get": {
                 "consumes": [

@@ -37,6 +37,7 @@ func NewApiRoute(
 			shops := v1.Group("/shops")
 			{
 				shops.GET("/partner-shops", ShopController.PartnerShopList)
+				shops.GET("/shop", ShopController.Shop)
 			}
 
 			user := v1.Group("/user")

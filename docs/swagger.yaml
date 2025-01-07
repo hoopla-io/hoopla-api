@@ -125,6 +125,20 @@ paths:
       responses: {}
       tags:
       - Partners
+  /shops/shop:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: shopId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Shops
   /user/get-me:
     get:
       consumes:
