@@ -24,7 +24,7 @@ func NewPartnerController(PartnerService service.PartnerService) *PartnerControl
 // @Router /partners [get]
 func (c PartnerController) Partners(ctx *gin.Context) {
 	var request partners_request.PartnersRequest
-	if err := ctx.ShouldBind(&request); err != nil {
+	if err := ctx.ShouldBindQuery(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}

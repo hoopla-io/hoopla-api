@@ -84,8 +84,9 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	}
 
 	shopResource := shop_resource.ShopResource{
-		ID:   shop.ID,
-		Name: shop.Name,
+		ID:        shop.ID,
+		PartnerId: shop.PartnerID,
+		Name:      shop.Name,
 	}
 
 	var shopLocation shop_resource.ShopLocationResource

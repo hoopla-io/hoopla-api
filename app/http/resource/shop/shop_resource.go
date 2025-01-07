@@ -1,8 +1,9 @@
 package shop_resource
 
 type ShopResource struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID        uint   `json:"id"`
+	PartnerId uint   `json:"partnerId"`
+	Name      string `json:"name"`
 
 	Location     *ShopLocationResource         `json:"location"`
 	PhoneNumbers *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`

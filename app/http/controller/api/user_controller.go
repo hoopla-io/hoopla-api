@@ -22,11 +22,11 @@ func NewUserController(userService service.UserService) *UserController {
 // @Tags User
 // @Accept  json
 // @Produce  json
-// @Param data body user_request.GetMeRequest true "Get me"
+// @Param data query user_request.GetMeRequest true "Get me"
 // @Router /user/get-me [get]
 func (uc *UserController) GetMe(ctx *gin.Context) {
 	var request user_request.GetMeRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	if err := ctx.ShouldBindQuery(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
@@ -52,11 +52,11 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 // @Tags User
 // @Accept  json
 // @Produce  json
-// @Param data body user_request.RefreshTokenRequest true "Get me"
+// @Param data query user_request.RefreshTokenRequest true "Get me"
 // @Router /user/refresh-token [patch]
 func (uc *UserController) RefreshToken(ctx *gin.Context) {
 	var request user_request.RefreshTokenRequest
-	if err := ctx.ShouldBindJSON(&request); err != nil {
+	if err := ctx.ShouldBindQuery(&request); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
