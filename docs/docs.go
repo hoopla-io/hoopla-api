@@ -183,17 +183,6 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "parameters": [
-                    {
-                        "description": "Get me",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/user_request.GetMeRequest"
-                        }
-                    }
-                ],
                 "responses": {}
             }
         },
@@ -210,13 +199,10 @@ const docTemplate = `{
                 ],
                 "parameters": [
                     {
-                        "description": "Get me",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/user_request.RefreshTokenRequest"
-                        }
+                        "type": "string",
+                        "name": "refreshToken",
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {}
@@ -257,20 +243,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "sessionId": {
-                    "type": "string"
-                }
-            }
-        },
-        "user_request.GetMeRequest": {
-            "type": "object"
-        },
-        "user_request.RefreshTokenRequest": {
-            "type": "object",
-            "required": [
-                "refreshToken"
-            ],
-            "properties": {
-                "refreshToken": {
                     "type": "string"
                 }
             }
