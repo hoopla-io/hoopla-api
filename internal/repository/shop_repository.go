@@ -32,7 +32,7 @@ func (r *ShopRepositoryImpl) GetPartnerShops(partnerId uint) (*[]model.ShopModel
 
 func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, error) {
 	var shop model.ShopModel
-	err := r.db.Where("id = ?", shopId).Preload("Attributes").First(&shop).Error
+	err := r.db.Where("id = ?", shopId).Preload("Attributes").Preload("WorkingHours").First(&shop).Error
 	if err != nil {
 		return nil, err
 	}

@@ -5,8 +5,9 @@ type ShopResource struct {
 	PartnerId uint   `json:"partnerId"`
 	Name      string `json:"name"`
 
-	Location     *ShopLocationResource         `json:"location"`
-	PhoneNumbers *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`
+	Location                   *ShopLocationResource         `json:"location"`
+	PhoneNumbers               *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`
+	ShopWorkingHoursCollection *[]ShopWorkingHoursCollection `json:"workingHours"`
 }
 
 type ShopLocationResource struct {
@@ -16,4 +17,10 @@ type ShopLocationResource struct {
 
 type ShopPhoneNumbersCollection struct {
 	PhoneNumber string `json:"phoneNumber"`
+}
+
+type ShopWorkingHoursCollection struct {
+	WeekDay string `json:"weekDay"`
+	OpenAt  string `json:"openAt"`
+	CloseAt string `json:"closeAt"`
 }

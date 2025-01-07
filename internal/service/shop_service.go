@@ -118,5 +118,15 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	shopResource.Location = &shopLocation
 	shopResource.PhoneNumbers = &phoneNumbers
 
+	var workingHours []shop_resource.ShopWorkingHoursCollection
+	for _, workingHour := range *shop.WorkingHours {
+		workingHours = append(workingHours, shop_resource.ShopWorkingHoursCollection{
+			WeekDay: workingHour.WeekDay,
+			OpenAt:  workingHour.OpenAt,
+			CloseAt: workingHour.CloseAt,
+		})
+	}
+	shopResource.ShopWorkingHoursCollection = &workingHours
+
 	return &shopResource, 200, nil
 }

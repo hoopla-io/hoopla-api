@@ -104,6 +104,27 @@ create index shop_attributes_attribute_key_index
 create index shop_attributes_deleted_at_index
     on shop_attributes (deleted_at);
 
+-- Create shop_hours
+CREATE TABLE IF NOT EXISTS shop_hours (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    week_day VARCHAR(50) NOT NULL,
+    open_at VARCHAR(10) NOT NULL,
+    close_at VARCHAR(10) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+create index shop_hours_shop_id_index
+    on shop_hours (shop_id);
+
+create index shop_hours_week_day_index
+    on shop_hours (week_day);
+
+create index shop_hours_deleted_at_index
+    on shop_hours (deleted_at);
+
 -- Create subscription table
 CREATE TABLE IF NOT EXISTS subscription (
     id SERIAL PRIMARY KEY,
