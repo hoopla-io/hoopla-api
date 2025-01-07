@@ -90,7 +90,7 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	}
 
 	var shopLocation shop_resource.ShopLocationResource
-	var phoneNumbers []shop_resource.ShopPhoneNumbersCollection
+	var phoneNumbers []shop_resource.ShopPhoneNumberResource
 	for _, attribute := range *shop.Attributes {
 		switch attribute.AttributeKey {
 		case "lat":
@@ -110,7 +110,7 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 			shopLocation.Lng = floatValue
 			break
 		case "phone_number":
-			phoneNumbers = append(phoneNumbers, shop_resource.ShopPhoneNumbersCollection{
+			phoneNumbers = append(phoneNumbers, shop_resource.ShopPhoneNumberResource{
 				PhoneNumber: attribute.AttributeValue,
 			})
 		}
@@ -118,15 +118,27 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	shopResource.Location = &shopLocation
 	shopResource.PhoneNumbers = &phoneNumbers
 
-	var workingHours []shop_resource.ShopWorkingHoursCollection
+	var workingHours []shop_resource.ShopWorkingHoursResource
 	for _, workingHour := range *shop.WorkingHours {
-		workingHours = append(workingHours, shop_resource.ShopWorkingHoursCollection{
+		workingHours = append(workingHours, shop_resource.ShopWorkingHoursResource{
 			WeekDay: workingHour.WeekDay,
 			OpenAt:  workingHour.OpenAt,
 			CloseAt: workingHour.CloseAt,
 		})
 	}
-	shopResource.ShopWorkingHoursCollection = &workingHours
+	shopResource.ShopWorkingHours = &workingHours
+
+	var pictures []shop_resource.ShopPictureResource
+	for _, picture := range *shop.Pictures {
+		var pictureUrl *string
+		if picture.Image != nil {
+			pictureUrl = picture.Image.GetUrl()
+			pictures = append(pictures, shop_resource.ShopPictureResource{
+				PictureUrl: pictureUrl,
+			})
+		}
+	}
+	shopResource.Pictures = &pictures
 
 	return &shopResource, 200, nil
 }

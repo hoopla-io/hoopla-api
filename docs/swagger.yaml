@@ -24,7 +24,7 @@ definitions:
     required:
     - sessionId
     type: object
-host: api.qahvazor.uz
+host: 127.0.0.1:8000
 info:
   contact:
     email: davronbekov.o@itv.uz

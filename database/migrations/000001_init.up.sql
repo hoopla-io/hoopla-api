@@ -104,7 +104,7 @@ create index shop_attributes_attribute_key_index
 create index shop_attributes_deleted_at_index
     on shop_attributes (deleted_at);
 
--- Create shop_hours
+-- Create shop_hours table
 CREATE TABLE IF NOT EXISTS shop_hours (
     id SERIAL PRIMARY KEY,
     shop_id BIGINT,
@@ -124,6 +124,22 @@ create index shop_hours_week_day_index
 
 create index shop_hours_deleted_at_index
     on shop_hours (deleted_at);
+
+-- Create shop_pictures table
+CREATE TABLE IF NOT EXISTS shop_pictures (
+    id SERIAL PRIMARY KEY,
+    shop_id BIGINT,
+    image_id BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+create index shop_pictures_shop_id_index
+    on shop_pictures (shop_id);
+
+create index shop_pictures_deleted_at_index
+    on shop_pictures (deleted_at);
 
 -- Create subscription table
 CREATE TABLE IF NOT EXISTS subscription (
