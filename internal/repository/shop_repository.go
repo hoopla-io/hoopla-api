@@ -22,7 +22,10 @@ func NewShopRepository(db *gorm.DB) ShopRepository {
 
 func (r *ShopRepositoryImpl) GetPartnerShops(partnerId uint) (*[]model.ShopModel, error) {
 	var shops []model.ShopModel
-	err := r.db.Where("partner_id = ?", partnerId).Preload("Attributes").Find(&shops).Error
+	err := r.db.Where("partner_id = ?", partnerId).
+		Preload("Attributes").
+		Preload("Picture.Image").
+		Find(&shops).Error
 	if err != nil {
 		return nil, err
 	}

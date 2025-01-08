@@ -1,8 +1,9 @@
 package partner_resource
 
 type ShopsCollections struct {
-	ShopID uint   `json:"shopId"`
-	Name   string `json:"name"`
+	ShopID     uint    `json:"shopId"`
+	Name       string  `json:"name"`
+	PictureURL *string `json:"pictureUrl"`
 
 	Location     *ShopLocationResource         `json:"location"`
 	PhoneNumbers *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`
