@@ -141,6 +141,17 @@ create index shop_pictures_shop_id_index
 create index shop_pictures_deleted_at_index
     on shop_pictures (deleted_at);
 
+-- Create partner_drinks table
+CREATE TABLE IF NOT EXISTS partner_drinks (
+    id SERIAL PRIMARY KEY,
+    partner_id BIGINT NOT NULL,
+    image_id BIGINT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
 -- Create subscription table
 CREATE TABLE IF NOT EXISTS subscription (
     id SERIAL PRIMARY KEY,
