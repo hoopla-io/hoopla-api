@@ -68,6 +68,13 @@ func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsReques
 		shopResource.Location = &shopLocation
 		shopResource.PhoneNumbers = &phoneNumbers
 
+		var pictureUrl *string
+		picture := shop.Picture
+		if picture != nil {
+			pictureUrl = picture.Image.GetUrl()
+			shopResource.PictureURL = pictureUrl
+		}
+
 		shopsCollection = append(shopsCollection, shopResource)
 	}
 

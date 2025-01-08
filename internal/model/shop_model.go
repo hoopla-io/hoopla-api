@@ -16,6 +16,7 @@ type ShopModel struct {
 	Attributes   *[]ShopAttributeModel `gorm:"foreignKey:shop_id;references:id"`
 	WorkingHours *[]ShopHourModel      `gorm:"foreignKey:shop_id;references:id"`
 	Pictures     *[]ShopPictureModel   `gorm:"foreignKey:shop_id;references:id"`
+	Picture      *ShopPictureModel     `gorm:"foreignKey:shop_id;references:id"`
 }
 
 func (ShopModel) TableName() string {
