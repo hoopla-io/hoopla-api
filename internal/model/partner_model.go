@@ -14,8 +14,9 @@ type PartnerModel struct {
 	UpdatedAt   time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 
-	Logo       *ImageModel
-	Attributes []PartnerAttributeModel `gorm:"foreignKey:partner_id;references:id"`
+	Logo          *ImageModel
+	Attributes    []PartnerAttributeModel `gorm:"foreignKey:partner_id;references:id"`
+	PartnerDrinks []PartnerDrinkModel     `gorm:"foreignKey:partner_id;references:id"`
 }
 
 func (PartnerModel) TableName() string {

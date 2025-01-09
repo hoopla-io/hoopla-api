@@ -6,8 +6,9 @@ type PartnerResource struct {
 	Description string  `json:"description"`
 	LogoUrl     *string `json:"logoUrl"`
 
-	PartnerPhoneNumbers []PartnerPhoneNumbersCollection `json:"phoneNumbers"`
-	PartnerUrls         []PartnerUrlsCollection         `json:"urls"`
+	PartnerPhoneNumbers *[]PartnerPhoneNumbersCollection `json:"phoneNumbers"`
+	PartnerUrls         *[]PartnerUrlsCollection         `json:"urls"`
+	PartnerDrinks       *[]DrinksCollection              `json:"drinks"`
 }
 
 type PartnerPhoneNumbersCollection struct {

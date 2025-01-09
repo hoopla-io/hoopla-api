@@ -32,7 +32,11 @@ func (p *PartnerRepositoryImpl) PartnersList() (*[]model.PartnerModel, error) {
 
 func (p *PartnerRepositoryImpl) PartnerDetailById(id uint) (*model.PartnerModel, error) {
 	var partner model.PartnerModel
-	if err := p.db.Where("id = ?", id).Preload("Logo").Preload("Attributes").First(&partner).Error; err != nil {
+	if err := p.db.Where("id = ?", id).
+		Preload("Logo").
+		Preload("Attributes").
+		Preload("PartnerDrinks.Drink.Image").
+		First(&partner).Error; err != nil {
 		return nil, err
 	}
 	return &partner, nil
