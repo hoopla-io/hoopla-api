@@ -73,7 +73,6 @@ func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest)
 	var phoneNumbers []partner_resource.PartnerPhoneNumbersCollection
 	var urls []partner_resource.PartnerUrlsCollection
 	for _, item := range partner.Attributes {
-		fmt.Print(item)
 		switch item.AttributeKey {
 		case "phone_number":
 			phoneNumbers = append(phoneNumbers, partner_resource.PartnerPhoneNumbersCollection{
@@ -88,9 +87,24 @@ func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest)
 			break
 		}
 	}
+	partnerResource.PartnerPhoneNumbers = &phoneNumbers
+	partnerResource.PartnerUrls = &urls
 
-	partnerResource.PartnerPhoneNumbers = phoneNumbers
-	partnerResource.PartnerUrls = urls
+	var partnerDrinks []partner_resource.DrinksCollection
+	for _, partnerDrink := range partner.PartnerDrinks {
+		drink := partnerDrink.Drink
+
+		var pictureUrl *string
+		if drink.Image != nil {
+			pictureUrl = drink.Image.GetUrl()
+		}
+		partnerDrinks = append(partnerDrinks, partner_resource.DrinksCollection{
+			ID:         drink.ID,
+			Name:       drink.Name,
+			PictureUrl: pictureUrl,
+		})
+	}
+	partnerResource.PartnerDrinks = &partnerDrinks
 
 	return &partnerResource, 200, nil
 }

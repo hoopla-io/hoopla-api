@@ -1,20 +1,11 @@
 package model
 
-import (
-	"gorm.io/gorm"
-	"time"
-)
-
 type PartnerDrinkModel struct {
-	ID        uint           `gorm:"primaryKey;autoIncrement"`
-	PartnerID uint           `gorm:"not null;index"`
-	ImageID   uint           `gorm:"not null"`
-	Name      string         `gorm:"not null"`
-	CreatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        uint `gorm:"primaryKey;autoIncrement"`
+	PartnerID uint `gorm:"not null;index"`
+	DrinkID   uint `gorm:"not null;index"`
 
-	Image *ImageModel `gorm:"foreignKey:image_id;primaryKey:id"`
+	Drink DrinkModel `gorm:"foreignKey:id;references:drink_id"`
 }
 
 func (PartnerDrinkModel) TableName() string {
