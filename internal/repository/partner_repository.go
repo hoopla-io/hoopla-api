@@ -20,6 +20,7 @@ func NewPartnerRepository(db *gorm.DB) PartnerRepository {
 	}
 }
 
+// PartnersList fetches all partners from the database
 func (p *PartnerRepositoryImpl) PartnersList() (*[]model.PartnerModel, error) {
 	var partners *[]model.PartnerModel
 	if err := p.db.Model(&model.PartnerModel{}).Preload("Logo").Find(&partners).Error; err != nil {
