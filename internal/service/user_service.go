@@ -3,12 +3,14 @@ package service
 import (
 	"crypto/md5"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	user_request "github.com/qahvazor/qahvazor/app/http/request/user"
 	auth_resource "github.com/qahvazor/qahvazor/app/http/resource/auth"
+	user_resource "github.com/qahvazor/qahvazor/app/http/resource/user"
 	"github.com/qahvazor/qahvazor/pkg/itvmsq"
 	"golang.org/x/exp/rand"
 	"gorm.io/gorm"
@@ -27,6 +29,7 @@ type UserService interface {
 	ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error)
 	RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error)
 	Logout(data user_request.LogoutRequest, userId uint) (int, error)
+	GenerateQRCode(data user_request.GenerateQrCodeRequest, userId uint) (*user_resource.QrCodeResource, error)
 }
 
 type UserServiceImpl struct {
@@ -218,4 +221,15 @@ func (s *UserServiceImpl) Logout(data user_request.LogoutRequest, userId uint) (
 	}
 
 	return 200, nil
+}
+
+func (s *UserServiceImpl) GenerateQRCode(data user_request.GenerateQrCodeRequest, userId uint) (*user_resource.QrCodeResource, error) {
+	qrCode := fmt.Sprintf("%d:%d", userId, time.Now().UnixMicro())
+	encoded := base64.StdEncoding.EncodeToString([]byte(qrCode))
+
+	qrCodeResource := &user_resource.QrCodeResource{
+		QrCode: encoded,
+	}
+
+	return qrCodeResource, nil
 }

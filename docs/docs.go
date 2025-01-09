@@ -172,6 +172,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/generate-qr-code": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "QR"
+                ],
+                "responses": {}
+            }
+        },
         "/user/get-me": {
             "get": {
                 "consumes": [

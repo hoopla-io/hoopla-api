@@ -44,7 +44,8 @@ func NewApiRoute(
 			{
 				user.GET("/get-me", middleware.JwtMiddleware(), UserController.GetMe)
 				user.PATCH("/refresh-token", UserController.RefreshToken)
-				user.POST("/logout", UserController.Logout)
+				user.POST("/logout", middleware.JwtMiddleware(), UserController.Logout)
+				user.GET("/generate-qr-code", middleware.JwtMiddleware(), UserController.GenerateQRCode)
 			}
 
 			//company := v1.Group("/company")
