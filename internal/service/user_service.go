@@ -224,11 +224,15 @@ func (s *UserServiceImpl) Logout(data user_request.LogoutRequest, userId uint) (
 }
 
 func (s *UserServiceImpl) GenerateQRCode(data user_request.GenerateQrCodeRequest, userId uint) (*user_resource.QrCodeResource, error) {
-	qrCode := fmt.Sprintf("%d:%d", userId, time.Now().UnixMicro())
+	expireAt := time.Now().Add(45 * time.Second).Unix()
+
+	qrCode := fmt.Sprintf("%d:%d", userId, expireAt)
 	encoded := base64.StdEncoding.EncodeToString([]byte(qrCode))
 
 	qrCodeResource := &user_resource.QrCodeResource{
-		QrCode: encoded,
+		QrCode:     encoded,
+		ExpireAt:   expireAt,
+		ExpireAtMs: expireAt * 1000,
 	}
 
 	return qrCodeResource, nil
