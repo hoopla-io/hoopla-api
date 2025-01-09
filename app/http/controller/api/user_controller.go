@@ -99,3 +99,32 @@ func (uc *UserController) Logout(ctx *gin.Context) {
 	response.SuccessResponse(ctx, "OK!", nil, nil)
 	return
 }
+
+// @Tags QR
+// @Accept  json
+// @Produce  json
+// @Param data query user_request.GenerateQrCodeRequest true "Request for new QR Code"
+// @Router /user/generate-qr-code [get]
+func (uc *UserController) GenerateQRCode(ctx *gin.Context) {
+	var request user_request.GenerateQrCodeRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	qrCodeResource, err := uc.userService.GenerateQRCode(request, userHelper.UserID)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not generate qrcode")
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", qrCodeResource, nil)
+	return
+}

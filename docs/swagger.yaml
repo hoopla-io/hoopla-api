@@ -132,6 +132,15 @@ paths:
       responses: {}
       tags:
       - Shops
+  /user/generate-qr-code:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - QR
   /user/get-me:
     get:
       consumes:
