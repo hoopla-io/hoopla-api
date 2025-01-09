@@ -26,6 +26,7 @@ type UserService interface {
 	ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth_resource.LoginResource, int, error)
 	ResendSms(data auth_request.ResendSmsRequest) (*auth_resource.SessionResource, int, error)
 	RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error)
+	Logout(data user_request.LogoutRequest, userId uint) (int, error)
 }
 
 type UserServiceImpl struct {
@@ -174,6 +175,9 @@ func (s *UserServiceImpl) ResendSms(data auth_request.ResendSmsRequest) (*auth_r
 func (s *UserServiceImpl) RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error) {
 	user, err := s.UserRepository.GetByRefreshToken(data.RefreshToken)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 401, errors.New("unauthorized")
+		}
 		return nil, 500, err
 	}
 
@@ -201,4 +205,17 @@ func (s *UserServiceImpl) RefreshToken(data user_request.RefreshTokenRequest) (*
 		ExpireAtMs:   expireAt * 1000,
 	}
 	return jwtResource, 200, nil
+}
+
+func (s *UserServiceImpl) Logout(data user_request.LogoutRequest, userId uint) (int, error) {
+	user, err := s.UserRepository.GetByID(userId)
+	if err != nil {
+		return 500, err
+	}
+	err = s.UserRepository.RemoveToken(user)
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
 }
