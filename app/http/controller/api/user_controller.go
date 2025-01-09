@@ -70,3 +70,32 @@ func (uc *UserController) RefreshToken(ctx *gin.Context) {
 	response.SuccessResponse(ctx, "OK!", jwtResource, nil)
 	return
 }
+
+// @Tags User
+// @Accept  json
+// @Produce  json
+// @Param data body user_request.LogoutRequest true "Logout from an account"
+// @Router /user/logout [post]
+func (uc *UserController) Logout(ctx *gin.Context) {
+	var logoutRequest user_request.LogoutRequest
+	if err := ctx.ShouldBindQuery(&logoutRequest); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	code, err := uc.userService.Logout(logoutRequest, userHelper.UserID)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", nil, nil)
+	return
+}

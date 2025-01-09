@@ -1,16 +1,20 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/qahvazor/qahvazor/internal/dto"
 	"github.com/qahvazor/qahvazor/internal/model"
 	"gorm.io/gorm"
+	"time"
 )
 
 type UserRepository interface {
+	GetByID(ID uint) (*model.UserModel, error)
 	GetByPhoneNumber(phoneNumber string) (*model.UserModel, error)
 	GetByRefreshToken(refreshToken string) (*model.UserModel, error)
 	CreateUser(data dto.UserDTO) (*model.UserModel, error)
 	UpdateToken(uuid string, user *model.UserModel) error
+	RemoveToken(*model.UserModel) error
 }
 
 type UserRepositoryImpl struct {
@@ -19,6 +23,15 @@ type UserRepositoryImpl struct {
 
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &UserRepositoryImpl{db: db}
+}
+
+func (r *UserRepositoryImpl) GetByID(id uint) (*model.UserModel, error) {
+	var userModel model.UserModel
+	if err := r.db.Where("id = ?", id).First(&userModel).Error; err != nil {
+		return nil, err
+	}
+
+	return &userModel, nil
 }
 
 func (r *UserRepositoryImpl) GetByPhoneNumber(phoneNumber string) (*model.UserModel, error) {
@@ -59,5 +72,12 @@ func (r *UserRepositoryImpl) UpdateToken(uuid string, user *model.UserModel) err
 		return err
 	}
 
+	return nil
+}
+
+func (r *UserRepositoryImpl) RemoveToken(user *model.UserModel) error {
+	if err := r.db.Model(user).Update("refresh_token", fmt.Sprintf("%d", time.Now().UnixMicro())).Error; err != nil {
+		return err
+	}
 	return nil
 }

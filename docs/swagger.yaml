@@ -24,6 +24,8 @@ definitions:
     required:
     - sessionId
     type: object
+  user_request.LogoutRequest:
+    type: object
 host: api.qahvazor.uz
 info:
   contact:
@@ -134,6 +136,22 @@ paths:
     get:
       consumes:
       - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User
+  /user/logout:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Logout from an account
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_request.LogoutRequest'
       produces:
       - application/json
       responses: {}

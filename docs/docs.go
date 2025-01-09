@@ -186,6 +186,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/logout": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "parameters": [
+                    {
+                        "description": "Logout from an account",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_request.LogoutRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/user/refresh-token": {
             "patch": {
                 "consumes": [
@@ -246,6 +271,9 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "user_request.LogoutRequest": {
+            "type": "object"
         }
     }
 }`
