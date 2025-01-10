@@ -30,6 +30,7 @@ type UserService interface {
 	RefreshToken(data user_request.RefreshTokenRequest) (*auth_resource.JwtResource, int, error)
 	Logout(data user_request.LogoutRequest, userId uint) (int, error)
 	GenerateQRCode(data user_request.GenerateQrCodeRequest, userId uint) (*user_resource.QrCodeResource, error)
+	GetUser(userHelper *utils.UserHelper) (*user_resource.UserBaseResource, int, error)
 }
 
 type UserServiceImpl struct {
@@ -236,4 +237,19 @@ func (s *UserServiceImpl) GenerateQRCode(data user_request.GenerateQrCodeRequest
 	}
 
 	return qrCodeResource, nil
+}
+
+func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.UserBaseResource, int, error) {
+	user, err := s.UserRepository.GetByID(userHelper.UserID)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	userResource := &user_resource.UserBaseResource{
+		UserID:      user.ID,
+		PhoneNumber: user.PhoneNumber,
+		Name:        user.Name,
+	}
+
+	return userResource, 200, nil
 }
