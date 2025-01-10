@@ -170,13 +170,34 @@ create index partner_drinks_partner_id_index
 create index partner_drinks_drink_id_index
     on partner_drinks (drink_id);
 
--- Create subscription table
-CREATE TABLE IF NOT EXISTS subscription (
+-- Create subscriptions table
+CREATE TABLE IF NOT EXISTS subscriptions (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    coffee_limit INT NOT NULL,
-    interval INT NOT NULL,
-    period   INT NOT NULL,
+    days INT NOT NULL,
+    price   INT NOT NULL,
+    currency VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
 );
+
+create index subscriptions_deleted_at_index
+    on subscriptions (deleted_at);
+
+-- Create subscription_shops table
+CREATE TABLE IF NOT EXISTS subscription_shops (
+    id SERIAL PRIMARY KEY,
+    partner_id BIGINT NOT NULL,
+    shop_id BIGINT NOT NULL,
+    subscription_id BIGINT NOT NULL
+);
+
+create index subscription_shops_partner_id_index
+    on subscription_shops (partner_id);
+
+create index subscription_shops_shop_id_index
+    on subscription_shops (shop_id);
+
+create index subscription_shops_subscription_id_index
+    on subscription_shops (subscription_id);
