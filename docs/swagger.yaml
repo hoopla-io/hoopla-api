@@ -132,6 +132,15 @@ paths:
       responses: {}
       tags:
       - Shops
+  /subscriptions:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Subscriptions
   /user/generate-qr-code:
     get:
       consumes:
