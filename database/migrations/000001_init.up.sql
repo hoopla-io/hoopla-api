@@ -201,3 +201,32 @@ create index subscription_shops_shop_id_index
 
 create index subscription_shops_subscription_id_index
     on subscription_shops (subscription_id);
+
+-- Create partner_users table
+CREATE TABLE IF NOT EXISTS partner_users (
+    id SERIAL PRIMARY KEY,
+    partner_id BIGINT,
+    shop_id BIGINT,
+    name VARCHAR(100),
+    phone_number VARCHAR(255) NOT NULL,
+    mobile_provider VARCHAR(100) NOT NULL,
+    refresh_token VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+create index partner_users_deleted_at_index
+    on partner_users (deleted_at);
+
+create index partner_users_refresh_token_index
+    on partner_users (refresh_token);
+
+create index partner_users_phone_number_index
+    on partner_users (phone_number);
+
+create index partner_users_partner_id_index
+    on partner_users (partner_id);
+
+create index partner_users_shop_id_index
+    on partner_users (shop_id);
