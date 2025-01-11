@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/qahvazor/qahvazor/app/http/controller/api"
+	api_user "github.com/qahvazor/qahvazor/app/http/controller/api/user"
 	"go.uber.org/fx"
 )
 
@@ -11,4 +12,5 @@ var Modules = fx.Options(
 	fx.Provide(api.NewUserController),
 	fx.Provide(api.NewShopController),
 	fx.Provide(api.NewSubscriptionController),
+	fx.Provide(api_user.NewOrderController),
 )
