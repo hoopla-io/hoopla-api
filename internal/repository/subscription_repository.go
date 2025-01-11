@@ -21,7 +21,9 @@ func NewSubscriptionRepository(db *gorm.DB) SubscriptionRepository {
 
 func (r *SubscriptionRepositoryImpl) SubscriptionsList() (*[]model.SubscriptionModel, error) {
 	var subscriptions []model.SubscriptionModel
-	err := r.db.Model(&model.SubscriptionModel{}).Find(&subscriptions).Error
+	err := r.db.Model(&model.SubscriptionModel{}).
+		Preload("Features").
+		Find(&subscriptions).Error
 	if err != nil {
 		return nil, err
 	}

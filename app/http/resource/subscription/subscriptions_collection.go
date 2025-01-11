@@ -6,4 +6,6 @@ type SubscriptionsCollection struct {
 	Days     uint    `json:"days"`
 	Price    float64 `json:"price"`
 	Currency string  `json:"currency"`
+
+	Features *[]FeaturesCollection `json:"features"`
 }

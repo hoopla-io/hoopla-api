@@ -202,6 +202,18 @@ create index subscription_shops_shop_id_index
 create index subscription_shops_subscription_id_index
     on subscription_shops (subscription_id);
 
+-- create subscription_features table
+CREATE TABLE IF NOT EXISTS subscription_features (
+    id SERIAL PRIMARY KEY,
+    subscription_id BIGINT NOT NULL,
+    feature VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+create index subscription_features_subscription_id_index
+    on subscription_features (subscription_id);
+
 -- Create partner_users table
 CREATE TABLE IF NOT EXISTS partner_users (
     id SERIAL PRIMARY KEY,
