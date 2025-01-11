@@ -239,6 +239,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/orders": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "responses": {}
+            }
+        },
         "/user/refresh-token": {
             "patch": {
                 "consumes": [

@@ -242,3 +242,34 @@ create index partner_users_partner_id_index
 
 create index partner_users_shop_id_index
     on partner_users (shop_id);
+
+-- create user_orders table
+CREATE TABLE IF NOT EXISTS user_orders (
+    id SERIAL PRIMARY KEY,
+    partner_id BIGINT NOT NULL,
+    shop_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    user_partner_id BIGINT NOT NULL,
+    drink_id BIGINT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP NULL
+);
+
+create index user_orders_partner_id_index
+    on user_orders (partner_id);
+
+create index user_orders_shop_id_index
+    on user_orders (shop_id);
+
+create index user_orders_user_id_index
+    on user_orders (user_id);
+
+create index user_orders_user_partner_id_index
+    on user_orders (user_partner_id);
+
+create index user_orders_drink_id_index
+    on user_orders (drink_id);
+
+create index user_orders_deleted_at_index
+    on user_orders (deleted_at);
