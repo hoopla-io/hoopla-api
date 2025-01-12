@@ -175,7 +175,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/orders:
+  /user/orders-list:
     get:
       consumes:
       - application/json
