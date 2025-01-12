@@ -40,7 +40,6 @@ func NewApiRoute(
 
 				user_orders := user.Group("/orders")
 				{
-					user_orders.GET("/", middleware.JwtMiddleware(), UserOrderController.Orders)
 					user_orders.GET("/orders-list", middleware.JwtMiddleware(), UserOrderController.Orders)
 				}
 			}

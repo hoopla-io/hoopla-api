@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	partners_request "github.com/qahvazor/qahvazor/app/http/request/partners"
 	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
 	"github.com/qahvazor/qahvazor/internal/repository"
@@ -29,7 +28,6 @@ func (s *PartnerServiceImpl) PartnersList(data partners_request.PartnersRequest)
 	if err != nil {
 		return nil, 500, err
 	}
-	fmt.Print(list)
 	var partners []partner_resource.PartnersCollection
 	for _, item := range *list {
 		var logoUrl *string
