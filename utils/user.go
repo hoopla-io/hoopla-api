@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strings"
 )
@@ -25,5 +26,6 @@ func (u *UserHelper) Init(ctx *gin.Context) error {
 		return nil
 	}
 
+	fmt.Println(fmt.Sprintf("ERRRRR: %s", authorization))
 	return errors.New("authorization header is not valid")
 }
