@@ -23,6 +23,7 @@ func (r *UserOrderRepositoryImpl) GetAllByUserId(userId uint) (*[]model.UserOrde
 	var userOrders []model.UserOrderModel
 	err := r.db.Model(&model.UserOrderModel{}).
 		Where("user_id = ?", userId).
+		Order("id desc").
 		Preload("Partner").
 		Preload("Shop").
 		Find(&userOrders).Error
