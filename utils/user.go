@@ -27,5 +27,7 @@ func (u *UserHelper) Init(ctx *gin.Context) error {
 	}
 
 	fmt.Println(fmt.Sprintf("ERRRRR: %s", authorization))
+	fmt.Println("HEADERS:_______")
+	fmt.Println(ctx.Request.Header)
 	return errors.New("authorization header is not valid")
 }
