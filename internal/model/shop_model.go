@@ -6,17 +6,21 @@ import (
 )
 
 type ShopModel struct {
-	ID        uint           `gorm:"primaryKey;autoIncrement"`
-	PartnerID uint           `gorm:"not null;index"`
-	Name      string         `gorm:"not null"`
-	CreatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID           uint           `gorm:"primaryKey;autoIncrement"`
+	ImageID      uint           `gorm:"not null"`
+	PartnerID    uint           `gorm:"not null;index"`
+	Name         string         `gorm:"not null"`
+	LocationLat  float64        `gorm:"not null;index"`
+	LocationLong float64        `gorm:"not null;index"`
+	CreatedAt    time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt    time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
+	DeletedAt    gorm.DeletedAt `gorm:"index"`
 
 	Attributes   *[]ShopAttributeModel `gorm:"foreignKey:shop_id;references:id"`
 	WorkingHours *[]ShopHourModel      `gorm:"foreignKey:shop_id;references:id"`
 	Pictures     *[]ShopPictureModel   `gorm:"foreignKey:shop_id;references:id"`
-	Picture      *ShopPictureModel     `gorm:"foreignKey:shop_id;references:id"`
+
+	Image *ImageModel `gorm:"foreignKey:id;references:image_id"`
 }
 
 func (ShopModel) TableName() string {

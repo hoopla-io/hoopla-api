@@ -5,7 +5,7 @@ type ShopsCollections struct {
 	Name       string  `json:"name"`
 	PictureURL *string `json:"pictureUrl"`
 
-	Location     *ShopLocationResource         `json:"location"`
+	Location     ShopLocationResource          `json:"location"`
 	PhoneNumbers *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`
 }
 

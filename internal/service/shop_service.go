@@ -2,13 +2,11 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	shops_request "github.com/qahvazor/qahvazor/app/http/request/shops"
 	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
 	shop_resource "github.com/qahvazor/qahvazor/app/http/resource/shop"
 	"github.com/qahvazor/qahvazor/internal/repository"
 	"gorm.io/gorm"
-	"strconv"
 )
 
 type ShopService interface {
@@ -37,41 +35,27 @@ func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsReques
 		shopResource := partner_resource.ShopsCollections{
 			ShopID: shop.ID,
 			Name:   shop.Name,
+			Location: partner_resource.ShopLocationResource{
+				Lat: shop.LocationLat,
+				Lng: shop.LocationLong,
+			},
 		}
 
-		var shopLocation partner_resource.ShopLocationResource
 		var phoneNumbers []partner_resource.ShopPhoneNumbersCollection
 		for _, attribute := range *shop.Attributes {
 			switch attribute.AttributeKey {
-			case "lat":
-				floatValue, err := strconv.ParseFloat(attribute.AttributeValue, 64)
-				if err != nil {
-					fmt.Println("Error:", err)
-					break
-				}
-				shopLocation.Lat = floatValue
-				break
-			case "lng":
-				floatValue, err := strconv.ParseFloat(attribute.AttributeValue, 64)
-				if err != nil {
-					fmt.Println("Error:", err)
-					break
-				}
-				shopLocation.Lng = floatValue
-				break
 			case "phone_number":
 				phoneNumbers = append(phoneNumbers, partner_resource.ShopPhoneNumbersCollection{
 					PhoneNumber: attribute.AttributeValue,
 				})
 			}
 		}
-		shopResource.Location = &shopLocation
 		shopResource.PhoneNumbers = &phoneNumbers
 
 		var pictureUrl *string
-		picture := shop.Picture
+		picture := shop.Image
 		if picture != nil {
-			pictureUrl = picture.Image.GetUrl()
+			pictureUrl = picture.GetUrl()
 			shopResource.PictureURL = pictureUrl
 		}
 
@@ -94,35 +78,21 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 		ID:        shop.ID,
 		PartnerId: shop.PartnerID,
 		Name:      shop.Name,
+		Location: shop_resource.ShopLocationResource{
+			Lat: shop.LocationLat,
+			Lng: shop.LocationLong,
+		},
 	}
 
-	var shopLocation shop_resource.ShopLocationResource
 	var phoneNumbers []shop_resource.ShopPhoneNumberResource
 	for _, attribute := range *shop.Attributes {
 		switch attribute.AttributeKey {
-		case "lat":
-			floatValue, err := strconv.ParseFloat(attribute.AttributeValue, 64)
-			if err != nil {
-				fmt.Println("Error:", err)
-				break
-			}
-			shopLocation.Lat = floatValue
-			break
-		case "lng":
-			floatValue, err := strconv.ParseFloat(attribute.AttributeValue, 64)
-			if err != nil {
-				fmt.Println("Error:", err)
-				break
-			}
-			shopLocation.Lng = floatValue
-			break
 		case "phone_number":
 			phoneNumbers = append(phoneNumbers, shop_resource.ShopPhoneNumberResource{
 				PhoneNumber: attribute.AttributeValue,
 			})
 		}
 	}
-	shopResource.Location = &shopLocation
 	shopResource.PhoneNumbers = &phoneNumbers
 
 	var workingHours []shop_resource.ShopWorkingHoursResource
@@ -146,6 +116,13 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 		}
 	}
 	shopResource.Pictures = &pictures
+
+	var pictureUrl *string
+	picture := shop.Image
+	if picture != nil {
+		pictureUrl = picture.GetUrl()
+		shopResource.PictureUrl = pictureUrl
+	}
 
 	return &shopResource, 200, nil
 }

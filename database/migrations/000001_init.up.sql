@@ -71,8 +71,11 @@ create index partner_attributes_deleted_at_index
 -- Create shops table
 CREATE TABLE IF NOT EXISTS shops (
     id SERIAL PRIMARY KEY,
-    partner_id BIGINT,
+    image_id BIGINT,
+    partner_id BIGINT NOT NULL,
     name VARCHAR(100) NOT NULL,
+    location_lat DOUBLE PRECISION NOT NULL,
+    location_long DOUBLE PRECISION NOT NUll,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP NULL
@@ -83,6 +86,12 @@ create index shops_partner_id_index
 
 create index shops_deleted_at_index
     on shops (deleted_at);
+
+create index shops_location_lat_index
+    on shops (location_lat);
+
+create index shops_location_long_index
+    on shops (location_long);
 
 -- Create shop_attributes table
 CREATE TABLE IF NOT EXISTS shop_attributes (
@@ -175,7 +184,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     days INT NOT NULL,
-    price   INT NOT NULL,
+    price   FLOAT NOT NULL,
     currency VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
