@@ -128,6 +128,34 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/shops/near-shops": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Shops"
+                ],
+                "parameters": [
+                    {
+                        "type": "number",
+                        "name": "lat",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "name": "long",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/shops/partner-shops": {
             "get": {
                 "consumes": [

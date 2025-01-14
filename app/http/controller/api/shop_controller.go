@@ -42,6 +42,28 @@ func (c *ShopController) PartnerShopList(ctx *gin.Context) {
 // @Tags Shops
 // @Accept  json
 // @Produce  json
+// @Param data query shops_request.NearShopsRequest true "Near shops"
+// @Router /shops/near-shops [get]
+func (c *ShopController) NearShops(ctx *gin.Context) {
+	var request shops_request.NearShopsRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	shops, code, err := c.shopService.NearShopsList(request)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", shops, nil)
+	return
+}
+
+// @Tags Shops
+// @Accept  json
+// @Produce  json
 // @Param data query shops_request.ShopRequest true "Partner shops"
 // @Router /shops/shop [get]
 func (c *ShopController) Shop(ctx *gin.Context) {

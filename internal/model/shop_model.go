@@ -12,6 +12,7 @@ type ShopModel struct {
 	Name         string         `gorm:"not null"`
 	LocationLat  float64        `gorm:"not null;index"`
 	LocationLong float64        `gorm:"not null;index"`
+	Distance     float64        `gorm:"index"`
 	CreatedAt    time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt    time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt    gorm.DeletedAt `gorm:"index"`

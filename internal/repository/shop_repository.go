@@ -8,6 +8,7 @@ import (
 type ShopRepository interface {
 	GetPartnerShops(partnerId uint) (*[]model.ShopModel, error)
 	ShopDetailById(shopId uint) (*model.ShopModel, error)
+	GetShopsByDistance(userLat float64, userLong float64) (*[]model.ShopModel, error)
 }
 
 type ShopRepositoryImpl struct {
@@ -46,4 +47,23 @@ func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, erro
 	}
 
 	return &shop, nil
+}
+
+func (r *ShopRepositoryImpl) GetShopsByDistance(userLat float64, userLong float64) (*[]model.ShopModel, error) {
+	var shops []model.ShopModel
+
+	err := r.db.Model(&model.ShopModel{}).
+		Preload("Image").
+		Select(`id, image_id, partner_id, name, location_lat, location_long,
+			(6371 * acos(cos(radians(?)) * cos(radians(location_lat)) * cos(radians(location_long) - radians(?)) + sin(radians(?)) * sin(radians(location_lat)))) as distance,
+			created_at, updated_at, deleted_at`,
+			userLat, userLong, userLat).
+		Order("distance ASC").
+		Find(&shops).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &shops, nil
 }

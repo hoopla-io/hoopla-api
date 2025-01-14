@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	shops_request "github.com/qahvazor/qahvazor/app/http/request/shops"
 	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
 	shop_resource "github.com/qahvazor/qahvazor/app/http/resource/shop"
@@ -10,6 +11,7 @@ import (
 )
 
 type ShopService interface {
+	NearShopsList(data shops_request.NearShopsRequest) (*[]partner_resource.ShopsCollections, int, error)
 	PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error)
 	ShopDetail(data shops_request.ShopRequest) (*shop_resource.ShopResource, int, error)
 }
@@ -22,6 +24,38 @@ func NewShopService(shopRepository repository.ShopRepository) ShopService {
 	return &ShopServiceImpl{
 		ShopRepository: shopRepository,
 	}
+}
+
+func (s *ShopServiceImpl) NearShopsList(data shops_request.NearShopsRequest) (*[]partner_resource.ShopsCollections, int, error) {
+	shops, err := s.ShopRepository.GetShopsByDistance(data.Lat, data.Long)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	var shopsCollection []partner_resource.ShopsCollections
+	for _, shop := range *shops {
+		fmt.Println(shop)
+		shopResource := partner_resource.ShopsCollections{
+			ShopID: shop.ID,
+			Name:   shop.Name,
+			Location: partner_resource.ShopLocationResource{
+				Lat: shop.LocationLat,
+				Lng: shop.LocationLong,
+			},
+			Distance: shop.Distance,
+		}
+
+		var pictureUrl *string
+		picture := shop.Image
+		if picture != nil {
+			pictureUrl = picture.GetUrl()
+			shopResource.PictureURL = pictureUrl
+		}
+
+		shopsCollection = append(shopsCollection, shopResource)
+	}
+
+	return &shopsCollection, 200, nil
 }
 
 func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error) {

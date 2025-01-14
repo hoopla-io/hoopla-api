@@ -104,6 +104,24 @@ paths:
       responses: {}
       tags:
       - Partners
+  /shops/near-shops:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: lat
+        required: true
+        type: number
+      - in: query
+        name: long
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Shops
   /shops/partner-shops:
     get:
       consumes:

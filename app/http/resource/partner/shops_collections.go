@@ -4,6 +4,7 @@ type ShopsCollections struct {
 	ShopID     uint    `json:"shopId"`
 	Name       string  `json:"name"`
 	PictureURL *string `json:"pictureUrl"`
+	Distance   float64 `json:"distance"`
 
 	Location     ShopLocationResource          `json:"location"`
 	PhoneNumbers *[]ShopPhoneNumbersCollection `json:"phoneNumbers"`
