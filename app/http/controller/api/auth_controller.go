@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/internal/service"
+	auth_request "github.com/hoopla/hoopla-api/app/http/request/auth"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/internal/service"
 )
 
 type AuthController struct {

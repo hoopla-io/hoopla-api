@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/hoopla/hoopla-api/pkg/databasego"
 	"github.com/itv-go/yamlreader"
-	"github.com/qahvazor/qahvazor/pkg/databasego"
 )
 
 func NewDatabaseConfig() *databasego.Config {

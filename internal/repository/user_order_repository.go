@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/qahvazor/qahvazor/internal/model"
+	"github.com/hoopla/hoopla-api/internal/model"
 	"gorm.io/gorm"
 )
 

@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	subscriptions_request "github.com/qahvazor/qahvazor/app/http/request/subscriptions"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/internal/service"
+	subscriptions_request "github.com/hoopla/hoopla-api/app/http/request/subscriptions"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/internal/service"
 )
 
 type SubscriptionController struct {

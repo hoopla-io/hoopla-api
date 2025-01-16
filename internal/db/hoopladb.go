@@ -1,13 +1,14 @@
 package db
 
 import (
-	"github.com/qahvazor/qahvazor/app/config"
-	"github.com/qahvazor/qahvazor/pkg/databasego"
-	"gorm.io/gorm"
 	"log"
+
+	"github.com/hoopla/hoopla-api/app/config"
+	"github.com/hoopla/hoopla-api/pkg/databasego"
+	"gorm.io/gorm"
 )
 
-func NewQahvazorDB() *gorm.DB {
+func NewHooplaDB() *gorm.DB {
 	dbCfg := config.NewDatabaseConfig()
 	db, err := databasego.NewDatabase(*dbCfg)
 	if err != nil {

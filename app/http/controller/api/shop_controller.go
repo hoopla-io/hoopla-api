@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	shops_request "github.com/qahvazor/qahvazor/app/http/request/shops"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/internal/service"
+	shops_request "github.com/hoopla/hoopla-api/app/http/request/shops"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/internal/service"
 )
 
 type ShopController struct {

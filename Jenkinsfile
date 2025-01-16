@@ -16,7 +16,7 @@ pipeline {
                         sh """
                             sshpass -p "${SERVER_PASSWORD}" ssh -A -tt -o StrictHostKeyChecking=no ${SERVER_USERNAME}@${SERVER_IP} "
                                 echo 'Connected to server';
-                                cd /opt/qahvazor-api/www;
+                                cd /opt/hoopla-api/www;
                                 git pull origin main;
                                 docker compose up -d --build;
                             "

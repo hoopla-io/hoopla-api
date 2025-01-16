@@ -1,10 +1,11 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/utils"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/utils"
 )
 
 func JwtMiddleware() gin.HandlerFunc {

@@ -1,9 +1,9 @@
 package service
 
 import (
-	user_orders_request "github.com/qahvazor/qahvazor/app/http/request/user/orders"
-	user_order_resource "github.com/qahvazor/qahvazor/app/http/resource/user/order"
-	"github.com/qahvazor/qahvazor/internal/repository"
+	user_orders_request "github.com/hoopla/hoopla-api/app/http/request/user/orders"
+	user_order_resource "github.com/hoopla/hoopla-api/app/http/resource/user/order"
+	"github.com/hoopla/hoopla-api/internal/repository"
 )
 
 type UserOrderService interface {

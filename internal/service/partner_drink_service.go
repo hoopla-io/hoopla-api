@@ -1,6 +1,6 @@
 package service
 
-import "github.com/qahvazor/qahvazor/internal/repository"
+import "github.com/hoopla/hoopla-api/internal/repository"
 
 type PartnerDrinkService interface {
 	GetPartnerDrinks()

@@ -2,10 +2,11 @@ package repository
 
 import (
 	"fmt"
-	"github.com/qahvazor/qahvazor/internal/dto"
-	"github.com/qahvazor/qahvazor/internal/model"
-	"gorm.io/gorm"
 	"time"
+
+	"github.com/hoopla/hoopla-api/internal/dto"
+	"github.com/hoopla/hoopla-api/internal/model"
+	"gorm.io/gorm"
 )
 
 type UserRepository interface {

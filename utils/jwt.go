@@ -2,9 +2,10 @@ package utils
 
 import (
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/qahvazor/qahvazor/app/config"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/hoopla/hoopla-api/app/config"
 )
 
 type UserClaims struct {
@@ -16,12 +17,12 @@ func EncodeJWT(userId uint, phoneNumber string, expireAt int64) (string, error) 
 	appCnf := config.NewAppConfig()
 
 	claims := jwt.MapClaims{
-		"iss":         "https://api.qahvazor.uz",
-		"aud":         "https://qahvazor.uz",
+		"iss":         "https://api.hoopla.uz",
+		"aud":         "https://hoopla.uz",
 		"iat":         time.Now().Unix(),
 		"nbf":         time.Now().Unix(),
 		"exp":         expireAt,
-		"jti":         fmt.Sprintf("auth-qahvzor-uz-%s", fmt.Sprintf("%v", time.Now().UnixNano())), // Unique ID
+		"jti":         fmt.Sprintf("auth-hoopla-uz-%s", fmt.Sprintf("%v", time.Now().UnixNano())), // Unique ID
 		"userId":      userId,
 		"phoneNumber": phoneNumber,
 	}

@@ -3,17 +3,18 @@ package internal
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/qahvazor/qahvazor/app/config"
-	"github.com/qahvazor/qahvazor/app/http/controller"
-	"github.com/qahvazor/qahvazor/app/routes"
-	"github.com/qahvazor/qahvazor/internal/db"
-	"github.com/qahvazor/qahvazor/internal/repository"
-	"github.com/qahvazor/qahvazor/internal/service"
-	"go.uber.org/fx"
 	"net"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/hoopla/hoopla-api/app/config"
+	"github.com/hoopla/hoopla-api/app/http/controller"
+	"github.com/hoopla/hoopla-api/app/routes"
+	"github.com/hoopla/hoopla-api/internal/db"
+	"github.com/hoopla/hoopla-api/internal/repository"
+	"github.com/hoopla/hoopla-api/internal/service"
+	"go.uber.org/fx"
 )
 
 var Modules = fx.Options(

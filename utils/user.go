@@ -3,8 +3,9 @@ package utils
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type UserHelper struct {

@@ -3,10 +3,11 @@ package service
 import (
 	"errors"
 	"fmt"
-	shops_request "github.com/qahvazor/qahvazor/app/http/request/shops"
-	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
-	shop_resource "github.com/qahvazor/qahvazor/app/http/resource/shop"
-	"github.com/qahvazor/qahvazor/internal/repository"
+
+	shops_request "github.com/hoopla/hoopla-api/app/http/request/shops"
+	partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
+	shop_resource "github.com/hoopla/hoopla-api/app/http/resource/shop"
+	"github.com/hoopla/hoopla-api/internal/repository"
 	"gorm.io/gorm"
 )
 

@@ -2,10 +2,10 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	user_request "github.com/qahvazor/qahvazor/app/http/request/user"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/internal/service"
-	"github.com/qahvazor/qahvazor/utils"
+	user_request "github.com/hoopla/hoopla-api/app/http/request/user"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/internal/service"
+	"github.com/hoopla/hoopla-api/utils"
 )
 
 type UserController struct {

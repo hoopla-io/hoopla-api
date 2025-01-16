@@ -1,4 +1,4 @@
-module github.com/qahvazor/qahvazor
+module github.com/hoopla/hoopla-api
 
 go 1.22.5
 

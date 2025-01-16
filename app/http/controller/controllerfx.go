@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/qahvazor/qahvazor/app/http/controller/api"
-	api_user "github.com/qahvazor/qahvazor/app/http/controller/api/user"
+	"github.com/hoopla/hoopla-api/app/http/controller/api"
+	api_user "github.com/hoopla/hoopla-api/app/http/controller/api/user"
 	"go.uber.org/fx"
 )
 

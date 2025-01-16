@@ -7,20 +7,21 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	user_request "github.com/qahvazor/qahvazor/app/http/request/user"
-	auth_resource "github.com/qahvazor/qahvazor/app/http/resource/auth"
-	user_resource "github.com/qahvazor/qahvazor/app/http/resource/user"
-	"github.com/qahvazor/qahvazor/pkg/itvmsq"
-	"golang.org/x/exp/rand"
-	"gorm.io/gorm"
 	"time"
 
+	"github.com/google/uuid"
+	user_request "github.com/hoopla/hoopla-api/app/http/request/user"
+	auth_resource "github.com/hoopla/hoopla-api/app/http/resource/auth"
+	user_resource "github.com/hoopla/hoopla-api/app/http/resource/user"
+	"github.com/hoopla/hoopla-api/pkg/itvmsq"
+	"golang.org/x/exp/rand"
+	"gorm.io/gorm"
+
+	auth_request "github.com/hoopla/hoopla-api/app/http/request/auth"
+	"github.com/hoopla/hoopla-api/internal/dto"
+	"github.com/hoopla/hoopla-api/internal/repository"
+	"github.com/hoopla/hoopla-api/utils"
 	"github.com/patrickmn/go-cache"
-	auth_request "github.com/qahvazor/qahvazor/app/http/request/auth"
-	"github.com/qahvazor/qahvazor/internal/dto"
-	"github.com/qahvazor/qahvazor/internal/repository"
-	"github.com/qahvazor/qahvazor/utils"
 )
 
 type UserService interface {

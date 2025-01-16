@@ -2,8 +2,9 @@ package model
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type ImageModel struct {
@@ -23,7 +24,7 @@ func (ImageModel) TableName() string {
 
 func (m *ImageModel) GetUrl() *string {
 	var url *string
-	u := fmt.Sprintf("http://api.qahvazor.uz/%s/%s.%s", m.Path, m.Filename, m.Ext)
+	u := fmt.Sprintf("http://api.hoopla.uz/%s/%s.%s", m.Path, m.Filename, m.Ext)
 	url = &u
 	return url
 }

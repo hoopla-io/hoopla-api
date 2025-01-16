@@ -1,9 +1,9 @@
 package service
 
 import (
-	subscriptions_request "github.com/qahvazor/qahvazor/app/http/request/subscriptions"
-	subscription_resource "github.com/qahvazor/qahvazor/app/http/resource/subscription"
-	"github.com/qahvazor/qahvazor/internal/repository"
+	subscriptions_request "github.com/hoopla/hoopla-api/app/http/request/subscriptions"
+	subscription_resource "github.com/hoopla/hoopla-api/app/http/resource/subscription"
+	"github.com/hoopla/hoopla-api/internal/repository"
 )
 
 type SubscriptionService interface {

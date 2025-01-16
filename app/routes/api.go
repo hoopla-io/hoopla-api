@@ -2,10 +2,10 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/qahvazor/qahvazor/app/http/controller/api"
-	api_user "github.com/qahvazor/qahvazor/app/http/controller/api/user"
-	"github.com/qahvazor/qahvazor/app/http/middleware"
-	_ "github.com/qahvazor/qahvazor/docs"
+	"github.com/hoopla/hoopla-api/app/http/controller/api"
+	api_user "github.com/hoopla/hoopla-api/app/http/controller/api/user"
+	"github.com/hoopla/hoopla-api/app/http/middleware"
+	_ "github.com/hoopla/hoopla-api/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )

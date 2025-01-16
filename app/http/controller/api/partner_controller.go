@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	partners_request "github.com/qahvazor/qahvazor/app/http/request/partners"
-	"github.com/qahvazor/qahvazor/app/http/response"
-	"github.com/qahvazor/qahvazor/internal/service"
+	partners_request "github.com/hoopla/hoopla-api/app/http/request/partners"
+	"github.com/hoopla/hoopla-api/app/http/response"
+	"github.com/hoopla/hoopla-api/internal/service"
 )
 
 type PartnerController struct {

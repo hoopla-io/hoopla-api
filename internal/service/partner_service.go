@@ -2,9 +2,10 @@ package service
 
 import (
 	"errors"
-	partners_request "github.com/qahvazor/qahvazor/app/http/request/partners"
-	partner_resource "github.com/qahvazor/qahvazor/app/http/resource/partner"
-	"github.com/qahvazor/qahvazor/internal/repository"
+
+	partners_request "github.com/hoopla/hoopla-api/app/http/request/partners"
+	partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
+	"github.com/hoopla/hoopla-api/internal/repository"
 	"gorm.io/gorm"
 )
 
