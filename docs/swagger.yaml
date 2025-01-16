@@ -26,11 +26,11 @@ definitions:
     type: object
   user_request.LogoutRequest:
     type: object
-host: api.qahvazor.uz
+host: api.hoopla.uz
 info:
   contact:
     email: davronbekov.o@itv.uz
-  title: Qahvazor | Api
+  title: Hoopla | Api
   version: 1.0.0
 paths:
   /auth/confirm-sms:

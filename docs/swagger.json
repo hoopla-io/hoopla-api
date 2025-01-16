@@ -1,13 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "Qahvazor | Api",
+        "title": "Hoopla | Api",
         "contact": {
             "email": "davronbekov.o@itv.uz"
         },
         "version": "1.0.0"
     },
-    "host": "api.qahvazor.uz",
+    "host": "api.hoopla.uz",
     "basePath": "/api/v1",
     "paths": {
         "/auth/confirm-sms": {
