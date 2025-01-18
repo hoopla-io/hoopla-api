@@ -130,6 +130,35 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	}
 	shopResource.PhoneNumbers = &phoneNumbers
 
+	var urls []partner_resource.PartnerUrlsCollection
+	for _, item := range *shop.PartnerAttributes {
+		switch item.AttributeKey {
+		case "web", "instagram":
+			urls = append(urls, partner_resource.PartnerUrlsCollection{
+				UrlType: item.AttributeKey,
+				Url:     item.AttributeValue,
+			})
+			break
+		}
+	}
+	shopResource.PartnerUrls = &urls
+
+	var partnerDrinks []partner_resource.DrinksCollection
+	for _, partnerDrink := range *shop.PartnerDrinks {
+		drink := partnerDrink.Drink
+
+		var pictureUrl *string
+		if drink.Image != nil {
+			pictureUrl = drink.Image.GetUrl()
+		}
+		partnerDrinks = append(partnerDrinks, partner_resource.DrinksCollection{
+			ID:         drink.ID,
+			Name:       drink.Name,
+			PictureUrl: pictureUrl,
+		})
+	}
+	shopResource.PartnerDrinks = &partnerDrinks
+
 	var workingHours []shop_resource.ShopWorkingHoursResource
 	for _, workingHour := range *shop.WorkingHours {
 		workingHours = append(workingHours, shop_resource.ShopWorkingHoursResource{

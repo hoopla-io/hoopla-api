@@ -21,6 +21,9 @@ type ShopModel struct {
 	WorkingHours *[]ShopHourModel      `gorm:"foreignKey:shop_id;references:id"`
 	Pictures     *[]ShopPictureModel   `gorm:"foreignKey:shop_id;references:id"`
 
+	PartnerDrinks     *[]PartnerDrinkModel     `gorm:"foreignKey:partner_id;references:partner_id"`
+	PartnerAttributes *[]PartnerAttributeModel `gorm:"foreignKey:partner_id;references:partner_id"`
+
 	Image *ImageModel `gorm:"foreignKey:id;references:image_id"`
 }
 

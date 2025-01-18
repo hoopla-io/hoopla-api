@@ -40,6 +40,8 @@ func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, erro
 		Preload("Attributes").
 		Preload("WorkingHours").
 		Preload("Pictures.Image").
+		Preload("PartnerDrinks.Drink.Image").
+		Preload("PartnerAttributes").
 		Preload("Image").
 		First(&shop).Error
 	if err != nil {
