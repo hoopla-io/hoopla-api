@@ -194,22 +194,44 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 create index subscriptions_deleted_at_index
     on subscriptions (deleted_at);
 
--- Create subscription_shops table
-CREATE TABLE IF NOT EXISTS subscription_shops (
+-- Create subscription_modules table
+CREATE TABLE IF NOT EXISTS subscription_modules (
+    id SERIAL PRIMARY KEY,
+    subscription_id BIGINT NOT NULL,
+    module_id BIGINT NOT NULL
+);
+
+create index subscription_modules_subscription_id_index
+    on subscription_modules (subscription_id);
+
+create index subscription_modules_module_id_index
+    on subscription_modules (module_id);
+
+-- Create modules table
+CREATE TABLE IF NOT EXISTS modules (
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(100) NOT NULL,
+   colour VARCHAR(50) NOT NULL,
+   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create shop_modules table
+CREATE TABLE IF NOT EXISTS shop_modules (
     id SERIAL PRIMARY KEY,
     partner_id BIGINT NOT NULL,
     shop_id BIGINT NOT NULL,
-    subscription_id BIGINT NOT NULL
+    module_id BIGINT NOT NULL
 );
 
-create index subscription_shops_partner_id_index
-    on subscription_shops (partner_id);
+create index shop_modules_partner_id_index
+    on shop_modules (partner_id);
 
-create index subscription_shops_shop_id_index
-    on subscription_shops (shop_id);
+create index shop_modules_shop_id_index
+    on shop_modules (shop_id);
 
-create index subscription_shops_subscription_id_index
-    on subscription_shops (subscription_id);
+create index shop_modules_module_id_index
+    on shop_modules (module_id);
 
 -- create subscription_features table
 CREATE TABLE IF NOT EXISTS subscription_features (

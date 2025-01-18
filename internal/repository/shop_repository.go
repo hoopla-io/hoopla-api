@@ -56,6 +56,7 @@ func (r *ShopRepositoryImpl) GetShopsByDistance(userLat float64, userLong float6
 
 	err := r.db.Model(&model.ShopModel{}).
 		Preload("Image").
+		Preload("Modules.Module").
 		Select(`id, image_id, partner_id, name, location_lat, location_long,
 			(6371 * acos(cos(radians(?)) * cos(radians(location_lat)) * cos(radians(location_long) - radians(?)) + sin(radians(?)) * sin(radians(location_lat)))) as distance,
 			created_at, updated_at, deleted_at`,

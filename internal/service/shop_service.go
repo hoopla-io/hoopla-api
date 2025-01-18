@@ -2,8 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
-
 	shops_request "github.com/hoopla/hoopla-api/app/http/request/shops"
 	partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
 	shop_resource "github.com/hoopla/hoopla-api/app/http/resource/shop"
@@ -12,8 +10,8 @@ import (
 )
 
 type ShopService interface {
-	NearShopsList(data shops_request.NearShopsRequest) (*[]partner_resource.ShopsCollections, int, error)
-	PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error)
+	NearShopsList(data shops_request.NearShopsRequest) (*[]shop_resource.ShopsCollections, int, error)
+	PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]shop_resource.ShopsCollections, int, error)
 	ShopDetail(data shops_request.ShopRequest) (*shop_resource.ShopResource, int, error)
 }
 
@@ -27,19 +25,19 @@ func NewShopService(shopRepository repository.ShopRepository) ShopService {
 	}
 }
 
-func (s *ShopServiceImpl) NearShopsList(data shops_request.NearShopsRequest) (*[]partner_resource.ShopsCollections, int, error) {
+func (s *ShopServiceImpl) NearShopsList(data shops_request.NearShopsRequest) (*[]shop_resource.ShopsCollections, int, error) {
 	shops, err := s.ShopRepository.GetShopsByDistance(data.Lat, data.Long)
 	if err != nil {
 		return nil, 500, err
 	}
 
-	var shopsCollection []partner_resource.ShopsCollections
+	var shopsCollection []shop_resource.ShopsCollections
 	for _, shop := range *shops {
-		fmt.Println(shop)
-		shopResource := partner_resource.ShopsCollections{
-			ShopID: shop.ID,
-			Name:   shop.Name,
-			Location: partner_resource.ShopLocationResource{
+		shopResource := shop_resource.ShopsCollections{
+			ShopID:    shop.ID,
+			PartnerID: shop.PartnerID,
+			Name:      shop.Name,
+			Location: shop_resource.ShopLocationResource{
 				Lat: shop.LocationLat,
 				Lng: shop.LocationLong,
 			},
@@ -53,24 +51,36 @@ func (s *ShopServiceImpl) NearShopsList(data shops_request.NearShopsRequest) (*[
 			shopResource.PictureURL = pictureUrl
 		}
 
+		var modules []shop_resource.ShopModulesResource
+		for _, module := range *shop.Modules {
+			if module.Module != nil {
+				modules = append(modules, shop_resource.ShopModulesResource{
+					ModuleID: module.Module.ID,
+					Name:     module.Module.Name,
+					Colour:   module.Module.Colour,
+				})
+			}
+		}
+		shopResource.Modules = &modules
+
 		shopsCollection = append(shopsCollection, shopResource)
 	}
 
 	return &shopsCollection, 200, nil
 }
 
-func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]partner_resource.ShopsCollections, int, error) {
+func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsRequest) (*[]shop_resource.ShopsCollections, int, error) {
 	shops, err := s.ShopRepository.GetPartnerShops(data.PartnerID)
 	if err != nil {
 		return nil, 500, err
 	}
 
-	var shopsCollection []partner_resource.ShopsCollections
+	var shopsCollection []shop_resource.ShopsCollections
 	for _, shop := range *shops {
-		shopResource := partner_resource.ShopsCollections{
+		shopResource := shop_resource.ShopsCollections{
 			ShopID: shop.ID,
 			Name:   shop.Name,
-			Location: partner_resource.ShopLocationResource{
+			Location: shop_resource.ShopLocationResource{
 				Lat: shop.LocationLat,
 				Lng: shop.LocationLong,
 			},

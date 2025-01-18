@@ -1,15 +1,12 @@
-package partner_resource
+package shop_resource
 
 type ShopsCollections struct {
 	ShopID     uint    `json:"shopId"`
+	PartnerID  uint    `json:"partnerId"`
 	Name       string  `json:"name"`
 	PictureURL *string `json:"pictureUrl"`
 	Distance   float64 `json:"distance"`
 
-	Location ShopLocationResource `json:"location"`
-}
-
-type ShopLocationResource struct {
-	Lat float64 `json:"lat"`
-	Lng float64 `json:"lng"`
+	Location ShopLocationResource   `json:"location"`
+	Modules  *[]ShopModulesResource `json:"modules"`
 }
