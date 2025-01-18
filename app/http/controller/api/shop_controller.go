@@ -17,11 +17,6 @@ func NewShopController(shopService service.ShopService) *ShopController {
 	}
 }
 
-// @Tags Partners
-// @Accept  json
-// @Produce  json
-// @Param data query shops_request.PartnerShopsRequest true "Partner shops"
-// @Router /shops/partner-shops [get]
 func (c *ShopController) PartnerShopList(ctx *gin.Context) {
 	var request shops_request.PartnerShopsRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {

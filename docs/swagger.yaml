@@ -81,29 +81,6 @@ paths:
       responses: {}
       tags:
       - Auth
-  /partners:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      tags:
-      - Partners
-  /partners/partner:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - in: query
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      tags:
-      - Partners
   /shops/near-shops:
     get:
       consumes:
@@ -122,20 +99,6 @@ paths:
       responses: {}
       tags:
       - Shops
-  /shops/partner-shops:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - in: query
-        name: partnerId
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses: {}
-      tags:
-      - Partners
   /shops/shop:
     get:
       consumes:

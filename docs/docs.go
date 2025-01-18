@@ -92,42 +92,6 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/partners": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Partners"
-                ],
-                "responses": {}
-            }
-        },
-        "/partners/partner": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Partners"
-                ],
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/shops/near-shops": {
             "get": {
                 "consumes": [
@@ -149,28 +113,6 @@ const docTemplate = `{
                     {
                         "type": "number",
                         "name": "long",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/shops/partner-shops": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Partners"
-                ],
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "name": "partnerId",
                         "in": "query",
                         "required": true
                     }

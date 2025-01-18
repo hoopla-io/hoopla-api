@@ -17,11 +17,6 @@ func NewPartnerController(PartnerService service.PartnerService) *PartnerControl
 	}
 }
 
-// @Tags Partners
-// @Accept  json
-// @Produce  json
-// @Param data query partners_request.PartnersRequest true "Partners list"
-// @Router /partners [get]
 func (c PartnerController) Partners(ctx *gin.Context) {
 	var request partners_request.PartnersRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -39,11 +34,6 @@ func (c PartnerController) Partners(ctx *gin.Context) {
 	return
 }
 
-// @Tags Partners
-// @Accept  json
-// @Produce  json
-// @Param data query partners_request.PartnerRequest true "Partner Detail"
-// @Router /partners/partner [get]
 func (c PartnerController) Partner(ctx *gin.Context) {
 	var request partners_request.PartnerRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
