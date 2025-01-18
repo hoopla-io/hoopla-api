@@ -76,17 +76,6 @@ func (s *ShopServiceImpl) PartnerShopsList(data shops_request.PartnerShopsReques
 			},
 		}
 
-		var phoneNumbers []partner_resource.ShopPhoneNumbersCollection
-		for _, attribute := range *shop.Attributes {
-			switch attribute.AttributeKey {
-			case "phone_number":
-				phoneNumbers = append(phoneNumbers, partner_resource.ShopPhoneNumbersCollection{
-					PhoneNumber: attribute.AttributeValue,
-				})
-			}
-		}
-		shopResource.PhoneNumbers = &phoneNumbers
-
 		var pictureUrl *string
 		picture := shop.Image
 		if picture != nil {
