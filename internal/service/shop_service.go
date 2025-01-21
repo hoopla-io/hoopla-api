@@ -26,7 +26,7 @@ func NewShopService(shopRepository repository.ShopRepository) ShopService {
 }
 
 func (s *ShopServiceImpl) NearShopsList(data shops_request.NearShopsRequest) (*[]shop_resource.ShopsCollections, int, error) {
-	shops, err := s.ShopRepository.GetShopsByDistance(data.Lat, data.Long)
+	shops, err := s.ShopRepository.GetShopsByDistance(data.Lat, data.Long, data.Name)
 	if err != nil {
 		return nil, 500, err
 	}

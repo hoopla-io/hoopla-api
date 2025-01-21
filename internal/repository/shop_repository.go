@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/hoopla/hoopla-api/internal/model"
 	"gorm.io/gorm"
 )
@@ -8,7 +9,7 @@ import (
 type ShopRepository interface {
 	GetPartnerShops(partnerId uint) (*[]model.ShopModel, error)
 	ShopDetailById(shopId uint) (*model.ShopModel, error)
-	GetShopsByDistance(userLat float64, userLong float64) (*[]model.ShopModel, error)
+	GetShopsByDistance(userLat float64, userLong float64, name *string) (*[]model.ShopModel, error)
 }
 
 type ShopRepositoryImpl struct {
@@ -51,18 +52,23 @@ func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, erro
 	return &shop, nil
 }
 
-func (r *ShopRepositoryImpl) GetShopsByDistance(userLat float64, userLong float64) (*[]model.ShopModel, error) {
+func (r *ShopRepositoryImpl) GetShopsByDistance(userLat float64, userLong float64, name *string) (*[]model.ShopModel, error) {
 	var shops []model.ShopModel
 
-	err := r.db.Model(&model.ShopModel{}).
+	query := r.db.Model(&model.ShopModel{}).
 		Preload("Image").
 		Preload("Modules.Module").
 		Select(`id, image_id, partner_id, name, location_lat, location_long,
 			(6371 * acos(cos(radians(?)) * cos(radians(location_lat)) * cos(radians(location_long) - radians(?)) + sin(radians(?)) * sin(radians(location_lat)))) as distance,
 			created_at, updated_at, deleted_at`,
 			userLat, userLong, userLat).
-		Order("distance ASC").
-		Find(&shops).Error
+		Order("distance ASC")
+
+	if name != nil {
+		query = query.Where("name like ?", fmt.Sprintf("%%%s%%", *name))
+	}
+
+	err := query.Find(&shops).Error
 
 	if err != nil {
 		return nil, err

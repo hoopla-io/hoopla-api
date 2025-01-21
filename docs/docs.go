@@ -115,6 +115,11 @@ const docTemplate = `{
                         "name": "long",
                         "in": "query",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "name": "name",
+                        "in": "query"
                     }
                 ],
                 "responses": {}

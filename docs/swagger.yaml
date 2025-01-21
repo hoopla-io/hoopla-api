@@ -94,6 +94,9 @@ paths:
         name: long
         required: true
         type: number
+      - in: query
+        name: name
+        type: string
       produces:
       - application/json
       responses: {}
