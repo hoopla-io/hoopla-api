@@ -29,7 +29,8 @@ var Modules = fx.Options(
 func Server(lc fx.Lifecycle) *gin.Engine {
 	appConf := config.NewAppConfig()
 
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery())
 
 	srv := &http.Server{
 		Addr:           fmt.Sprintf("%s:%d", appConf.HOST, appConf.PORT),
