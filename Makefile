@@ -1,4 +1,4 @@
-.PHONY: build tidy run debug docker-up docker-down docker-rebuild
+.PHONY: build tidy run debug docker-up docker-down docker-rebuild swag
 
 build:
 	@mkdir -p bin
@@ -23,3 +23,6 @@ docker-down:
 
 docker-rebuild:
 	@docker compose up -d --build
+
+swag:
+	@swag init -g cmd/main.go

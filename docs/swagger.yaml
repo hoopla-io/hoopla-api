@@ -24,9 +24,14 @@ definitions:
     required:
     - sessionId
     type: object
+  subscriptions_request.BuySubscriptionRequest:
+    properties:
+      subscriptionId:
+        type: integer
+    type: object
   user_request.LogoutRequest:
     type: object
-host: api.hoopla.uz
+host: 127.0.0.1:8000
 info:
   contact:
     email: davronbekov.o@itv.uz
@@ -120,6 +125,22 @@ paths:
     get:
       consumes:
       - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Subscriptions
+  /subscriptions/buy:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Buy Subscription
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/subscriptions_request.BuySubscriptionRequest'
       produces:
       - application/json
       responses: {}

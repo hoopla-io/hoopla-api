@@ -35,14 +35,16 @@ type UserService interface {
 }
 
 type UserServiceImpl struct {
-	UserRepository repository.UserRepository
-	sessionCache   *cache.Cache
+	UserRepository             repository.UserRepository
+	UserSubscriptionRepository repository.UserSubscriptionRepository
+	sessionCache               *cache.Cache
 }
 
-func NewUserService(UserRepository repository.UserRepository) UserService {
+func NewUserService(UserRepository repository.UserRepository, UserSubscriptionRepository repository.UserSubscriptionRepository) UserService {
 	return &UserServiceImpl{
-		UserRepository: UserRepository,
-		sessionCache:   cache.New(10*time.Minute, 20*time.Minute),
+		UserRepository:             UserRepository,
+		UserSubscriptionRepository: UserSubscriptionRepository,
+		sessionCache:               cache.New(10*time.Minute, 20*time.Minute),
 	}
 }
 
@@ -250,6 +252,20 @@ func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.
 		UserID:      user.ID,
 		PhoneNumber: user.PhoneNumber,
 		Name:        user.Name,
+		Balance:     user.GetBalance(),
+		Currency:    "sum",
+	}
+
+	subscription, err := s.UserSubscriptionRepository.GetByUserID(userHelper.UserID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 500, err
+	} else if subscription.EndDate > time.Now().Unix() {
+		userResource.Subscription = &user_resource.SubscriptionResource{
+			ID:          subscription.Subscription.ID,
+			Name:        subscription.Subscription.Name,
+			EndDate:     time.Unix(subscription.EndDate, 0).Format("2006-01-02"),
+			EndDateUnix: subscription.EndDate,
+		}
 	}
 
 	return userResource, 200, nil

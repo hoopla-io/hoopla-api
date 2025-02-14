@@ -7,6 +7,7 @@ import (
 
 type SubscriptionRepository interface {
 	SubscriptionsList() (*[]model.SubscriptionModel, error)
+	GetByID(id uint) (*model.SubscriptionModel, error)
 }
 
 type SubscriptionRepositoryImpl struct {
@@ -29,4 +30,15 @@ func (r *SubscriptionRepositoryImpl) SubscriptionsList() (*[]model.SubscriptionM
 	}
 
 	return &subscriptions, nil
+}
+
+func (r *SubscriptionRepositoryImpl) GetByID(id uint) (*model.SubscriptionModel, error) {
+	var subscription model.SubscriptionModel
+
+	query := r.db.First(&subscription, id)
+	if query.Error != nil {
+		return nil, query.Error
+	}
+
+	return &subscription, nil
 }

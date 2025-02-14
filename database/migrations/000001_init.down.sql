@@ -9,3 +9,4 @@ DROP TABLE IF EXISTS shop_worktimes CASCADE;
 DROP TABLE IF EXISTS coffee CASCADE;
 DROP TABLE IF EXISTS shop_coffees CASCADE;
 DROP TABLE IF EXISTS subscription CASCADE;
+drop table if exists transactions cascade;

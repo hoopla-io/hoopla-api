@@ -60,6 +60,7 @@ func NewApiRoute(
 			subscriptions := v1.Group("/subscriptions")
 			{
 				subscriptions.GET("/", SubscriptionController.Subscriptions)
+				subscriptions.POST("/buy", middleware.JwtMiddleware(), SubscriptionController.BuySubscription)
 			}
 
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

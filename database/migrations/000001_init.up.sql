@@ -304,3 +304,28 @@ create index user_orders_drink_id_index
 
 create index user_orders_deleted_at_index
     on user_orders (deleted_at);
+
+
+ALTER TABLE users
+    ADD debit BIGINT DEFAULT 0;
+
+ALTER TABLE users
+    ADD credit BIGINT DEFAULT 0;
+
+create table if not exists transactions
+(
+    id               SERIAL PRIMARY KEY,
+    user_id          INTEGER      not null,
+    transaction_type VARCHAR(20)  not null,
+    transaction_id   VARCHAR(255) not null,
+    amount           INTEGER      not null default 0,
+    created_at       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
+    deleted_at       TIMESTAMP    NULL
+)
+
+ALTER TABLE transactions
+    ADD currency VARCHAR(20);
+
+ALTER TABLE transactions
+    ADD payment_type VARCHAR(20);

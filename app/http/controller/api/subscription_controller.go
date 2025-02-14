@@ -5,6 +5,7 @@ import (
 	subscriptions_request "github.com/hoopla/hoopla-api/app/http/request/subscriptions"
 	"github.com/hoopla/hoopla-api/app/http/response"
 	"github.com/hoopla/hoopla-api/internal/service"
+	"github.com/hoopla/hoopla-api/utils"
 )
 
 type SubscriptionController struct {
@@ -36,5 +37,34 @@ func (controller *SubscriptionController) Subscriptions(ctx *gin.Context) {
 	}
 
 	response.SuccessResponse(ctx, "ok!", subscriptions, nil)
+	return
+}
+
+// @Tags Subscriptions
+// @Accept  json
+// @Produce  json
+// @Param data body subscriptions_request.BuySubscriptionRequest true "Buy Subscription"
+// @Router /subscriptions/buy [post]
+func (controller *SubscriptionController) BuySubscription(ctx *gin.Context) {
+	var request subscriptions_request.BuySubscriptionRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	statusCode, err := controller.subscriptionService.BuySubscription(request, userHelper.UserID)
+	if err != nil {
+		response.ErrorResponse(ctx, statusCode, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", nil, nil)
 	return
 }

@@ -16,6 +16,7 @@ type UserRepository interface {
 	CreateUser(data dto.UserDTO) (*model.UserModel, error)
 	UpdateToken(uuid string, user *model.UserModel) error
 	RemoveToken(*model.UserModel) error
+	AddCredit(creditDto dto.AddCreditDTO) error
 }
 
 type UserRepositoryImpl struct {
@@ -80,5 +81,18 @@ func (r *UserRepositoryImpl) RemoveToken(user *model.UserModel) error {
 	if err := r.db.Model(user).Update("refresh_token", fmt.Sprintf("%d", time.Now().UnixMicro())).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+func (r *UserRepositoryImpl) AddCredit(creditDto dto.AddCreditDTO) error {
+	amountCents := int64(creditDto.Amount * 100)
+	query := r.db.Model(&model.UserModel{}).
+		Where("id = ?", creditDto.UserID).
+		Update("credit", gorm.Expr("credit + ?", amountCents))
+
+	if query.Error != nil {
+		return query.Error
+	}
+
 	return nil
 }

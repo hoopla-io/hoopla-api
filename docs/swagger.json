@@ -7,7 +7,7 @@
         },
         "version": "1.0.0"
     },
-    "host": "api.hoopla.uz",
+    "host": "127.0.0.1:8000",
     "basePath": "/api/v1",
     "paths": {
         "/auth/confirm-sms": {
@@ -154,6 +154,31 @@
                 "responses": {}
             }
         },
+        "/subscriptions/buy": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Subscriptions"
+                ],
+                "parameters": [
+                    {
+                        "description": "Buy Subscription",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/subscriptions_request.BuySubscriptionRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/user/generate-qr-code": {
             "get": {
                 "consumes": [
@@ -279,6 +304,14 @@
             "properties": {
                 "sessionId": {
                     "type": "string"
+                }
+            }
+        },
+        "subscriptions_request.BuySubscriptionRequest": {
+            "type": "object",
+            "properties": {
+                "subscriptionId": {
+                    "type": "integer"
                 }
             }
         },
