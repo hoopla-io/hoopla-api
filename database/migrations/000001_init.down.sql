@@ -1,12 +1,40 @@
--- Drop tables
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS images CASCADE;
-DROP TABLE IF EXISTS company CASCADE;
-DROP TABLE IF EXISTS company_socials CASCADE;
-DROP TABLE IF EXISTS shops CASCADE;
-DROP TABLE IF EXISTS shop_phones CASCADE;
-DROP TABLE IF EXISTS shop_worktimes CASCADE;
-DROP TABLE IF EXISTS coffee CASCADE;
-DROP TABLE IF EXISTS shop_coffees CASCADE;
-DROP TABLE IF EXISTS subscription CASCADE;
-drop table if exists transactions cascade;
+drop table images;
+
+drop table users;
+
+drop table partners;
+
+drop table partner_attributes;
+
+drop table shop_attributes;
+
+drop table shop_hours;
+
+drop table shop_pictures;
+
+drop table drinks;
+
+drop table partner_drinks;
+
+drop table partner_users;
+
+drop table subscriptions;
+
+drop table subscription_features;
+
+drop table user_orders;
+
+drop table shops;
+
+drop table subscription_modules;
+
+drop table modules;
+
+drop table shop_modules;
+
+drop table transactions;
+
+drop table payme_transactions;
+
+drop table user_subscriptions;
+
