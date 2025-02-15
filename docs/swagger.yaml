@@ -31,7 +31,7 @@ definitions:
     type: object
   user_request.LogoutRequest:
     type: object
-host: 127.0.0.1:8000
+host: api.hoopla.uz
 info:
   contact:
     email: davronbekov.o@itv.uz
