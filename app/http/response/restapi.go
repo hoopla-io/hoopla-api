@@ -24,10 +24,6 @@ func (m *Meta) SetLastPage() {
 }
 
 func NewResponse(c *gin.Context, statusCode int, message string, data interface{}, meta interface{}) {
-	c.Header("Content-Type", "application/json")
-	c.Header("Access-Control-Allow-Origin", c.Request.Host)
-	c.Header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
-	c.Header("Access-Control-Allow-Headers", "*")
 	c.JSON(statusCode, Response{
 		Code:    statusCode,
 		Message: message,
