@@ -198,6 +198,33 @@ paths:
       responses: {}
       tags:
       - User
+  /user/pay/services:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User/Pay
+  /user/pay/top-up:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: amount
+        required: true
+        type: number
+      - in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User/Pay
   /user/refresh-token:
     patch:
       consumes:

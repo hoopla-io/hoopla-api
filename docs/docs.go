@@ -267,6 +267,48 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/pay/services": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User/Pay"
+                ],
+                "responses": {}
+            }
+        },
+        "/user/pay/top-up": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User/Pay"
+                ],
+                "parameters": [
+                    {
+                        "type": "number",
+                        "name": "amount",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/user/refresh-token": {
             "patch": {
                 "consumes": [

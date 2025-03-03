@@ -18,6 +18,7 @@ func NewApiRoute(
 	ShopController *api.ShopController,
 	SubscriptionController *api.SubscriptionController,
 	UserOrderController *api_user.OrderController,
+	PayController *api_user.PayController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -42,6 +43,12 @@ func NewApiRoute(
 				user_orders := user.Group("/orders")
 				{
 					user_orders.GET("/orders-list", middleware.JwtMiddleware(), UserOrderController.Orders)
+				}
+
+				pay_services := user.Group("/pay")
+				{
+					pay_services.GET("/services", PayController.Services)
+					pay_services.GET("/top-up", PayController.TopUp)
 				}
 			}
 
