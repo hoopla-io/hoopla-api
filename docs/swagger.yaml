@@ -146,6 +146,15 @@ paths:
       responses: {}
       tags:
       - Subscriptions
+  /user/deactivate:
+    delete:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User
   /user/generate-qr-code:
     get:
       consumes:

@@ -126,3 +126,31 @@ func (uc *UserController) GenerateQRCode(ctx *gin.Context) {
 	response.SuccessResponse(ctx, "OK!", qrCodeResource, nil)
 	return
 }
+
+// @Tags User
+// @Accept  json
+// @Produce  json
+// @Param data query user_request.DeactivateRequest true "Deactivate an account"
+// @Router /user/deactivate [delete]
+func (uc *UserController) Deactivate(ctx *gin.Context) {
+	var request user_request.DeactivateRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+	deactivated, err := uc.userService.DeactivateUser(&userHelper)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not deactivate")
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", deactivated, nil)
+	return
+}

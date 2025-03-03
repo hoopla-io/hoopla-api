@@ -37,6 +37,7 @@ func NewApiRoute(
 				user.PATCH("/refresh-token", UserController.RefreshToken)
 				user.POST("/logout", middleware.JwtMiddleware(), UserController.Logout)
 				user.GET("/generate-qr-code", middleware.JwtMiddleware(), UserController.GenerateQRCode)
+				user.DELETE("/deactivate", middleware.JwtMiddleware(), UserController.Deactivate)
 
 				user_orders := user.Group("/orders")
 				{

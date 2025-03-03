@@ -186,6 +186,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/deactivate": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "responses": {}
+            }
+        },
         "/user/generate-qr-code": {
             "get": {
                 "consumes": [

@@ -17,6 +17,7 @@ type UserRepository interface {
 	UpdateToken(uuid string, user *model.UserModel) error
 	RemoveToken(*model.UserModel) error
 	AddCredit(creditDto dto.AddCreditDTO) error
+	DeleteUser(user *model.UserModel) error
 }
 
 type UserRepositoryImpl struct {
@@ -92,6 +93,14 @@ func (r *UserRepositoryImpl) AddCredit(creditDto dto.AddCreditDTO) error {
 
 	if query.Error != nil {
 		return query.Error
+	}
+
+	return nil
+}
+
+func (r *UserRepositoryImpl) DeleteUser(user *model.UserModel) error {
+	if err := r.db.Delete(user).Error; err != nil {
+		return err
 	}
 
 	return nil
