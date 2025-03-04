@@ -84,7 +84,7 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 	}
 
 	if oldSubscription.EndDate > currentTimeUnix {
-		return 422, errors.New("You currently have an active subscription!")
+		return 428, errors.New("You currently have an active subscription!")
 	}
 
 	subscriptionEndDateUnix := currentTimeUnix + int64(86400*subscription.Days)
