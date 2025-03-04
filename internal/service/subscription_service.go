@@ -73,7 +73,7 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 	}
 
 	if user.GetBalance() < subscription.Price {
-		return 422, errors.New("Insufficient balance!")
+		return 428, errors.New("Insufficient balance!")
 	}
 
 	currentTimeUnix := time.Now().Unix()
@@ -84,7 +84,7 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 	}
 
 	if oldSubscription.EndDate > currentTimeUnix {
-		return 428, errors.New("You currently have an active subscription!")
+		return 422, errors.New("You currently have an active subscription!")
 	}
 
 	subscriptionEndDateUnix := currentTimeUnix + int64(86400*subscription.Days)
