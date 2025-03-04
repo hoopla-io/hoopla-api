@@ -253,7 +253,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/orders-list": {
+        "/user/orders/orders-list": {
             "get": {
                 "consumes": [
                     "application/json"

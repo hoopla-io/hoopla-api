@@ -189,7 +189,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/orders-list:
+  /user/orders/orders-list:
     get:
       consumes:
       - application/json

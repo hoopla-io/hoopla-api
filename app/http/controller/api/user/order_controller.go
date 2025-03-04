@@ -22,7 +22,7 @@ func NewOrderController(userOrderService service.UserOrderService) *OrderControl
 // @Accept  json
 // @Produce  json
 // @Param data query user_orders_request.OrdersRequest true "User-orders list"
-// @Router /user/orders-list [get]
+// @Router /user/orders/orders-list [get]
 func (controller *OrderController) Orders(ctx *gin.Context) {
 	var request user_orders_request.OrdersRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
