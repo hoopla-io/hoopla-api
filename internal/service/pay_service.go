@@ -38,7 +38,7 @@ func (s *PayServiceImpl) TopUp(data user_pay_request.TopUpRequest, user *utils.U
 	var topUpResource user_pay_resource.TopUpResource
 	var checkoutUrl string
 	if data.ID == 1 {
-		checkoutUrl = fmt.Sprintf("m=67a9fe88dbc8d1a8dc0eb7cc;ac.phoneNumber=%s;a=%f;c=%s",
+		checkoutUrl = fmt.Sprintf("m=67c6d714e4b4003392f2e809;ac.phoneNumber=%s;a=%f;c=%s",
 			user.PhoneNumber,
 			data.Amount*100,
 			"https://hoopla.uz",
