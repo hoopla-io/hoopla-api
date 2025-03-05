@@ -125,7 +125,7 @@ func (s *UserServiceImpl) ConfirmSms(data auth_request.ConfirmSmsRequest) (*auth
 	}
 
 	// Generate the JWT token
-	expireAt := time.Now().Add(1 * time.Hour).Unix()
+	expireAt := time.Now().Add(1 * time.Minute).Unix()
 	accessToken, err := utils.EncodeJWT(user.ID, user.PhoneNumber, expireAt)
 	if err != nil {
 		return nil, 500, err
