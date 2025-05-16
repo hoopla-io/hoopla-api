@@ -47,6 +47,9 @@ func (s *SubscriptionServiceImpl) GetSubscriptions(data subscriptions_request.Su
 			Price:    item.Price,
 			Currency: item.Currency,
 		}
+		for _, day := range item.WeekDays {
+			subscription.WeekDays = append(subscription.WeekDays, day.GetName("en"))
+		}
 		var features []subscription_resource.FeaturesCollection
 		for _, feature := range item.Features {
 			features = append(features, subscription_resource.FeaturesCollection{

@@ -24,6 +24,8 @@ func (r *SubscriptionRepositoryImpl) SubscriptionsList() (*[]model.SubscriptionM
 	var subscriptions []model.SubscriptionModel
 	err := r.db.Model(&model.SubscriptionModel{}).
 		Preload("Features").
+		Preload("WeekDays").
+		Order("priority asc").
 		Find(&subscriptions).Error
 	if err != nil {
 		return nil, err

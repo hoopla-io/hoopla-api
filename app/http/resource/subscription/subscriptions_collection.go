@@ -8,4 +8,6 @@ type SubscriptionsCollection struct {
 	Currency string  `json:"currency"`
 
 	Features *[]FeaturesCollection `json:"features"`
+
+	WeekDays []string `json:"weekDays"`
 }
