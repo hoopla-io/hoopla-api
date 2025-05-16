@@ -46,6 +46,7 @@ func (s *SubscriptionServiceImpl) GetSubscriptions(data subscriptions_request.Su
 			Days:     item.Days,
 			Price:    item.Price,
 			Currency: item.Currency,
+			CupsADay: item.CupsDay,
 		}
 		for _, day := range item.WeekDays {
 			subscription.WeekDays = append(subscription.WeekDays, day.GetName("en"))
