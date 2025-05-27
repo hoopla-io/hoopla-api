@@ -11,7 +11,7 @@ type SubscriptionModel struct {
 	Days      uint           `gorm:"not null"`
 	Price     float64        `gorm:"not null"`
 	Currency  string         `gorm:"type:varchar(50);not null"`
-	CupsDay   uint8          `gorm:"column:cups_day"`
+	CupsDay   uint           `gorm:"column:cups_day"`
 	Priority  int            `gorm:"default:0"`
 	CreatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`

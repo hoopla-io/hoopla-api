@@ -253,6 +253,20 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/user/orders/drinks-stat": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "responses": {}
+            }
+        },
         "/user/orders/orders-list": {
             "get": {
                 "consumes": [

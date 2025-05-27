@@ -46,3 +46,25 @@ func (controller *OrderController) Orders(ctx *gin.Context) {
 	response.SuccessResponse(ctx, "ok!", orders, nil)
 	return
 }
+
+// @Tags User
+// @Accept  json
+// @Produce  json
+// @Router /user/orders/drinks-stat [get]
+func (controller *OrderController) DrinksStat(ctx *gin.Context) {
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	stat, code, err := controller.userOrderService.GetDrinksStat(userHelper.UserID)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "ok!", stat, nil)
+	return
+}

@@ -8,15 +8,21 @@ import (
 
 type UserOrderService interface {
 	GetOrders(data user_orders_request.OrdersRequest, userId uint) (*[]user_order_resource.UserOrdersCollection, int, error)
+	GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error)
 }
 
 type UserOrderServiceImpl struct {
-	userOrderRepository repository.UserOrderRepository
+	userOrderRepository        repository.UserOrderRepository
+	userSubscriptionRepository repository.UserSubscriptionRepository
 }
 
-func NewUserOrderService(userOrderRepository repository.UserOrderRepository) UserOrderService {
+func NewUserOrderService(
+	userOrderRepository repository.UserOrderRepository,
+	UserSubscriptionRepository repository.UserSubscriptionRepository,
+) UserOrderService {
 	return &UserOrderServiceImpl{
-		userOrderRepository: userOrderRepository,
+		userOrderRepository:        userOrderRepository,
+		userSubscriptionRepository: UserSubscriptionRepository,
 	}
 }
 
@@ -37,4 +43,25 @@ func (s *UserOrderServiceImpl) GetOrders(data user_orders_request.OrdersRequest,
 	}
 
 	return &userOrdersCollection, 200, nil
+}
+
+func (s *UserOrderServiceImpl) GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error) {
+	var available uint
+
+	userSubscription, err := s.userSubscriptionRepository.GetByUserID(userId)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	available = userSubscription.Subscription.CupsDay
+
+	orders, err := s.userOrderRepository.GetTodaysByUserId(userId)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	return &user_order_resource.DrinksStatCollection{
+		Available: available,
+		Left:      uint(len(orders)),
+	}, 200, nil
 }
