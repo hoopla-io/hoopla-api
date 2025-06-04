@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -20,6 +21,7 @@ func NewAppConfig() *AppConfig {
 		JwtKey: os.Getenv("JWT_KEY"),
 	}
 	appConfig.PORT, _ = strconv.Atoi(os.Getenv("PORT"))
+	fmt.Println(appConfig)
 
 	return appConfig
 }
