@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/hoopla/hoopla-api/pkg/databasego"
 	"gorm.io/gorm"
 	"log"
@@ -17,6 +18,8 @@ func NewMainDB() *gorm.DB {
 		HOST:     os.Getenv("DB_HOST"),
 	}
 	mainDB.PORT, _ = strconv.Atoi(os.Getenv("DB_PORT"))
+
+	fmt.Println(mainDB)
 
 	db, err := databasego.NewDatabase(*mainDB)
 	if err != nil {
