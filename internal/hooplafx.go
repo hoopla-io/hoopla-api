@@ -11,7 +11,6 @@ import (
 	"github.com/hoopla/hoopla-api/app/config"
 	"github.com/hoopla/hoopla-api/app/http/controller"
 	"github.com/hoopla/hoopla-api/app/routes"
-	"github.com/hoopla/hoopla-api/internal/db"
 	"github.com/hoopla/hoopla-api/internal/repository"
 	"github.com/hoopla/hoopla-api/internal/service"
 	"go.uber.org/fx"
@@ -23,10 +22,11 @@ var Modules = fx.Options(
 	controller.Modules,
 	service.Modules,
 	repository.Modules,
-	db.Modules,
+	fx.Provide(config.NewMainDB),
 )
 
 func Server(lc fx.Lifecycle) *gin.Engine {
+	config.LoadENV()
 	appConf := config.NewAppConfig()
 
 	router := gin.New()

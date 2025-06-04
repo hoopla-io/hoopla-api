@@ -1,20 +1,25 @@
 package config
 
-import "github.com/itv-go/yamlreader"
+import (
+	"os"
+	"strconv"
+)
 
 type AppConfig struct {
-	APP  string `yaml:"APP"`
-	HOST string `yaml:"HOST"`
-	PORT int    `yaml:"PORT"`
+	APP  string
+	HOST string
+	PORT int
 
-	JwtKey string `yaml:"JWT_KEY"`
+	JwtKey string
 }
 
 func NewAppConfig() *AppConfig {
-	read, err := yamlreader.Read("config/app.yaml", &AppConfig{})
-	if err != nil {
-		return nil
+	appConfig := &AppConfig{
+		APP:    os.Getenv("APP"),
+		HOST:   os.Getenv("HOST"),
+		JwtKey: os.Getenv("JWT_KEY"),
 	}
+	appConfig.PORT, _ = strconv.Atoi(os.Getenv("PORT"))
 
-	return read
+	return appConfig
 }

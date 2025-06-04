@@ -14,7 +14,6 @@ FROM alpine:latest AS runner
 WORKDIR /
 
 COPY --from=builder /app/main /main
-COPY --from=builder /app/config /config
 
 EXPOSE 8000
 
