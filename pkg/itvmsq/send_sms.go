@@ -8,11 +8,7 @@ import (
 )
 
 func SendCode(mobileProvider, phoneNumber string, code int) error {
-	message := fmt.Sprintf("hoopla kod: %d %s", code, "qKGewJ132BX")
-
-	if mobileProvider == "uzmobile" {
-		message = fmt.Sprintf("hoopla sizning ro'yhatdan o'tish uchun kodingiz: %d %s", code, "qKGewJ132BX")
-	}
+	message := fmt.Sprintf("hoopla sizning ro'yhatdan o'tish uchun kodingiz: %d %s", code, "qKGewJ132BX")
 
 	payload := map[string]interface{}{
 		"credential_provider": mobileProvider,
