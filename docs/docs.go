@@ -370,6 +370,31 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/vendors/poster/webhook": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poster"
+                ],
+                "parameters": [
+                    {
+                        "description": "Webhook for poster",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vendors_poster_request.WebhookRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -420,6 +445,32 @@ const docTemplate = `{
         },
         "user_request.LogoutRequest": {
             "type": "object"
+        },
+        "vendors_poster_request.WebhookRequest": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "type": "string"
+                },
+                "account_number": {
+                    "type": "string"
+                },
+                "action": {
+                    "type": "string"
+                },
+                "object": {
+                    "type": "string"
+                },
+                "object_id": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "verify": {
+                    "type": "string"
+                }
+            }
         }
     }
 }`

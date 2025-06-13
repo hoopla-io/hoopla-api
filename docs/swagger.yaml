@@ -31,6 +31,23 @@ definitions:
     type: object
   user_request.LogoutRequest:
     type: object
+  vendors_poster_request.WebhookRequest:
+    properties:
+      account:
+        type: string
+      account_number:
+        type: string
+      action:
+        type: string
+      object:
+        type: string
+      object_id:
+        type: string
+      time:
+        type: integer
+      verify:
+        type: string
+    type: object
 host: api.hoopla.uz
 info:
   contact:
@@ -259,6 +276,22 @@ paths:
       - in: query
         name: code
         type: string
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Poster
+  /vendors/poster/webhook:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Webhook for poster
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/vendors_poster_request.WebhookRequest'
       produces:
       - application/json
       responses: {}
