@@ -1,6 +1,6 @@
 package vendors_poster_request
 
 type OauthRequest struct {
-	Code    string `query:"code"`
-	Account string `query:"account"`
+	Code    string `form:"code"`
+	Account string `form:"account"`
 }
