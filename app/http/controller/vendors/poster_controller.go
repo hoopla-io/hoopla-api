@@ -45,11 +45,19 @@ func (c *PosterController) Oauth(ctx *gin.Context) {
 // @Param data body vendors_poster_request.WebhookRequest true "Webhook for poster"
 // @Router /vendors/poster/webhook [post]
 func (c *PosterController) Webhook(ctx *gin.Context) {
-	request := vendors_poster_request.WebhookRequest{}
-	if err := ctx.ShouldBindJSON(&request); err != nil {
-		response.ValidationErrorResponse(ctx, err.Error())
+	//request := vendors_poster_request.WebhookRequest{}
+	//if err := ctx.ShouldBindJSON(&request); err != nil {
+	//	response.ValidationErrorResponse(ctx, err.Error())
+	//	return
+	//}
+
+	var data map[string]interface{}
+	if err := ctx.ShouldBindJSON(&data); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
+	fmt.Println(data)
 
 	//verify := fmt.Sprintf(
 	//	"%s;%s;%s;%s",
@@ -61,5 +69,5 @@ func (c *PosterController) Webhook(ctx *gin.Context) {
 	//verify = fmt.Sprintf("%x", md5.Sum([]byte(verify)))
 
 	//object->incoming_order
-	fmt.Println(request)
+	//fmt.Println(request)
 }
