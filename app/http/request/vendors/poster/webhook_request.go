@@ -6,6 +6,6 @@ type WebhookRequest struct {
 	Object        string `json:"object"`
 	ObjectID      int64  `json:"object_id"`
 	Action        string `json:"action"`
-	Time          uint64 `json:"time"`
+	Time          string `json:"time"`
 	Verify        string `json:"verify"`
 }
