@@ -21,7 +21,7 @@ func NewAuthController(userService service.UserService) *AuthController {
 // @Accept  json
 // @Produce  json
 // @Param data body auth_request.LoginRequest true "Login Request"
-// @Router /auth/login [post]
+// @Router /v1/auth/login [post]
 func (ctr *AuthController) Login(ctx *gin.Context) {
 	loginRequest := auth_request.LoginRequest{}
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
@@ -43,7 +43,7 @@ func (ctr *AuthController) Login(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data body auth_request.ConfirmSmsRequest true "Confirm Sms Request"
-// @Router /auth/confirm-sms [post]
+// @Router /v1/auth/confirm-sms [post]
 func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 	confirmSmsRequest := auth_request.ConfirmSmsRequest{}
 	if err := ctx.ShouldBindJSON(&confirmSmsRequest); err != nil {
@@ -64,7 +64,7 @@ func (ctr *AuthController) ConfirmSms(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data body auth_request.ResendSmsRequest true "Resend Sms Request"
-// @Router /auth/resend-sms [post]
+// @Router /v1/auth/resend-sms [post]
 func (ctr *AuthController) ResendSms(ctx *gin.Context) {
 	resendSmsRequest := auth_request.ResendSmsRequest{}
 	if err := ctx.ShouldBindJSON(&resendSmsRequest); err != nil {

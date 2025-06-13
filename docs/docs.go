@@ -17,7 +17,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/confirm-sms": {
+        "/v1/auth/confirm-sms": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -42,7 +42,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/auth/login": {
+        "/v1/auth/login": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -67,7 +67,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/auth/resend-sms": {
+        "/v1/auth/resend-sms": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -92,7 +92,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/shops/near-shops": {
+        "/v1/shops/near-shops": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -125,7 +125,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/shops/shop": {
+        "/v1/shops/shop": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -147,7 +147,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/subscriptions": {
+        "/v1/subscriptions": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -161,7 +161,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/subscriptions/buy": {
+        "/v1/subscriptions/buy": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -186,7 +186,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/deactivate": {
+        "/v1/user/deactivate": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -200,7 +200,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/generate-qr-code": {
+        "/v1/user/generate-qr-code": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -214,7 +214,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/get-me": {
+        "/v1/user/get-me": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -228,7 +228,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/logout": {
+        "/v1/user/logout": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -253,7 +253,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/orders/drinks-stat": {
+        "/v1/user/orders/drinks-stat": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -267,7 +267,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/orders/orders-list": {
+        "/v1/user/orders/orders-list": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -281,7 +281,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/pay/services": {
+        "/v1/user/pay/services": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -295,7 +295,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/pay/top-up": {
+        "/v1/user/pay/top-up": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -323,7 +323,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/refresh-token": {
+        "/v1/user/refresh-token": {
             "patch": {
                 "consumes": [
                     "application/json"
@@ -428,7 +428,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
 	Host:             "api.hoopla.uz",
-	BasePath:         "/api/v1",
+	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Hoopla | Api",
 	Description:      "",

@@ -10,7 +10,7 @@ import (
 // @version 1.0.0
 // @contact.email davronbekov.o@itv.uz
 // @host api.hoopla.uz
-// @BasePath /api/v1
+// @BasePath /api
 func main() {
 	app := fx.New(
 		internal.Modules,

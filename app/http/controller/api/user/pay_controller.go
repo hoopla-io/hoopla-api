@@ -22,7 +22,7 @@ func NewPayController(payService service.PayService) *PayController {
 // @Accept  json
 // @Produce  json
 // @Param data query user_pay_request.ServicesRequest true "Pay services list"
-// @Router /user/pay/services [get]
+// @Router /v1/user/pay/services [get]
 func (pc *PayController) Services(ctx *gin.Context) {
 	var request user_pay_request.ServicesRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -44,7 +44,7 @@ func (pc *PayController) Services(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data query user_pay_request.TopUpRequest true "Top up balance"
-// @Router /user/pay/top-up [get]
+// @Router /v1/user/pay/top-up [get]
 func (pc *PayController) TopUp(ctx *gin.Context) {
 	var request user_pay_request.TopUpRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {

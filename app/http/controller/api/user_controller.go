@@ -22,7 +22,7 @@ func NewUserController(userService service.UserService) *UserController {
 // @Accept  json
 // @Produce  json
 // @Param data query user_request.GetMeRequest true "Get me"
-// @Router /user/get-me [get]
+// @Router /v1/user/get-me [get]
 func (uc *UserController) GetMe(ctx *gin.Context) {
 	var request user_request.GetMeRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -51,7 +51,7 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data query user_request.RefreshTokenRequest true "Get me"
-// @Router /user/refresh-token [patch]
+// @Router /v1/user/refresh-token [patch]
 func (uc *UserController) RefreshToken(ctx *gin.Context) {
 	var request user_request.RefreshTokenRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -73,7 +73,7 @@ func (uc *UserController) RefreshToken(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data body user_request.LogoutRequest true "Logout from an account"
-// @Router /user/logout [post]
+// @Router /v1/user/logout [post]
 func (uc *UserController) Logout(ctx *gin.Context) {
 	var logoutRequest user_request.LogoutRequest
 	if err := ctx.ShouldBindQuery(&logoutRequest); err != nil {
@@ -102,7 +102,7 @@ func (uc *UserController) Logout(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data query user_request.GenerateQrCodeRequest true "Request for new QR Code"
-// @Router /user/generate-qr-code [get]
+// @Router /v1/user/generate-qr-code [get]
 func (uc *UserController) GenerateQRCode(ctx *gin.Context) {
 	var request user_request.GenerateQrCodeRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -131,7 +131,7 @@ func (uc *UserController) GenerateQRCode(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data query user_request.DeactivateRequest true "Deactivate an account"
-// @Router /user/deactivate [delete]
+// @Router /v1/user/deactivate [delete]
 func (uc *UserController) Deactivate(ctx *gin.Context) {
 	var request user_request.DeactivateRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {

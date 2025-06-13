@@ -76,21 +76,21 @@ func NewApiRoute(
 				subscriptions.POST("/buy", middleware.JwtMiddleware(), SubscriptionController.BuySubscription)
 			}
 
-			vendors := api_routes.Group("/vendors")
-			{
-				//iiko := vendors.Group("/iiko")
-				//{
-				//	iiko.POST("/webhook", IikoController.Webhook)
-				//}
-
-				poster := vendors.Group("/poster")
-				{
-					poster.GET("/oauth", PosterController.Oauth)
-					poster.POST("/webhook", PosterController.Webhook)
-				}
-			}
-
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
+
+		vendors := api_routes.Group("/vendors")
+		{
+			//iiko := vendors.Group("/iiko")
+			//{
+			//	iiko.POST("/webhook", IikoController.Webhook)
+			//}
+
+			poster := vendors.Group("/poster")
+			{
+				poster.GET("/oauth", PosterController.Oauth)
+				poster.POST("/webhook", PosterController.Webhook)
+			}
 		}
 	}
 }

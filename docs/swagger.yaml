@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /api
 definitions:
   auth_request.ConfirmSmsRequest:
     properties:
@@ -38,7 +38,7 @@ info:
   title: Hoopla | Api
   version: 1.0.0
 paths:
-  /auth/confirm-sms:
+  /v1/auth/confirm-sms:
     post:
       consumes:
       - application/json
@@ -54,7 +54,7 @@ paths:
       responses: {}
       tags:
       - Auth
-  /auth/login:
+  /v1/auth/login:
     post:
       consumes:
       - application/json
@@ -70,7 +70,7 @@ paths:
       responses: {}
       tags:
       - Auth
-  /auth/resend-sms:
+  /v1/auth/resend-sms:
     post:
       consumes:
       - application/json
@@ -86,7 +86,7 @@ paths:
       responses: {}
       tags:
       - Auth
-  /shops/near-shops:
+  /v1/shops/near-shops:
     get:
       consumes:
       - application/json
@@ -107,7 +107,7 @@ paths:
       responses: {}
       tags:
       - Shops
-  /shops/shop:
+  /v1/shops/shop:
     get:
       consumes:
       - application/json
@@ -121,7 +121,7 @@ paths:
       responses: {}
       tags:
       - Shops
-  /subscriptions:
+  /v1/subscriptions:
     get:
       consumes:
       - application/json
@@ -130,7 +130,7 @@ paths:
       responses: {}
       tags:
       - Subscriptions
-  /subscriptions/buy:
+  /v1/subscriptions/buy:
     post:
       consumes:
       - application/json
@@ -146,7 +146,7 @@ paths:
       responses: {}
       tags:
       - Subscriptions
-  /user/deactivate:
+  /v1/user/deactivate:
     delete:
       consumes:
       - application/json
@@ -155,7 +155,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/generate-qr-code:
+  /v1/user/generate-qr-code:
     get:
       consumes:
       - application/json
@@ -164,7 +164,7 @@ paths:
       responses: {}
       tags:
       - QR
-  /user/get-me:
+  /v1/user/get-me:
     get:
       consumes:
       - application/json
@@ -173,7 +173,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/logout:
+  /v1/user/logout:
     post:
       consumes:
       - application/json
@@ -189,7 +189,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/orders/drinks-stat:
+  /v1/user/orders/drinks-stat:
     get:
       consumes:
       - application/json
@@ -198,7 +198,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/orders/orders-list:
+  /v1/user/orders/orders-list:
     get:
       consumes:
       - application/json
@@ -207,7 +207,7 @@ paths:
       responses: {}
       tags:
       - User
-  /user/pay/services:
+  /v1/user/pay/services:
     get:
       consumes:
       - application/json
@@ -216,7 +216,7 @@ paths:
       responses: {}
       tags:
       - User/Pay
-  /user/pay/top-up:
+  /v1/user/pay/top-up:
     get:
       consumes:
       - application/json
@@ -234,7 +234,7 @@ paths:
       responses: {}
       tags:
       - User/Pay
-  /user/refresh-token:
+  /v1/user/refresh-token:
     patch:
       consumes:
       - application/json

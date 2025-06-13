@@ -8,9 +8,9 @@
         "version": "1.0.0"
     },
     "host": "api.hoopla.uz",
-    "basePath": "/api/v1",
+    "basePath": "/api",
     "paths": {
-        "/auth/confirm-sms": {
+        "/v1/auth/confirm-sms": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -35,7 +35,7 @@
                 "responses": {}
             }
         },
-        "/auth/login": {
+        "/v1/auth/login": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -60,7 +60,7 @@
                 "responses": {}
             }
         },
-        "/auth/resend-sms": {
+        "/v1/auth/resend-sms": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -85,7 +85,7 @@
                 "responses": {}
             }
         },
-        "/shops/near-shops": {
+        "/v1/shops/near-shops": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -118,7 +118,7 @@
                 "responses": {}
             }
         },
-        "/shops/shop": {
+        "/v1/shops/shop": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -140,7 +140,7 @@
                 "responses": {}
             }
         },
-        "/subscriptions": {
+        "/v1/subscriptions": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -154,7 +154,7 @@
                 "responses": {}
             }
         },
-        "/subscriptions/buy": {
+        "/v1/subscriptions/buy": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -179,7 +179,7 @@
                 "responses": {}
             }
         },
-        "/user/deactivate": {
+        "/v1/user/deactivate": {
             "delete": {
                 "consumes": [
                     "application/json"
@@ -193,7 +193,7 @@
                 "responses": {}
             }
         },
-        "/user/generate-qr-code": {
+        "/v1/user/generate-qr-code": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -207,7 +207,7 @@
                 "responses": {}
             }
         },
-        "/user/get-me": {
+        "/v1/user/get-me": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -221,7 +221,7 @@
                 "responses": {}
             }
         },
-        "/user/logout": {
+        "/v1/user/logout": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -246,7 +246,7 @@
                 "responses": {}
             }
         },
-        "/user/orders/drinks-stat": {
+        "/v1/user/orders/drinks-stat": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -260,7 +260,7 @@
                 "responses": {}
             }
         },
-        "/user/orders/orders-list": {
+        "/v1/user/orders/orders-list": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -274,7 +274,7 @@
                 "responses": {}
             }
         },
-        "/user/pay/services": {
+        "/v1/user/pay/services": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -288,7 +288,7 @@
                 "responses": {}
             }
         },
-        "/user/pay/top-up": {
+        "/v1/user/pay/top-up": {
             "get": {
                 "consumes": [
                     "application/json"
@@ -316,7 +316,7 @@
                 "responses": {}
             }
         },
-        "/user/refresh-token": {
+        "/v1/user/refresh-token": {
             "patch": {
                 "consumes": [
                     "application/json"

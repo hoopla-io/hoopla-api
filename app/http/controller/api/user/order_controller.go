@@ -22,7 +22,7 @@ func NewOrderController(userOrderService service.UserOrderService) *OrderControl
 // @Accept  json
 // @Produce  json
 // @Param data query user_orders_request.OrdersRequest true "User-orders list"
-// @Router /user/orders/orders-list [get]
+// @Router /v1/user/orders/orders-list [get]
 func (controller *OrderController) Orders(ctx *gin.Context) {
 	var request user_orders_request.OrdersRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -50,7 +50,7 @@ func (controller *OrderController) Orders(ctx *gin.Context) {
 // @Tags User
 // @Accept  json
 // @Produce  json
-// @Router /user/orders/drinks-stat [get]
+// @Router /v1/user/orders/drinks-stat [get]
 func (controller *OrderController) DrinksStat(ctx *gin.Context) {
 	var userHelper utils.UserHelper
 	err := userHelper.Init(ctx)

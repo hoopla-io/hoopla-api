@@ -22,7 +22,7 @@ func NewSubscriptionController(subscriptionService service.SubscriptionService) 
 // @Accept  json
 // @Produce  json
 // @Param data query subscriptions_request.SubscriptionsRequest true "Subscriptions list"
-// @Router /subscriptions [get]
+// @Router /v1/subscriptions [get]
 func (controller *SubscriptionController) Subscriptions(ctx *gin.Context) {
 	var request subscriptions_request.SubscriptionsRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
@@ -44,7 +44,7 @@ func (controller *SubscriptionController) Subscriptions(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param data body subscriptions_request.BuySubscriptionRequest true "Buy Subscription"
-// @Router /subscriptions/buy [post]
+// @Router /v1/subscriptions/buy [post]
 func (controller *SubscriptionController) BuySubscription(ctx *gin.Context) {
 	var request subscriptions_request.BuySubscriptionRequest
 	if err := ctx.ShouldBindJSON(&request); err != nil {
