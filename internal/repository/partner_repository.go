@@ -7,7 +7,9 @@ import (
 
 type PartnerRepository interface {
 	PartnersList() (*[]model.PartnerModel, error)
-	PartnerDetailById(id uint) (*model.PartnerModel, error)
+	PartnerDetailById(uint) (*model.PartnerModel, error)
+	GetPartnerByVendorId(string) (*model.PartnerModel, error)
+	UpdateVendorKey(*model.PartnerModel, string) error
 }
 
 type PartnerRepositoryImpl struct {
@@ -44,4 +46,22 @@ func (p *PartnerRepositoryImpl) PartnerDetailById(id uint) (*model.PartnerModel,
 		return nil, err
 	}
 	return &partner, nil
+}
+
+func (p *PartnerRepositoryImpl) GetPartnerByVendorId(vendorId string) (*model.PartnerModel, error) {
+	var partner model.PartnerModel
+	if err := p.db.Where("vendor_id = ?", vendorId).First(&partner).Error; err != nil {
+		return nil, err
+	}
+
+	return &partner, nil
+}
+
+func (p *PartnerRepositoryImpl) UpdateVendorKey(partner *model.PartnerModel, vendorKey string) error {
+	err := p.db.Model(partner).Update("vendor_key", vendorKey).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

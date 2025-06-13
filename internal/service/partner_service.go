@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-
 	partners_request "github.com/hoopla/hoopla-api/app/http/request/partners"
 	partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
 	"github.com/hoopla/hoopla-api/internal/repository"
@@ -12,6 +11,7 @@ import (
 type PartnerService interface {
 	PartnersList(data partners_request.PartnersRequest) (*[]partner_resource.PartnersCollection, int, error)
 	PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error)
+	UpdateVendorKey(vendorId string, vendorKey string) (int, error)
 }
 
 type PartnerServiceImpl struct {
@@ -106,4 +106,18 @@ func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest)
 	partnerResource.PartnerDrinks = &partnerDrinks
 
 	return &partnerResource, 200, nil
+}
+
+func (s *PartnerServiceImpl) UpdateVendorKey(vendorId string, vendorKey string) (int, error) {
+	partnerMode, err := s.PartnerRepository.GetPartnerByVendorId(vendorId)
+	if err != nil {
+		return 500, err
+	}
+
+	err = s.PartnerRepository.UpdateVendorKey(partnerMode, vendorKey)
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
 }

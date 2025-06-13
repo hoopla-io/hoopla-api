@@ -17,6 +17,9 @@ type ShopModel struct {
 	UpdatedAt    time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt    gorm.DeletedAt `gorm:"index"`
 
+	VendorTerminalID string `gorm:"index"`
+
+	Partner      *PartnerModel         `gorm:"foreignKey:id;references:partner_id"`
 	Attributes   *[]ShopAttributeModel `gorm:"foreignKey:shop_id;references:id"`
 	WorkingHours *[]ShopHourModel      `gorm:"foreignKey:shop_id;references:id"`
 	Pictures     *[]ShopPictureModel   `gorm:"foreignKey:shop_id;references:id"`

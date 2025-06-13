@@ -9,4 +9,5 @@ var Modules = fx.Options(
 	fx.Provide(NewSubscriptionService),
 	fx.Provide(NewUserOrderService),
 	fx.Provide(NewPayService),
+	fx.Provide(NewPartnerTokenService),
 )

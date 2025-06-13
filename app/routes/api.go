@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/hoopla/hoopla-api/app/http/controller/api"
 	api_user "github.com/hoopla/hoopla-api/app/http/controller/api/user"
+	vendor_controllers "github.com/hoopla/hoopla-api/app/http/controller/vendors"
 	"github.com/hoopla/hoopla-api/app/http/middleware"
 	_ "github.com/hoopla/hoopla-api/docs"
 	swaggerFiles "github.com/swaggo/files"
@@ -19,6 +20,9 @@ func NewApiRoute(
 	SubscriptionController *api.SubscriptionController,
 	UserOrderController *api_user.OrderController,
 	PayController *api_user.PayController,
+
+	IikoController vendor_controllers.IikoController,
+	PosterController *vendor_controllers.PosterController,
 ) {
 	api_routes := router.Group("/api")
 	{
@@ -73,6 +77,20 @@ func NewApiRoute(
 			}
 
 			v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+		}
+
+		vendors := api_routes.Group("/vendors")
+		{
+			//iiko := vendors.Group("/iiko")
+			//{
+			//	iiko.POST("/webhook", IikoController.Webhook)
+			//}
+
+			poster := vendors.Group("/poster")
+			{
+				poster.GET("/oauth", PosterController.Oauth)
+				poster.POST("/webhook", PosterController.Webhook)
+			}
 		}
 	}
 }
