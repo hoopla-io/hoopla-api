@@ -4,7 +4,7 @@ type WebhookRequest struct {
 	Account       string `json:"account"`
 	AccountNumber string `json:"account_number"`
 	Object        string `json:"object"`
-	ObjectID      string `json:"object_id"`
+	ObjectID      int64  `json:"object_id"`
 	Action        string `json:"action"`
 	Time          uint64 `json:"time"`
 	Verify        string `json:"verify"`
