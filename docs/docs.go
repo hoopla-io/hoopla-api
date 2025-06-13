@@ -344,6 +344,32 @@ const docTemplate = `{
                 ],
                 "responses": {}
             }
+        },
+        "/vendors/poster/oauth": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Poster"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "account",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "code",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {

@@ -248,4 +248,20 @@ paths:
       responses: {}
       tags:
       - User
+  /vendors/poster/oauth:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - in: query
+        name: account
+        type: string
+      - in: query
+        name: code
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - Poster
 swagger: "2.0"

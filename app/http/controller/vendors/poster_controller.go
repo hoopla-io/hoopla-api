@@ -17,6 +17,11 @@ func NewPosterController(partnerService service.PartnerService) *PosterControlle
 	}
 }
 
+// @Tags Poster
+// @Accept  json
+// @Produce  json
+// @Param data query vendors_poster_request.OauthRequest true "OAUTH for poster"
+// @Router /vendors/poster/oauth [get]
 func (c *PosterController) Oauth(ctx *gin.Context) {
 	request := vendors_poster_request.OauthRequest{}
 	if err := ctx.ShouldBindQuery(&request); err != nil {
