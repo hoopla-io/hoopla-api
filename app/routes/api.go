@@ -21,7 +21,7 @@ func NewApiRoute(
 	UserOrderController *api_user.OrderController,
 	PayController *api_user.PayController,
 
-	IikoController vendor_controllers.IikoController,
+	IikoController *vendor_controllers.IikoController,
 	PosterController *vendor_controllers.PosterController,
 ) {
 	api_routes := router.Group("/api")
