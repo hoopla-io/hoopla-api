@@ -42,9 +42,9 @@ definitions:
       object:
         type: string
       object_id:
-        type: string
-      time:
         type: integer
+      time:
+        type: string
       verify:
         type: string
     type: object
@@ -265,6 +265,22 @@ paths:
       responses: {}
       tags:
       - User
+  /vendors/iiko/webhook:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Webhook for iiko
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/vendors_poster_request.WebhookRequest'
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - IIKO
   /vendors/poster/oauth:
     get:
       consumes:

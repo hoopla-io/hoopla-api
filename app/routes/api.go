@@ -81,10 +81,10 @@ func NewApiRoute(
 
 		vendors := api_routes.Group("/vendors")
 		{
-			//iiko := vendors.Group("/iiko")
-			//{
-			//	iiko.POST("/webhook", IikoController.Webhook)
-			//}
+			iiko := vendors.Group("/iiko")
+			{
+				iiko.POST("/webhook", IikoController.Webhook)
+			}
 
 			poster := vendors.Group("/poster")
 			{

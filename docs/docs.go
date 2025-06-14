@@ -345,6 +345,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/vendors/iiko/webhook": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "IIKO"
+                ],
+                "parameters": [
+                    {
+                        "description": "Webhook for iiko",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vendors_poster_request.WebhookRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/vendors/poster/oauth": {
             "get": {
                 "consumes": [
@@ -462,10 +487,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "object_id": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "time": {
-                    "type": "integer"
+                    "type": "string"
                 },
                 "verify": {
                     "type": "string"
