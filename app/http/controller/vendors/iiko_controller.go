@@ -1,6 +1,7 @@
 package vendor_controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hoopla/hoopla-api/app/http/response"
 )
@@ -17,5 +18,15 @@ func NewIikoController() *IikoController {
 // @Param data body vendors_poster_request.WebhookRequest true "Webhook for iiko"
 // @Router /vendors/iiko/webhook [post]
 func (c *IikoController) Webhook(ctx *gin.Context) {
+	var r map[string]interface{}
+	if err := ctx.ShouldBindJSON(&r); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	fmt.Println("IIIKOOO__------------------------")
+	fmt.Println(r)
+	fmt.Println("IIIKOOO__------------------------")
+
 	response.SuccessResponse(ctx, "OK!", nil, nil)
 }
