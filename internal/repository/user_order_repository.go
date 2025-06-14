@@ -10,6 +10,8 @@ import (
 type UserOrderRepository interface {
 	GetAllByUserId(userId uint) (*[]model.UserOrderModel, error)
 	GetTodaysByUserId(userId uint) ([]model.UserOrderModel, error)
+	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, error)
+	UpdateOrder(userOrder *model.UserOrderModel) error
 }
 
 type UserOrderRepositoryImpl struct {
@@ -56,4 +58,28 @@ func (r *UserOrderRepositoryImpl) GetTodaysByUserId(userId uint) ([]model.UserOr
 	}
 
 	return userOrders, nil
+}
+
+func (r *UserOrderRepositoryImpl) GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, error) {
+	var userOrder model.UserOrderModel
+	err := r.db.Model(&model.UserOrderModel{}).
+		Where("partner_id = ?", partnerID).
+		Where("vendor = ?", vendor).
+		Where("vendor_order_id = ?", vendorOrderID).
+		Find(&userOrder).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &userOrder, nil
+}
+
+func (r *UserOrderRepositoryImpl) UpdateOrder(userOrder *model.UserOrderModel) error {
+	err := r.db.Save(userOrder).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

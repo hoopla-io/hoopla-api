@@ -7,17 +7,24 @@ import (
 	"github.com/hoopla/hoopla-api/internal/service"
 	vendor_utils "github.com/hoopla/hoopla-api/utils/vendors"
 	"net/http"
+	"strconv"
 )
 
 type PosterController struct {
 	partnerService      service.PartnerService
 	partnerTokenService service.PartnerTokenService
+	userOrderService    service.UserOrderService
 }
 
-func NewPosterController(partnerService service.PartnerService, partnerTokenService service.PartnerTokenService) *PosterController {
+func NewPosterController(
+	partnerService service.PartnerService,
+	partnerTokenService service.PartnerTokenService,
+	userOrderService service.UserOrderService,
+) *PosterController {
 	return &PosterController{
 		partnerService:      partnerService,
 		partnerTokenService: partnerTokenService,
+		userOrderService:    userOrderService,
 	}
 }
 
@@ -79,10 +86,38 @@ func (c *PosterController) Webhook(ctx *gin.Context) {
 			}
 			poster.AccessToken = accessToken
 
-			poster.GetOrderStatus(request.ObjectID)
+			orderStatus, err := poster.GetOrderStatus(request.ObjectID)
+			if err != nil {
+				response.ErrorResponse(ctx, 500, err.Error())
+				return
+			}
+
+			userOrder, code, err := c.userOrderService.GetOrderByVendorOrderID(
+				partner.ID,
+				partner.Vendor,
+				strconv.FormatInt(request.ObjectID, 10),
+			)
+			if err != nil {
+				response.ErrorResponse(ctx, code, err.Error())
+				return
+			}
+
+			//in case if order was missing
+			userOrder.PartnerID = partner.ID
+			userOrder.Vendor = partner.Vendor
+			userOrder.VendorOrderID = strconv.FormatInt(request.ObjectID, 10)
+
+			userOrder, code, err = c.userOrderService.UpdateOrderStatus(userOrder, orderStatus)
+			if err != nil {
+				response.ErrorResponse(ctx, code, err.Error())
+				return
+			}
+
+			response.SuccessResponse(ctx, "OK!", orderStatus, nil)
+			return
 		}
 	}
 
-	//object->incoming_order
-	//fmt.Println(request)
+	response.SuccessResponse(ctx, "OK!", nil, nil)
+	return
 }

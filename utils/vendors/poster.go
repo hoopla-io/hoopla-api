@@ -31,11 +31,11 @@ func (i Poster) GetAccessToken() (string, time.Time, error) {
 		&formData,
 	)
 	if err != nil {
-		return "", time.Time{}, err
+		return "", time.Now(), err
 	}
 
 	if statusCode != 200 {
-		return "", time.Time{}, errors.New(data["error_message"].(string))
+		return "", time.Now(), errors.New(data["error_message"].(string))
 	}
 
 	return data["access_token"].(string), time.Now().AddDate(10, 0, 0), nil
@@ -59,7 +59,22 @@ func (i Poster) GetOrderStatus(orderID int64) (string, error) {
 		return "pending", err
 	}
 
-	fmt.Println(data, statusCode)
+	if data["error"] != nil || statusCode != 200 {
+		return "pending", errors.New(data["message"].(string))
+	}
 
-	return "pending", nil
+	response, ok := data["response"].(map[string]interface{})
+	if !ok {
+		return "pending", errors.New("could not parse response")
+	}
+
+	if response["status"].(float64) == 1 {
+		return "completed", nil
+	}
+
+	if response["status"].(float64) == 0 {
+		return "pending", nil
+	}
+
+	return "canceled", nil
 }

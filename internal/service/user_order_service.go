@@ -1,14 +1,19 @@
 package service
 
 import (
+	"errors"
 	user_orders_request "github.com/hoopla/hoopla-api/app/http/request/user/orders"
 	user_order_resource "github.com/hoopla/hoopla-api/app/http/resource/user/order"
+	"github.com/hoopla/hoopla-api/internal/model"
 	"github.com/hoopla/hoopla-api/internal/repository"
+	"gorm.io/gorm"
 )
 
 type UserOrderService interface {
 	GetOrders(data user_orders_request.OrdersRequest, userId uint) (*[]user_order_resource.UserOrdersCollection, int, error)
 	GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error)
+	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorID string) (*model.UserOrderModel, int, error)
+	UpdateOrderStatus(userOrder *model.UserOrderModel, status string) (*model.UserOrderModel, int, error)
 }
 
 type UserOrderServiceImpl struct {
@@ -64,4 +69,26 @@ func (s *UserOrderServiceImpl) GetDrinksStat(userId uint) (*user_order_resource.
 		Available: available,
 		Left:      uint(len(orders)),
 	}, 200, nil
+}
+
+func (s *UserOrderServiceImpl) GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, int, error) {
+	userOder, err := s.userOrderRepository.GetOrderByVendorOrderID(partnerID, vendor, vendorOrderID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, err
+		}
+		return nil, 500, err
+	}
+
+	return userOder, 200, nil
+}
+
+func (s *UserOrderServiceImpl) UpdateOrderStatus(userOrder *model.UserOrderModel, status string) (*model.UserOrderModel, int, error) {
+	userOrder.Status = status
+	err := s.userOrderRepository.UpdateOrder(userOrder)
+	if err != nil {
+		return nil, 500, err
+	}
+
+	return userOrder, 200, nil
 }
