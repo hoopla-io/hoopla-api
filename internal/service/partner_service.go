@@ -4,6 +4,7 @@ import (
 	"errors"
 	partners_request "github.com/hoopla/hoopla-api/app/http/request/partners"
 	partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
+	"github.com/hoopla/hoopla-api/internal/model"
 	"github.com/hoopla/hoopla-api/internal/repository"
 	"gorm.io/gorm"
 )
@@ -11,6 +12,7 @@ import (
 type PartnerService interface {
 	PartnersList(data partners_request.PartnersRequest) (*[]partner_resource.PartnersCollection, int, error)
 	PartnerDetail(data partners_request.PartnerRequest) (*partner_resource.PartnerResource, int, error)
+	GetPartnerByVendorId(vendorId string) (*model.PartnerModel, int, error)
 	UpdateVendorKey(vendorId string, vendorKey string) (int, error)
 }
 
@@ -108,9 +110,24 @@ func (s *PartnerServiceImpl) PartnerDetail(data partners_request.PartnerRequest)
 	return &partnerResource, 200, nil
 }
 
+func (s *PartnerServiceImpl) GetPartnerByVendorId(vendorId string) (*model.PartnerModel, int, error) {
+	partner, err := s.PartnerRepository.GetPartnerByVendorId(vendorId)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, err
+		}
+		return nil, 500, err
+	}
+
+	return partner, 200, nil
+}
+
 func (s *PartnerServiceImpl) UpdateVendorKey(vendorId string, vendorKey string) (int, error) {
 	partnerMode, err := s.PartnerRepository.GetPartnerByVendorId(vendorId)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 404, err
+		}
 		return 500, err
 	}
 

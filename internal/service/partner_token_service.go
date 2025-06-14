@@ -10,7 +10,7 @@ import (
 )
 
 type PartnerTokenService interface {
-	GetAccessToken(shop model.ShopModel) (string, error)
+	GetAccessToken(partner *model.PartnerModel) (string, error)
 }
 
 type PartnerTokenServiceImpl struct {
@@ -23,8 +23,8 @@ func NewPartnerTokenService(repository repository.PartnerTokenRepository) Partne
 	}
 }
 
-func (s *PartnerTokenServiceImpl) GetAccessToken(shop model.ShopModel) (string, error) {
-	partnerToken, err := s.repository.GetTokenByShopID(shop.ID)
+func (s *PartnerTokenServiceImpl) GetAccessToken(partner *model.PartnerModel) (string, error) {
+	partnerToken, err := s.repository.GetTokenByPartnerID(partner.ID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return "", err
 	}
@@ -38,15 +38,19 @@ func (s *PartnerTokenServiceImpl) GetAccessToken(shop model.ShopModel) (string, 
 
 	if isAccessTokenNeeded {
 		vendor := utils.Vendor{}
-		vendor.Init(shop.Partner.Vendor, shop.Partner.VendorID, shop.Partner.VendorKey)
+		vendor.Init(partner.Vendor, partner.VendorID, partner.VendorKey)
 		token, expiresAt, err := vendor.VendorInterface.GetAccessToken()
 		if err != nil {
 			return "", err
 		}
 
+		if token == "" {
+			return "", err
+		}
+
 		if partnerToken == nil {
 			partnerToken = &model.PartnerTokenModel{
-				ShopID:      shop.ID,
+				PartnerID:   partner.ID,
 				AccessToken: token,
 				ExpiresAt:   expiresAt,
 			}

@@ -7,7 +7,7 @@ import (
 )
 
 type PartnerTokenRepository interface {
-	GetTokenByShopID(shopID uint) (*model.PartnerTokenModel, error)
+	GetTokenByPartnerID(partnerID uint) (*model.PartnerTokenModel, error)
 	UpdatePartnerToken(*model.PartnerTokenModel, string, time.Time) error
 	CreatePartnerToken(*model.PartnerTokenModel) error
 }
@@ -22,10 +22,10 @@ func NewPartnerTokenRepository(db *gorm.DB) PartnerTokenRepository {
 	}
 }
 
-func (r *PartnerRepositoryImpl) GetTokenByShopID(shopID uint) (*model.PartnerTokenModel, error) {
+func (r *PartnerRepositoryImpl) GetTokenByPartnerID(partnerID uint) (*model.PartnerTokenModel, error) {
 	var token model.PartnerTokenModel
 
-	err := r.db.First(&token, "shop_id = ?", shopID).Error
+	err := r.db.First(&token, "partner_id = ?", partnerID).Error
 	if err != nil {
 		return nil, err
 	}

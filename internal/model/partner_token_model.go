@@ -4,7 +4,7 @@ import "time"
 
 type PartnerTokenModel struct {
 	ID          uint      `gorm:"primary_key"`
-	ShopID      uint      `gorm:"index"`
+	PartnerID   uint      `gorm:"index"`
 	AccessToken string    `gorm:"type:text"`
 	ExpiresAt   time.Time `gorm:"index"`
 	CreatedAt   time.Time `gorm:"default:CURRENT_TIMESTAMP"`
