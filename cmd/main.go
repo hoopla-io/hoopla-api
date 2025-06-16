@@ -9,7 +9,7 @@ import (
 // @title Hoopla | Api
 // @version 1.0.0
 // @contact.email davronbekov.o@itv.uz
-// @host 127.0.0.1:8000
+// @host api.hoopla.uz
 // @BasePath /api
 func main() {
 	app := fx.New(
