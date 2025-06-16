@@ -12,6 +12,7 @@ type UserOrderRepository interface {
 	GetTodaysByUserId(userId uint) ([]model.UserOrderModel, error)
 	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, error)
 	UpdateOrder(userOrder *model.UserOrderModel) error
+	CreateOrder(userOrder *model.UserOrderModel) error
 }
 
 type UserOrderRepositoryImpl struct {
@@ -77,6 +78,15 @@ func (r *UserOrderRepositoryImpl) GetOrderByVendorOrderID(partnerID uint, vendor
 
 func (r *UserOrderRepositoryImpl) UpdateOrder(userOrder *model.UserOrderModel) error {
 	err := r.db.Save(userOrder).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *UserOrderRepositoryImpl) CreateOrder(userOrder *model.UserOrderModel) error {
+	err := r.db.Create(userOrder).Error
 	if err != nil {
 		return err
 	}

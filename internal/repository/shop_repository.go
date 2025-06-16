@@ -9,6 +9,7 @@ import (
 type ShopRepository interface {
 	GetPartnerShops(partnerId uint) (*[]model.ShopModel, error)
 	ShopDetailById(shopId uint) (*model.ShopModel, error)
+	ShopBasicDetailById(shopId uint) (*model.ShopModel, error)
 	GetShopsByDistance(userLat float64, userLong float64, name *string) (*[]model.ShopModel, error)
 }
 
@@ -44,6 +45,18 @@ func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, erro
 		Preload("PartnerDrinks.Drink.Image").
 		Preload("PartnerAttributes").
 		Preload("Image").
+		First(&shop).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &shop, nil
+}
+
+func (r *ShopRepositoryImpl) ShopBasicDetailById(shopId uint) (*model.ShopModel, error) {
+	var shop model.ShopModel
+	err := r.db.Where("id = ?", shopId).
+		Preload("Partner").
 		First(&shop).Error
 	if err != nil {
 		return nil, err

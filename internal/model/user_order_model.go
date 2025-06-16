@@ -15,9 +15,10 @@ type UserOrderModel struct {
 	UpdatedAt time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 
-	Status        string `gorm:"index;default:pending"`
-	Vendor        string `gorm:"index'"`
-	VendorOrderID string `gorm:"index"`
+	Status        string  `gorm:"index;default:pending"`
+	Vendor        string  `gorm:"index'"`
+	VendorOrderID string  `gorm:"index"`
+	ProductPrice  float32 `gorm:"not null;default:0.0"`
 
 	Partner *PartnerModel `gorm:"foreignKey:partner_id;references:id"`
 	Shop    *ShopModel    `gorm:"foreignKey:shop_id;references:id"`

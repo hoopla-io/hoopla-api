@@ -7,6 +7,7 @@ import (
 
 type PartnerDrinkRepository interface {
 	DrinksByPartnerId(partnerId uint) (*[]model.PartnerDrinkModel, error)
+	PartnerDrinkByDrinkId(partnerId uint, drinkId uint) (*model.PartnerDrinkModel, error)
 }
 
 type PartnerDrinkRepositoryImpl struct {
@@ -25,4 +26,16 @@ func (r PartnerDrinkRepositoryImpl) DrinksByPartnerId(partnerId uint) (*[]model.
 		return nil, err
 	}
 	return &drinks, nil
+}
+
+func (r PartnerDrinkRepositoryImpl) PartnerDrinkByDrinkId(partnerId uint, drinkId uint) (*model.PartnerDrinkModel, error) {
+	var drink model.PartnerDrinkModel
+	err := r.db.Where("partner_id = ?", partnerId).
+		Where("drink_id = ?", drinkId).
+		Find(&drink).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &drink, nil
 }

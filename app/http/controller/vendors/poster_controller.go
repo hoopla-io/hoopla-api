@@ -84,7 +84,7 @@ func (c *PosterController) Webhook(ctx *gin.Context) {
 				response.ErrorResponse(ctx, 500, err.Error())
 				return
 			}
-			poster.AccessToken = accessToken
+			poster.SetAccessToken(accessToken)
 
 			orderStatus, err := poster.GetOrderStatus(request.ObjectID)
 			if err != nil {

@@ -253,6 +253,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/v1/user/orders/create": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User/Orders"
+                ],
+                "parameters": [
+                    {
+                        "description": "New order",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_orders_request.CreateRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/v1/user/orders/drinks-stat": {
             "get": {
                 "consumes": [
@@ -276,7 +301,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "User"
+                    "User/Orders"
                 ],
                 "responses": {}
             }
@@ -468,6 +493,17 @@ const docTemplate = `{
                 }
             }
         },
+        "user_orders_request.CreateRequest": {
+            "type": "object",
+            "properties": {
+                "drink_id": {
+                    "type": "integer"
+                },
+                "shop_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "user_request.LogoutRequest": {
             "type": "object"
         },
@@ -503,7 +539,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
-	Host:             "api.hoopla.uz",
+	Host:             "127.0.0.1:8000",
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Hoopla | Api",

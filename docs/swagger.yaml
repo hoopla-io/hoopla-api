@@ -29,6 +29,13 @@ definitions:
       subscriptionId:
         type: integer
     type: object
+  user_orders_request.CreateRequest:
+    properties:
+      drink_id:
+        type: integer
+      shop_id:
+        type: integer
+    type: object
   user_request.LogoutRequest:
     type: object
   vendors_poster_request.WebhookRequest:
@@ -48,7 +55,7 @@ definitions:
       verify:
         type: string
     type: object
-host: api.hoopla.uz
+host: 127.0.0.1:8000
 info:
   contact:
     email: davronbekov.o@itv.uz
@@ -206,6 +213,22 @@ paths:
       responses: {}
       tags:
       - User
+  /v1/user/orders/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: New order
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_orders_request.CreateRequest'
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User/Orders
   /v1/user/orders/drinks-stat:
     get:
       consumes:
@@ -223,7 +246,7 @@ paths:
       - application/json
       responses: {}
       tags:
-      - User
+      - User/Orders
   /v1/user/pay/services:
     get:
       consumes:

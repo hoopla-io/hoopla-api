@@ -3,6 +3,7 @@ package vendor_utils
 import (
 	"errors"
 	"fmt"
+	"github.com/hoopla/hoopla-api/internal/model"
 	"github.com/hoopla/hoopla-api/pkg"
 	"net/url"
 	"os"
@@ -15,10 +16,14 @@ type Poster struct {
 	AccessToken string
 }
 
-func (i Poster) GetAccessToken() (string, time.Time, error) {
+func (p *Poster) SetAccessToken(accessToken string) {
+	p.AccessToken = accessToken
+}
+
+func (p *Poster) GetAccessToken() (string, time.Time, error) {
 	formData := url.Values{
-		"account":            {i.VendorID},
-		"code":               {i.VendorKey},
+		"account":            {p.VendorID},
+		"code":               {p.VendorKey},
 		"application_id":     {os.Getenv("POSTER_APPLICATION_ID")},
 		"application_secret": {os.Getenv("POSTER_APPLICATION_SECRET")},
 		"grant_type":         {"authorization_code"},
@@ -27,7 +32,7 @@ func (i Poster) GetAccessToken() (string, time.Time, error) {
 
 	req := pkg.Requests{}
 	statusCode, data, err := req.PostForm(
-		fmt.Sprintf("https://%s.joinposter.com/api/v2/auth/access_token", i.VendorID),
+		fmt.Sprintf("https://%s.joinposter.com/api/v2/auth/access_token", p.VendorID),
 		&formData,
 	)
 	if err != nil {
@@ -41,17 +46,50 @@ func (i Poster) GetAccessToken() (string, time.Time, error) {
 	return data["access_token"].(string), time.Now().AddDate(10, 0, 0), nil
 }
 
-func (i Poster) CreateOrder() (string, error) {
-	return "pending", nil
+func (p *Poster) CreateOrder(
+	partnerDrink *model.PartnerDrinkModel,
+	shop *model.ShopModel,
+	partner *model.PartnerModel,
+	userOrder *model.UserOrderModel,
+	phoneNumber string,
+) (string, string, error) {
+	formData := url.Values{
+		"spot_id":                 {shop.VendorTerminalID},
+		"phone":                   {fmt.Sprintf("+%s", phoneNumber)},
+		"products[0][product_id]": {partnerDrink.VendorProductID},
+		"products[0][count]":      {"1"},
+		"products[0][price]":      {fmt.Sprintf("%f", partnerDrink.ProductPrice)},
+		"service_mode":            {"2"},
+		"comment":                 {"hoopla"},
+		"payment[type]":           {"1"},
+		"payment[sum]":            {fmt.Sprintf("%f", partnerDrink.ProductPrice)},
+	}
+
+	req := pkg.Requests{}
+	statusCode, data, err := req.PostForm(
+		fmt.Sprintf("https://joinposter.com/api/incomingOrders.createIncomingOrder?token=%s", p.AccessToken),
+		&formData,
+	)
+	if err != nil {
+		return "error", "", err
+	}
+
+	if statusCode != 200 {
+		return "error", "", errors.New(data["error_message"].(string))
+	}
+
+	response := data["response"].(map[string]interface{})
+
+	return "preparing", fmt.Sprintf("%.0f", response["incoming_order_id"]), nil
 }
 
-func (i Poster) GetOrderStatus(orderID int64) (string, error) {
+func (p *Poster) GetOrderStatus(orderID int64) (string, error) {
 	req := pkg.Requests{}
 	statusCode, data, err := req.Get(
 		fmt.Sprintf(
 			"https://joinposter.com/api/incomingOrders.getIncomingOrder?incoming_order_id=%d&token=%s",
 			orderID,
-			i.AccessToken,
+			p.AccessToken,
 		),
 	)
 
@@ -73,7 +111,7 @@ func (i Poster) GetOrderStatus(orderID int64) (string, error) {
 	}
 
 	if response["status"].(float64) == 0 {
-		return "pending", nil
+		return "preparing", nil
 	}
 
 	return "canceled", nil

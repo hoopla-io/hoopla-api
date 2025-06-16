@@ -6,9 +6,11 @@ type PartnerDrinkModel struct {
 	PartnerID uint `gorm:"not null;index"`
 	DrinkID   uint `gorm:"not null;index"`
 
-	VendorProductID string `gorm:"index"`
+	VendorProductID string  `gorm:"index"`
+	ProductPrice    float32 `gorm:"not null;default:0.0"`
 
-	Drink DrinkModel `gorm:"foreignKey:id;references:drink_id"`
+	Partner *PartnerModel `gorm:"foreignKey:id;references:partner_id"`
+	Drink   *DrinkModel   `gorm:"foreignKey:id;references:drink_id"`
 }
 
 func (PartnerDrinkModel) TableName() string {

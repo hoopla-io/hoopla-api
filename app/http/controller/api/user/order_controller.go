@@ -18,7 +18,36 @@ func NewOrderController(userOrderService service.UserOrderService) *OrderControl
 	}
 }
 
-// @Tags User
+// @Tags User/Orders
+// @Accept  json
+// @Produce  json
+// @Param data body user_orders_request.CreateRequest true "New order"
+// @Router /v1/user/orders/create [post]
+func (controller *OrderController) Create(ctx *gin.Context) {
+	var request user_orders_request.CreateRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	userOrder, code, err := controller.userOrderService.CreateOrder(request, &userHelper)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", userOrder, nil)
+	return
+}
+
+// @Tags User/Orders
 // @Accept  json
 // @Produce  json
 // @Param data query user_orders_request.OrdersRequest true "User-orders list"
