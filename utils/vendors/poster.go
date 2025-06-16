@@ -80,7 +80,7 @@ func (p *Poster) CreateOrder(
 
 	response := data["response"].(map[string]interface{})
 
-	return "preparing", fmt.Sprintf("%.0f", response["incoming_order_id"]), nil
+	return "pending", fmt.Sprintf("%.0f", response["incoming_order_id"]), nil
 }
 
 func (p *Poster) GetOrderStatus(orderID int64) (string, error) {

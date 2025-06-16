@@ -130,7 +130,7 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		UserID:    userHelper.UserID,
 		DrinkID:   data.DrinkID,
 
-		Status:        "pending",
+		Status:        "created",
 		Vendor:        partner.Vendor,
 		VendorOrderID: "",
 		ProductPrice:  partnerDrink.ProductPrice,
