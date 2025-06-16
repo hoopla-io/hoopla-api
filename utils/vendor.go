@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+// created - when order is created
+// pending - when order is sent to vendor partner
+// preparing - when order is accepted
+// completed - when order is completed
+// cancelled - when order is cancelled
 type VendorInterface interface {
 	SetAccessToken(string)
 	GetAccessToken() (string, time.Time, error)
