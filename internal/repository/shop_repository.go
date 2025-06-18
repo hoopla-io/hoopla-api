@@ -39,6 +39,7 @@ func (r *ShopRepositoryImpl) GetPartnerShops(partnerId uint) (*[]model.ShopModel
 func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, error) {
 	var shop model.ShopModel
 	err := r.db.Where("id = ?", shopId).
+		Preload("Partner").
 		Preload("Attributes").
 		Preload("WorkingHours").
 		Preload("Pictures.Image").

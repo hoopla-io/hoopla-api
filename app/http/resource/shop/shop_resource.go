@@ -3,10 +3,11 @@ package shop_resource
 import partner_resource "github.com/hoopla/hoopla-api/app/http/resource/partner"
 
 type ShopResource struct {
-	ID         uint    `json:"id"`
-	PartnerId  uint    `json:"partnerId"`
-	Name       string  `json:"name"`
-	PictureUrl *string `json:"pictureUrl"`
+	ID              uint    `json:"id"`
+	PartnerId       uint    `json:"partnerId"`
+	Name            string  `json:"name"`
+	PictureUrl      *string `json:"pictureUrl"`
+	CanAcceptOrders bool    `json:"canAcceptOrders"`
 
 	Location         ShopLocationResource        `json:"location"`
 	PhoneNumbers     *[]ShopPhoneNumberResource  `json:"phoneNumbers"`

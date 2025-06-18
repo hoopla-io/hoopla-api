@@ -109,13 +109,18 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 	}
 
 	shopResource := shop_resource.ShopResource{
-		ID:        shop.ID,
-		PartnerId: shop.PartnerID,
-		Name:      shop.Name,
+		ID:              shop.ID,
+		PartnerId:       shop.PartnerID,
+		Name:            shop.Name,
+		CanAcceptOrders: false,
 		Location: shop_resource.ShopLocationResource{
 			Lat: shop.LocationLat,
 			Lng: shop.LocationLong,
 		},
+	}
+
+	if shop.Partner.Vendor != "hoopla" { // if our solution is used then user should not make an order
+		shopResource.CanAcceptOrders = true
 	}
 
 	var phoneNumbers []shop_resource.ShopPhoneNumberResource
