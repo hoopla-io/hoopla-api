@@ -249,12 +249,16 @@ func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.
 		return nil, 500, err
 	}
 
+	qrCode := fmt.Sprintf("%s:%d", userHelper.PhoneNumber, userHelper.UserID)
+	encoded := base64.StdEncoding.EncodeToString([]byte(qrCode))
+
 	userResource := &user_resource.UserBaseResource{
 		UserID:      user.ID,
 		PhoneNumber: user.PhoneNumber,
 		Name:        user.Name,
 		Balance:     user.GetBalance(),
 		Currency:    "sum",
+		QrCode:      encoded,
 	}
 
 	subscription, err := s.UserSubscriptionRepository.GetByUserID(userHelper.UserID)

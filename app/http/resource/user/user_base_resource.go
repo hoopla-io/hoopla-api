@@ -6,6 +6,7 @@ type UserBaseResource struct {
 	Name         string                `json:"name"`
 	Balance      float64               `json:"balance"`
 	Currency     string                `json:"currency"`
+	QrCode       string                `json:"qrCode"`
 	Subscription *SubscriptionResource `json:"subscription"`
 }
 
