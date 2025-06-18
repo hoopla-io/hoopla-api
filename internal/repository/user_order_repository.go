@@ -32,6 +32,8 @@ func (r *UserOrderRepositoryImpl) GetAllByUserId(userId uint) (*[]model.UserOrde
 		Order("id desc").
 		Preload("Partner").
 		Preload("Shop").
+		Preload("Drink").
+		Limit(10).
 		Find(&userOrders).Error
 
 	if err != nil {

@@ -55,6 +55,8 @@ func (s *UserOrderServiceImpl) GetOrders(data user_orders_request.OrdersRequest,
 			ShopName:        order.Shop.Name,
 			PurchasedAt:     order.CreatedAt,
 			PurchasedAtUnix: order.CreatedAt.Unix(),
+			DrinkName:       order.Drink.Name,
+			OrderStatus:     order.Status,
 		})
 	}
 

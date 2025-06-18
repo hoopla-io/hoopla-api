@@ -22,6 +22,7 @@ type UserOrderModel struct {
 
 	Partner *PartnerModel `gorm:"foreignKey:partner_id;references:id"`
 	Shop    *ShopModel    `gorm:"foreignKey:shop_id;references:id"`
+	Drink   *DrinkModel   `gorm:"foreignKey:drink_id;references:id"`
 }
 
 func (UserOrderModel) TableName() string {
