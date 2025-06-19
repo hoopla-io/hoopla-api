@@ -18,8 +18,9 @@ func NewIikoController() *IikoController {
 // @Param data body vendors_poster_request.WebhookRequest true "Webhook for iiko"
 // @Router /vendors/iiko/webhook [post]
 func (c *IikoController) Webhook(ctx *gin.Context) {
+	fmt.Println("IIIKOOO__------------------------request")
 	var r map[string]interface{}
-	if err := ctx.ShouldBindQuery(&r); err != nil {
+	if err := ctx.ShouldBindBodyWithJSON(&r); err != nil {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
