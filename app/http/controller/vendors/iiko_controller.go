@@ -19,10 +19,10 @@ func NewIikoController() *IikoController {
 // @Router /vendors/iiko/webhook [post]
 func (c *IikoController) Webhook(ctx *gin.Context) {
 	var r map[string]interface{}
-	if err := ctx.ShouldBindJSON(&r); err != nil {
-		response.ValidationErrorResponse(ctx, err.Error())
-		return
-	}
+	//if err := ctx.ShouldBindQuery(&r); err != nil {
+	//	response.ValidationErrorResponse(ctx, err.Error())
+	//	return
+	//}
 
 	fmt.Println("IIIKOOO__------------------------")
 	fmt.Println(r)
