@@ -20,7 +20,8 @@ func NewIikoController() *IikoController {
 func (c *IikoController) Webhook(ctx *gin.Context) {
 	fmt.Println("IIIKOOO__------------------------request")
 	var r map[string]interface{}
-	if err := ctx.ShouldBindBodyWithJSON(&r); err != nil {
+	if err := ctx.ShouldBind(&r); err != nil {
+		fmt.Println(err.Error())
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
