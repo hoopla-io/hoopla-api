@@ -19,7 +19,7 @@ func NewIikoController() *IikoController {
 // @Router /vendors/iiko/webhook [post]
 func (c *IikoController) Webhook(ctx *gin.Context) {
 	fmt.Println("IIIKOOO__------------------------request")
-	var r map[string]interface{}
+	var r []map[string]interface{}
 	if err := ctx.ShouldBind(&r); err != nil {
 		fmt.Println(err.Error())
 		response.ValidationErrorResponse(ctx, err.Error())
