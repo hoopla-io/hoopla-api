@@ -9,6 +9,7 @@ import (
 )
 
 type Requests struct {
+	Headers map[string]string
 }
 
 func (r *Requests) Get(url string) (int, map[string]interface{}, error) {
@@ -38,11 +39,24 @@ func (r *Requests) Post(url string, data map[string]interface{}) (int, map[strin
 		return 500, nil, err
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonBytes))
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBytes))
+	if err != nil {
+		return 500, nil, err
+	}
+
+	//setting headers
+	req.Header.Set("Content-Type", "application/json")
+	for k, v := range r.Headers {
+		req.Header.Set(k, v)
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		return 500, nil, err
 	}
 	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return 500, nil, err

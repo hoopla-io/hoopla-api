@@ -50,29 +50,36 @@ func (i *Iiko) CreateOrder(
 		"organizationId":  i.VendorID,
 		"terminalGroupId": shop.VendorTerminalID,
 		"order": map[string]interface{}{
-			"externalNumber":   userOrder.ID,
+			"externalNumber":   fmt.Sprintf("hoopla-%d", userOrder.ID),
 			"phone":            fmt.Sprintf("+%s", phoneNumber),
 			"orderServiceType": "DeliveryByClient",
 			"sourceKey":        "hoopla",
-			"items": map[string]interface{}{
-				"productId": partnerDrink.VendorProductID,
-				"type":      "Product",
-				"amount":    1,
-				"price":     partnerDrink.ProductPrice,
+			"items": []map[string]interface{}{
+				{
+					"productId": partnerDrink.VendorProductID,
+					"type":      "Product",
+					"amount":    1,
+					"price":     partnerDrink.ProductPrice,
+				},
 			},
 		},
 	}
+
 	req := pkg.Requests{}
-	statusCode, data, err := req.Post("https://api-ru.iiko.services/api/1/deliveries/create", data)
+	req.Headers = map[string]string{
+		"Authorization": fmt.Sprintf("Bearer %s", i.AccessToken),
+	}
+
+	statusCode, res, err := req.Post("https://api-ru.iiko.services/api/1/deliveries/create", data)
 	if err != nil {
-		return "error", "", err
+		return "error", "", errors.New("error creating order")
 	}
 
 	if statusCode != 200 {
-		return "error", "", errors.New(data["errorDescription"].(string))
+		return "error", "", errors.New(res["errorDescription"].(string))
 	}
 
-	orderInfo := data["orderInfo"].(map[string]interface{})
+	orderInfo := res["orderInfo"].(map[string]interface{})
 
 	return "pending", orderInfo["id"].(string), nil
 }
