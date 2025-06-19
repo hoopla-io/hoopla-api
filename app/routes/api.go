@@ -84,6 +84,7 @@ func NewApiRoute(
 		{
 			iiko := vendors.Group("/iiko")
 			{
+				iiko.Match([]string{"GET", "POST"}, "/webhook", IikoController.Webhook)
 				iiko.POST("/webhook", IikoController.Webhook)
 			}
 
