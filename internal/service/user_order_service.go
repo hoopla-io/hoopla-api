@@ -146,7 +146,6 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 	orderStatus, vendorOrderID, err := vendor.VendorInterface.CreateOrder(
 		partnerDrink,
 		shop,
-		partner,
 		&userOrder,
 		userHelper.PhoneNumber,
 	)

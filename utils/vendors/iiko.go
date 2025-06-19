@@ -1,7 +1,10 @@
 package vendor_utils
 
 import (
+	"errors"
+	"fmt"
 	"github.com/hoopla/hoopla-api/internal/model"
+	"github.com/hoopla/hoopla-api/pkg"
 	"time"
 )
 
@@ -16,15 +19,60 @@ func (i *Iiko) SetAccessToken(accessToken string) {
 }
 
 func (i *Iiko) GetAccessToken() (string, time.Time, error) {
-	return "", time.Now(), nil
+	data := map[string]interface{}{
+		"apiLogin": i.VendorKey,
+	}
+
+	req := pkg.Requests{}
+	statusCode, res, err := req.Post("https://api-ru.iiko.services/api/1/access_token", data)
+	if err != nil {
+		return "", time.Now(), err
+	}
+
+	if statusCode != 200 {
+		return "", time.Now(), errors.New(res["errorDescription"].(string))
+	}
+
+	accessToken := res["token"].(string)
+	expiresAt := time.Now().Add(time.Hour)
+
+	return accessToken, expiresAt, nil
 }
 
 func (i *Iiko) CreateOrder(
 	partnerDrink *model.PartnerDrinkModel,
 	shop *model.ShopModel,
-	partner *model.PartnerModel,
 	userOrder *model.UserOrderModel,
 	phoneNumber string,
 ) (string, string, error) {
-	return "preparing", "1231231", nil
+
+	data := map[string]interface{}{
+		"organizationId":  i.VendorID,
+		"terminalGroupId": shop.VendorTerminalID,
+		"order": map[string]interface{}{
+			"externalNumber":   userOrder.ID,
+			"phone":            fmt.Sprintf("+%s", phoneNumber),
+			"orderServiceType": "DeliveryByClient",
+			"sourceKey":        "hoopla",
+			"items": map[string]interface{}{
+				"productId": partnerDrink.VendorProductID,
+				"type":      "Product",
+				"amount":    1,
+				"price":     partnerDrink.ProductPrice,
+			},
+		},
+	}
+	req := pkg.Requests{}
+	statusCode, data, err := req.Post("https://api-ru.iiko.services/api/1/deliveries/create", data)
+	if err != nil {
+		return "error", "", err
+	}
+
+	if statusCode != 200 {
+		return "error", "", errors.New(data["errorDescription"].(string))
+	}
+
+	orderInfo := data["orderInfo"].(map[string]interface{})
+
+	return "pending", orderInfo["id"].(string), nil
 }

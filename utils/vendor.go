@@ -17,7 +17,6 @@ type VendorInterface interface {
 	CreateOrder(
 		partnerDrink *model.PartnerDrinkModel,
 		shop *model.ShopModel,
-		partner *model.PartnerModel,
 		userOrder *model.UserOrderModel,
 		phoneNumber string,
 	) (string, string, error)

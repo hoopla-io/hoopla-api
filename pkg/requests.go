@@ -32,7 +32,7 @@ func (r *Requests) Get(url string) (int, map[string]interface{}, error) {
 	return resp.StatusCode, data, nil
 }
 
-func (r *Requests) Post(url string, data map[string]interface{}, contentType string) (int, map[string]interface{}, error) {
+func (r *Requests) Post(url string, data map[string]interface{}) (int, map[string]interface{}, error) {
 	jsonBytes, err := json.Marshal(data)
 	if err != nil {
 		return 500, nil, err

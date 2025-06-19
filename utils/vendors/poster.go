@@ -49,7 +49,6 @@ func (p *Poster) GetAccessToken() (string, time.Time, error) {
 func (p *Poster) CreateOrder(
 	partnerDrink *model.PartnerDrinkModel,
 	shop *model.ShopModel,
-	partner *model.PartnerModel,
 	userOrder *model.UserOrderModel,
 	phoneNumber string,
 ) (string, string, error) {
