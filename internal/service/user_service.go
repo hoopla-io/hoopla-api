@@ -266,7 +266,7 @@ func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.
 		return nil, 500, err
 	}
 
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
+	if subscription != nil {
 		if subscription.EndDate > time.Now().Unix() {
 			userResource.Subscription = &user_resource.SubscriptionResource{
 				ID:          subscription.Subscription.ID,
