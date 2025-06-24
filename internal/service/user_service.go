@@ -264,12 +264,16 @@ func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.
 	subscription, err := s.UserSubscriptionRepository.GetLastSubscriptionByUserID(userHelper.UserID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, 500, err
-	} else if subscription.EndDate > time.Now().Unix() {
-		userResource.Subscription = &user_resource.SubscriptionResource{
-			ID:          subscription.Subscription.ID,
-			Name:        subscription.Subscription.Name,
-			EndDate:     time.Unix(subscription.EndDate, 0).Format("2006-01-02"),
-			EndDateUnix: subscription.EndDate,
+	}
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if subscription.EndDate > time.Now().Unix() {
+			userResource.Subscription = &user_resource.SubscriptionResource{
+				ID:          subscription.Subscription.ID,
+				Name:        subscription.Subscription.Name,
+				EndDate:     time.Unix(subscription.EndDate, 0).Format("2006-01-02"),
+				EndDateUnix: subscription.EndDate,
+			}
 		}
 	}
 
