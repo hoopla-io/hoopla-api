@@ -30,9 +30,15 @@ func (r *UserOrderRepositoryImpl) GetAllByUserId(userId uint) (*[]model.UserOrde
 	err := r.db.Model(&model.UserOrderModel{}).
 		Where("user_id = ?", userId).
 		Order("id desc").
-		Preload("Partner").
-		Preload("Shop").
-		Preload("Drink").
+		Preload("Partner", func(db *gorm.DB) *gorm.DB {
+			return db.Unscoped()
+		}).
+		Preload("Shop", func(db *gorm.DB) *gorm.DB {
+			return db.Unscoped()
+		}).
+		Preload("Drink", func(db *gorm.DB) *gorm.DB {
+			return db.Unscoped()
+		}).
 		Limit(10).
 		Find(&userOrders).Error
 
