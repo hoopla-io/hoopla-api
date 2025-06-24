@@ -8,6 +8,7 @@ import (
 	"github.com/hoopla/hoopla-api/internal/repository"
 	"github.com/hoopla/hoopla-api/utils"
 	"gorm.io/gorm"
+	"time"
 )
 
 type UserOrderService interface {
@@ -64,24 +65,28 @@ func (s *UserOrderServiceImpl) GetOrders(data user_orders_request.OrdersRequest,
 }
 
 func (s *UserOrderServiceImpl) GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error) {
-	var available uint
-
-	userSubscription, err := s.userSubscriptionRepository.GetByUserID(userId)
-	if err != nil {
-		return nil, 500, err
+	drinkStats := &user_order_resource.DrinksStatCollection{
+		Available: 0,
+		Used:      0,
 	}
 
-	available = userSubscription.Subscription.CupsDay
-
-	orders, err := s.userOrderRepository.GetTodaysByUserId(userId)
+	userSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userId)
 	if err != nil {
-		return nil, 500, err
+		return drinkStats, 500, err
+	}
+	if userSubscription.EndDate < time.Now().Unix() {
+		return drinkStats, 200, nil
 	}
 
-	return &user_order_resource.DrinksStatCollection{
-		Available: available,
-		Left:      uint(len(orders)),
-	}, 200, nil
+	drinkStats.Available = userSubscription.Subscription.CupsDay
+
+	userOrderedTtl, err := s.userOrderRepository.GetOrdersNumberForToday(userId)
+	if err != nil {
+		return drinkStats, 500, err
+	}
+	drinkStats.Used = userOrderedTtl
+
+	return drinkStats, 200, nil
 }
 
 func (s *UserOrderServiceImpl) GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, int, error) {
@@ -117,6 +122,8 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 	if err != nil {
 		return nil, 500, err
 	}
+
+	// subscription and limit checking here
 
 	vendor := utils.Vendor{}
 	vendor.Init(partner.Vendor, partner.VendorID, partner.VendorKey)

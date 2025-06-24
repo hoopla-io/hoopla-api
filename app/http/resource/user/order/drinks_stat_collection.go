@@ -1,6 +1,6 @@
 package user_order_resource
 
 type DrinksStatCollection struct {
-	Available uint `json:"available"`
-	Left      uint `json:"used"`
+	Available uint  `json:"available"`
+	Used      int64 `json:"used"`
 }

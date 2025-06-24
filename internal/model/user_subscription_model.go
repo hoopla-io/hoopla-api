@@ -15,8 +15,8 @@ type UserSubscriptionModel struct {
 	UpdatedAt      time.Time      `gorm:"default:CURRENT_TIMESTAMP"`
 	DeletedAt      gorm.DeletedAt `gorm:"index"`
 
-	User         UserModel         `gorm:"foreignKey:UserID"`
-	Subscription SubscriptionModel `gorm:"foreignKey:SubscriptionID"`
+	User         *UserModel         `gorm:"foreignKey:UserID"`
+	Subscription *SubscriptionModel `gorm:"foreignKey:SubscriptionID"`
 }
 
 func (UserSubscriptionModel) TableName() string {

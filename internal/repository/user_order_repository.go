@@ -9,7 +9,7 @@ import (
 
 type UserOrderRepository interface {
 	GetAllByUserId(userId uint) (*[]model.UserOrderModel, error)
-	GetTodaysByUserId(userId uint) ([]model.UserOrderModel, error)
+	GetOrdersNumberForToday(userId uint) (int64, error)
 	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, error)
 	UpdateOrder(userOrder *model.UserOrderModel) error
 	CreateOrder(userOrder *model.UserOrderModel) error
@@ -43,24 +43,22 @@ func (r *UserOrderRepositoryImpl) GetAllByUserId(userId uint) (*[]model.UserOrde
 	return &userOrders, nil
 }
 
-func (r *UserOrderRepositoryImpl) GetTodaysByUserId(userId uint) ([]model.UserOrderModel, error) {
-	var userOrders []model.UserOrderModel
+func (r *UserOrderRepositoryImpl) GetOrdersNumberForToday(userId uint) (int64, error) {
+	var ttlUserOrders int64
 
-	today := time.Now().Truncate(24 * time.Hour)
-	tomorrow := today.Add(24 * time.Hour)
+	today := time.Now().Format("2006-01-02 00:00:00")
+	tomorrow := time.Now().AddDate(0, 0, 1).Format("2006-01-02 00:00:00")
 
 	err := r.db.Model(&model.UserOrderModel{}).
 		Where("user_id = ? AND created_at >= ? AND created_at < ?", userId, today, tomorrow).
 		Order("id desc").
-		Preload("Partner").
-		Preload("Shop").
-		Find(&userOrders).Error
+		Count(&ttlUserOrders).Error
 
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	return userOrders, nil
+	return ttlUserOrders, nil
 }
 
 func (r *UserOrderRepositoryImpl) GetOrderByVendorOrderID(partnerID uint, vendor string, vendorOrderID string) (*model.UserOrderModel, error) {

@@ -8,7 +8,7 @@ import (
 
 type UserSubscriptionRepository interface {
 	Create(dto dto.UserSubscriptionDTO) error
-	GetByUserID(userID uint) (*model.UserSubscriptionModel, error)
+	GetLastSubscriptionByUserID(userID uint) (*model.UserSubscriptionModel, error)
 }
 
 type userSubscriptionRepository struct {
@@ -33,13 +33,16 @@ func (r *userSubscriptionRepository) Create(dto dto.UserSubscriptionDTO) error {
 
 }
 
-func (r *userSubscriptionRepository) GetByUserID(userID uint) (*model.UserSubscriptionModel, error) {
+func (r *userSubscriptionRepository) GetLastSubscriptionByUserID(userID uint) (*model.UserSubscriptionModel, error) {
 	var subscription model.UserSubscriptionModel
 
-	query := r.db.Model(&model.UserSubscriptionModel{}).
-		Preload("User").
+	err := r.db.Model(&model.UserSubscriptionModel{}).
 		Preload("Subscription").
-		Last(&subscription, "user_id = ?", userID)
+		Last(&subscription, "user_id = ?", userID).Error
 
-	return &subscription, query.Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &subscription, nil
 }
