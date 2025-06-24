@@ -261,7 +261,7 @@ func (s *UserServiceImpl) GetUser(userHelper *utils.UserHelper) (*user_resource.
 		QrCode:      encoded,
 	}
 
-	subscription, err := s.UserSubscriptionRepository.GetByUserID(userHelper.UserID)
+	subscription, err := s.UserSubscriptionRepository.GetLastSubscriptionByUserID(userHelper.UserID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, 500, err
 	} else if subscription.EndDate > time.Now().Unix() {
