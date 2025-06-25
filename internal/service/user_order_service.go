@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	user_orders_request "github.com/hoopla/hoopla-api/app/http/request/user/orders"
 	user_order_resource "github.com/hoopla/hoopla-api/app/http/resource/user/order"
 	"github.com/hoopla/hoopla-api/internal/model"
@@ -114,12 +115,18 @@ func (s *UserOrderServiceImpl) UpdateOrderStatus(userOrder *model.UserOrderModel
 func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*model.UserOrderModel, int, error) {
 	shop, err := s.shopRepository.ShopBasicDetailById(data.ShopID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, errors.New(fmt.Sprintf("shop-{%d} not found", data.ShopID))
+		}
 		return nil, 500, err
 	}
 	partner := shop.Partner
 
 	partnerDrink, err := s.partnerDrinkRepository.PartnerDrinkByDrinkId(partner.ID, data.DrinkID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, errors.New(fmt.Sprintf("drink-{%d} for shop-{%d} not found", data.DrinkID, data.ShopID))
+		}
 		return nil, 500, err
 	}
 
