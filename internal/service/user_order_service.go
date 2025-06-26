@@ -17,7 +17,7 @@ type UserOrderService interface {
 	GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error)
 	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorID string) (*model.UserOrderModel, int, error)
 	UpdateOrderStatus(userOrder *model.UserOrderModel, status string) (*model.UserOrderModel, int, error)
-	CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*model.UserOrderModel, int, error)
+	CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*user_order_resource.UserOrderResource, int, error)
 }
 
 type UserOrderServiceImpl struct {
@@ -112,7 +112,7 @@ func (s *UserOrderServiceImpl) UpdateOrderStatus(userOrder *model.UserOrderModel
 	return userOrder, 200, nil
 }
 
-func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*model.UserOrderModel, int, error) {
+func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*user_order_resource.UserOrderResource, int, error) {
 	shop, err := s.shopRepository.ShopBasicDetailById(data.ShopID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -174,5 +174,15 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		return nil, 500, err
 	}
 
-	return &userOrder, 200, nil
+	userOrderResource := user_order_resource.UserOrderResource{
+		ID:              userOrder.ID,
+		PartnerName:     partner.Name,
+		ShopName:        shop.Name,
+		PurchasedAt:     userOrder.CreatedAt,
+		PurchasedAtUnix: userOrder.CreatedAt.Unix(),
+		DrinkName:       partnerDrink.Drink.Name,
+		OrderStatus:     userOrder.Status,
+	}
+
+	return &userOrderResource, 200, nil
 }

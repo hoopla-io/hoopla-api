@@ -37,13 +37,13 @@ func (controller *OrderController) Create(ctx *gin.Context) {
 		return
 	}
 
-	userOrder, code, err := controller.userOrderService.CreateOrder(request, &userHelper)
+	userOrderResource, code, err := controller.userOrderService.CreateOrder(request, &userHelper)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
 		return
 	}
 
-	response.SuccessResponse(ctx, "OK!", userOrder, nil)
+	response.SuccessResponse(ctx, "OK!", userOrderResource, nil)
 	return
 }
 

@@ -31,6 +31,7 @@ func (r PartnerDrinkRepositoryImpl) DrinksByPartnerId(partnerId uint) (*[]model.
 func (r PartnerDrinkRepositoryImpl) PartnerDrinkByDrinkId(partnerId uint, drinkId uint) (*model.PartnerDrinkModel, error) {
 	var drink model.PartnerDrinkModel
 	err := r.db.Where("partner_id = ?", partnerId).
+		Preload("Drink").
 		Where("drink_id = ?", drinkId).
 		Find(&drink).Error
 	if err != nil {
