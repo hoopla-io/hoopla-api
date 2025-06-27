@@ -73,8 +73,12 @@ func (s *UserOrderServiceImpl) GetDrinksStat(userId uint) (*user_order_resource.
 
 	userSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userId)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return drinkStats, 200, nil
+		}
 		return drinkStats, 500, err
 	}
+
 	if userSubscription.EndDate < time.Now().Unix() {
 		return drinkStats, 200, nil
 	}
