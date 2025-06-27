@@ -68,11 +68,17 @@ func (s *SubscriptionServiceImpl) GetSubscriptions(data subscriptions_request.Su
 func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.BuySubscriptionRequest, userId uint) (int, error) {
 	subscription, err := s.subscriptionRepository.GetByID(data.SubscriptionID)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 404, errors.New("subscription not found")
+		}
 		return 500, err
 	}
 
 	user, err := s.userRepository.GetByID(userId)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return 404, errors.New("user not found")
+		}
 		return 500, err
 	}
 
@@ -87,8 +93,10 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 		return 500, err
 	}
 
-	if oldSubscription.EndDate > currentTimeUnix {
-		return 422, errors.New("you currently have an active subscription")
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if oldSubscription.EndDate > currentTimeUnix {
+			return 422, errors.New("you currently have an active subscription")
+		}
 	}
 
 	subscriptionEndDateUnix := currentTimeUnix + int64(86400*subscription.Days)
