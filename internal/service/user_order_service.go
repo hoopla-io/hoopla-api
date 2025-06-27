@@ -140,7 +140,7 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 	}
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		if lastSubscription.EndDate > time.Now().Unix() {
+		if lastSubscription.EndDate < time.Now().Unix() {
 			return nil, 402, errors.New("you dont have the subscription")
 		}
 	}
