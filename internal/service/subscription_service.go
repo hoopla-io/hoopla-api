@@ -74,6 +74,19 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 		return 500, err
 	}
 
+	currentTimeUnix := time.Now().Unix()
+
+	oldSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userId)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return 500, err
+	}
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if oldSubscription.EndDate > currentTimeUnix {
+			return 422, errors.New("you currently have an active subscription")
+		}
+	}
+
 	user, err := s.userRepository.GetByID(userId)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -84,19 +97,6 @@ func (s *SubscriptionServiceImpl) BuySubscription(data subscriptions_request.Buy
 
 	if user.GetBalance() < subscription.Price {
 		return 428, errors.New("insufficient balance")
-	}
-
-	currentTimeUnix := time.Now().Unix()
-
-	oldSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(user.ID)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return 500, err
-	}
-
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		if oldSubscription.EndDate > currentTimeUnix {
-			return 422, errors.New("you currently have an active subscription")
-		}
 	}
 
 	subscriptionEndDateUnix := currentTimeUnix + int64(86400*subscription.Days)
