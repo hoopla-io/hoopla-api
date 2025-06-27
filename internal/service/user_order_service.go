@@ -130,7 +130,34 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		return nil, 500, err
 	}
 
-	// subscription and limit checking here
+	// subscription checking here
+	lastSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userHelper.UserID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 402, errors.New("you dont have the subscription")
+		}
+		return nil, 500, err
+	}
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		if lastSubscription.EndDate > time.Now().Unix() {
+			return nil, 402, errors.New("you dont have the subscription")
+		}
+	}
+
+	//limit checking here
+	cupsPerDay := lastSubscription.Subscription.CupsDay
+	userOrderedTtl, err := s.userOrderRepository.GetOrdersNumberForToday(userHelper.UserID)
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, 500, err
+	}
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		userOrderedTtl = 0
+	}
+
+	if uint(userOrderedTtl) >= cupsPerDay {
+		return nil, 422, errors.New("you have reached your daily drink limit")
+	}
 
 	vendor := utils.Vendor{}
 	vendor.Init(partner.Vendor, partner.VendorID, partner.VendorKey)
