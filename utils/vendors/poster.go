@@ -57,11 +57,11 @@ func (p *Poster) CreateOrder(
 		"phone":                   {fmt.Sprintf("+%s", phoneNumber)},
 		"products[0][product_id]": {partnerDrink.VendorProductID},
 		"products[0][count]":      {"1"},
-		"products[0][price]":      {fmt.Sprintf("%f", partnerDrink.ProductPrice)},
+		"products[0][price]":      {fmt.Sprintf("%f", partnerDrink.ProductPrice*100)},
 		"service_mode":            {"2"},
-		"comment":                 {"hoopla"},
+		"comment":                 {fmt.Sprintf("hoopla-%d", userOrder.ID)},
 		"payment[type]":           {"1"},
-		"payment[sum]":            {fmt.Sprintf("%f", partnerDrink.ProductPrice)},
+		"payment[sum]":            {fmt.Sprintf("%f", partnerDrink.ProductPrice*100)},
 	}
 
 	req := pkg.Requests{}
