@@ -147,6 +147,17 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		if lastSubscription.EndDate < time.Now().Unix() {
 			return nil, 402, errors.New("you dont have the subscription")
 		}
+
+		availableDay := false
+		for _, subscriptionDay := range *lastSubscription.SubscriptionDays {
+			if subscriptionDay.Day == int16(time.Now().Weekday()) {
+				availableDay = true
+			}
+		}
+
+		if !availableDay {
+			return nil, 422, errors.New("your subscription is not available for today")
+		}
 	}
 
 	//limit checking here

@@ -38,6 +38,7 @@ func (r *userSubscriptionRepository) GetLastSubscriptionByUserID(userID uint) (*
 
 	err := r.db.Model(&model.UserSubscriptionModel{}).
 		Preload("Subscription").
+		Preload("SubscriptionDay").
 		Last(&subscription, "user_id = ?", userID).Error
 
 	if err != nil {
