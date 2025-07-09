@@ -57,6 +57,7 @@ func (r *UserOrderRepositoryImpl) GetOrdersNumberForToday(userId uint) (int64, e
 
 	err := r.db.Model(&model.UserOrderModel{}).
 		Where("user_id = ? AND created_at >= ? AND created_at < ?", userId, today, tomorrow).
+		Where("status != ?", "canceled").
 		Order("id desc").
 		Count(&ttlUserOrders).Error
 
