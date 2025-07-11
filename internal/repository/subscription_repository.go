@@ -23,7 +23,9 @@ func NewSubscriptionRepository(db *gorm.DB) SubscriptionRepository {
 func (r *SubscriptionRepositoryImpl) SubscriptionsList() (*[]model.SubscriptionModel, error) {
 	var subscriptions []model.SubscriptionModel
 	err := r.db.Model(&model.SubscriptionModel{}).
-		Preload("Features").
+		Preload("Features", func(db *gorm.DB) *gorm.DB {
+			return db.Order("updated_at DESC")
+		}).
 		Preload("WeekDays").
 		Order("priority asc").
 		Find(&subscriptions).Error
