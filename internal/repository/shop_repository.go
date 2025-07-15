@@ -41,7 +41,9 @@ func (r *ShopRepositoryImpl) ShopDetailById(shopId uint) (*model.ShopModel, erro
 	err := r.db.Where("id = ?", shopId).
 		Preload("Partner").
 		Preload("Attributes").
-		Preload("WorkingHours").
+		Preload("WorkingHours", func(db *gorm.DB) *gorm.DB {
+			return db.Order("updated_at DESC")
+		}).
 		Preload("Pictures.Image").
 		Preload("PartnerDrinks", func(db *gorm.DB) *gorm.DB {
 			return db.Order("updated_at DESC")
