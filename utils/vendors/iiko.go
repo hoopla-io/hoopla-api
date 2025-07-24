@@ -75,6 +75,10 @@ func (i *Iiko) CreateOrder(
 		return "error", "", errors.New("error creating order")
 	}
 
+	fmt.Println("---------")
+	fmt.Println("create-order", res)
+	fmt.Println("---------")
+
 	if statusCode != 200 {
 		return "error", "", errors.New(res["errorDescription"].(string))
 	}
