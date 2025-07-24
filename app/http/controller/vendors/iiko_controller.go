@@ -1,6 +1,7 @@
 package vendor_controllers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/hoopla/hoopla-api/app/http/response"
 	"github.com/hoopla/hoopla-api/internal/service"
@@ -30,6 +31,10 @@ func (c *IikoController) Webhook(ctx *gin.Context) {
 		response.ValidationErrorResponse(ctx, err.Error())
 		return
 	}
+
+	fmt.Println("---------------")
+	fmt.Println("request", request)
+	fmt.Println("---------------")
 
 	if request[0]["eventType"] == "DeliveryOrderUpdate" {
 		eventInfo := request[0]["eventInfo"].(map[string]interface{})
