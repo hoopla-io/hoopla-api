@@ -306,6 +306,31 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/v1/user/orders/validate-order": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User/Orders"
+                ],
+                "parameters": [
+                    {
+                        "description": "Validate new order",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user_orders_request.ValidateOrderRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/v1/user/pay/services": {
             "get": {
                 "consumes": [
@@ -496,10 +521,24 @@ const docTemplate = `{
         "user_orders_request.CreateRequest": {
             "type": "object",
             "properties": {
-                "drink_id": {
+                "addOnId": {
+                    "type": "string"
+                },
+                "drinkId": {
                     "type": "integer"
                 },
-                "shop_id": {
+                "shopId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "user_orders_request.ValidateOrderRequest": {
+            "type": "object",
+            "properties": {
+                "drinkId": {
+                    "type": "integer"
+                },
+                "shopId": {
                     "type": "integer"
                 }
             }

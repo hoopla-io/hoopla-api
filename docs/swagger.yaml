@@ -31,9 +31,18 @@ definitions:
     type: object
   user_orders_request.CreateRequest:
     properties:
-      drink_id:
+      addOnId:
+        type: string
+      drinkId:
         type: integer
-      shop_id:
+      shopId:
+        type: integer
+    type: object
+  user_orders_request.ValidateOrderRequest:
+    properties:
+      drinkId:
+        type: integer
+      shopId:
         type: integer
     type: object
   user_request.LogoutRequest:
@@ -242,6 +251,22 @@ paths:
     get:
       consumes:
       - application/json
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - User/Orders
+  /v1/user/orders/validate-order:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Validate new order
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_orders_request.ValidateOrderRequest'
       produces:
       - application/json
       responses: {}

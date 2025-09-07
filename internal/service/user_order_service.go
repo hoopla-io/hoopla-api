@@ -18,6 +18,7 @@ type UserOrderService interface {
 	GetDrinksStat(userId uint) (*user_order_resource.DrinksStatCollection, int, error)
 	GetOrderByVendorOrderID(partnerID uint, vendor string, vendorID string) (*model.UserOrderModel, int, error)
 	UpdateOrderStatus(userOrder *model.UserOrderModel, status string) (*model.UserOrderModel, int, error)
+	ValidateOrder(data user_orders_request.ValidateOrderRequest, userHelper *utils.UserHelper) (*user_order_resource.UserValidateOrderResource, int, error)
 	CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*user_order_resource.UserOrderResource, int, error)
 }
 
@@ -118,6 +119,53 @@ func (s *UserOrderServiceImpl) UpdateOrderStatus(userOrder *model.UserOrderModel
 	}
 
 	return userOrder, 200, nil
+}
+
+func (s *UserOrderServiceImpl) ValidateOrder(data user_orders_request.ValidateOrderRequest, userHelper *utils.UserHelper) (*user_order_resource.UserValidateOrderResource, int, error) {
+	shop, err := s.shopRepository.ShopBasicDetailById(data.ShopID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, errors.New(fmt.Sprintf("shop-{%d} not found", data.ShopID))
+		}
+		return nil, 500, err
+	}
+	partner := shop.Partner
+
+	partnerDrink, err := s.partnerDrinkRepository.PartnerDrinkByDrinkId(partner.ID, data.DrinkID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, errors.New(fmt.Sprintf("drink-{%d} for shop-{%d} not found", data.DrinkID, data.ShopID))
+		}
+		return nil, 500, err
+	}
+
+	validateOrderResource := user_order_resource.UserValidateOrderResource{
+		Partner: user_order_resource.UserValidateOrderPartnerStruct{
+			ID:   shop.Partner.ID,
+			Name: shop.Partner.Name,
+		},
+		Shop: user_order_resource.UserValidateOrderShopStruct{
+			ID:   shop.ID,
+			Name: shop.Name,
+		},
+		Drink: user_order_resource.UserValidateOrderDrinkStruct{
+			ID:   partnerDrink.Drink.ID,
+			Name: partnerDrink.Drink.Name,
+		},
+		ValidatedAt:     time.Now(),
+		ValidatedAtUnix: time.Now().Unix(),
+	}
+
+	var drinkAddOns []user_order_resource.OrderAddOnsCollection
+	for _, item := range *partnerDrink.AddOns {
+		drinkAddOns = append(drinkAddOns, user_order_resource.OrderAddOnsCollection{
+			AddOn:         item.AddOn,
+			VendorAddOnId: item.VendorAddOnID,
+		})
+	}
+	validateOrderResource.AddOns = &drinkAddOns
+
+	return &validateOrderResource, 200, nil
 }
 
 func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateRequest, userHelper *utils.UserHelper) (*user_order_resource.UserOrderResource, int, error) {

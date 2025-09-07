@@ -21,6 +21,35 @@ func NewOrderController(userOrderService service.UserOrderService) *OrderControl
 // @Tags User/Orders
 // @Accept  json
 // @Produce  json
+// @Param data body user_orders_request.ValidateOrderRequest true "Validate new order"
+// @Router /v1/user/orders/validate-order [post]
+func (controller *OrderController) ValidateOrder(ctx *gin.Context) {
+	var request user_orders_request.ValidateOrderRequest
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		response.ValidationErrorResponse(ctx, err.Error())
+		return
+	}
+
+	var userHelper utils.UserHelper
+	err := userHelper.Init(ctx)
+	if err != nil {
+		response.BadRequestResponse(ctx, "can not parse token")
+		return
+	}
+
+	userOrderResource, code, err := controller.userOrderService.ValidateOrder(request, &userHelper)
+	if err != nil {
+		response.ErrorResponse(ctx, code, err.Error())
+		return
+	}
+
+	response.SuccessResponse(ctx, "OK!", userOrderResource, nil)
+	return
+}
+
+// @Tags User/Orders
+// @Accept  json
+// @Produce  json
 // @Param data body user_orders_request.CreateRequest true "New order"
 // @Router /v1/user/orders/create [post]
 func (controller *OrderController) Create(ctx *gin.Context) {
