@@ -186,6 +186,7 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		return nil, 500, err
 	}
 	if user.GetBalance() < partnerDrink.ProductPrice {
+		fmt.Println("insufficient balance")
 		return nil, 428, errors.New("insufficient balance")
 	}
 
