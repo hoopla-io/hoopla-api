@@ -5,6 +5,7 @@ import (
 	"fmt"
 	user_orders_request "github.com/hoopla/hoopla-api/app/http/request/user/orders"
 	user_order_resource "github.com/hoopla/hoopla-api/app/http/resource/user/order"
+	"github.com/hoopla/hoopla-api/internal/dto"
 	"github.com/hoopla/hoopla-api/internal/model"
 	"github.com/hoopla/hoopla-api/internal/repository"
 	"github.com/hoopla/hoopla-api/utils"
@@ -21,6 +22,7 @@ type UserOrderService interface {
 }
 
 type UserOrderServiceImpl struct {
+	userRepository             repository.UserRepository
 	userOrderRepository        repository.UserOrderRepository
 	userSubscriptionRepository repository.UserSubscriptionRepository
 	partnerTokenService        PartnerTokenService
@@ -29,6 +31,7 @@ type UserOrderServiceImpl struct {
 }
 
 func NewUserOrderService(
+	userRepository repository.UserRepository,
 	userOrderRepository repository.UserOrderRepository,
 	UserSubscriptionRepository repository.UserSubscriptionRepository,
 	partnerTokenService PartnerTokenService,
@@ -36,6 +39,7 @@ func NewUserOrderService(
 	shopRepository repository.ShopRepository,
 ) UserOrderService {
 	return &UserOrderServiceImpl{
+		userRepository:             userRepository,
 		userOrderRepository:        userOrderRepository,
 		userSubscriptionRepository: UserSubscriptionRepository,
 		partnerTokenService:        partnerTokenService,
@@ -135,44 +139,65 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 	}
 
 	// subscription checking here
-	lastSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userHelper.UserID)
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, 402, errors.New("you dont have the subscription")
-		}
-		return nil, 500, err
-	}
-
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		if lastSubscription.EndDate < time.Now().Unix() {
-			return nil, 402, errors.New("you dont have the subscription")
-		}
-
-		availableDay := false
-		for _, subscriptionDay := range *lastSubscription.SubscriptionDays {
-			if subscriptionDay.Day == int16(time.Now().Weekday()) {
-				availableDay = true
-			}
-		}
-
-		if !availableDay {
-			return nil, 422, errors.New("your subscription is not available for today")
-		}
-	}
+	//lastSubscription, err := s.userSubscriptionRepository.GetLastSubscriptionByUserID(userHelper.UserID)
+	//if err != nil {
+	//	if errors.Is(err, gorm.ErrRecordNotFound) {
+	//		return nil, 402, errors.New("you dont have the subscription")
+	//	}
+	//	return nil, 500, err
+	//}
+	//
+	//if !errors.Is(err, gorm.ErrRecordNotFound) {
+	//	if lastSubscription.EndDate < time.Now().Unix() {
+	//		return nil, 402, errors.New("you dont have the subscription")
+	//	}
+	//
+	//	availableDay := false
+	//	for _, subscriptionDay := range *lastSubscription.SubscriptionDays {
+	//		if subscriptionDay.Day == int16(time.Now().Weekday()) {
+	//			availableDay = true
+	//		}
+	//	}
+	//
+	//	if !availableDay {
+	//		return nil, 422, errors.New("your subscription is not available for today")
+	//	}
+	//}
 
 	//limit checking here
-	cupsPerDay := lastSubscription.Subscription.CupsDay
-	userOrderedTtl, err := s.userOrderRepository.GetOrdersNumberForToday(userHelper.UserID)
-	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	//cupsPerDay := lastSubscription.Subscription.CupsDay
+	//userOrderedTtl, err := s.userOrderRepository.GetOrdersNumberForToday(userHelper.UserID)
+	//if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+	//	return nil, 500, err
+	//}
+	//if errors.Is(err, gorm.ErrRecordNotFound) {
+	//	userOrderedTtl = 0
+	//}
+	//
+	//if uint(userOrderedTtl) >= cupsPerDay {
+	//	return nil, 422, errors.New("you have reached your daily drink limit")
+	//}
+
+	user, err := s.userRepository.GetByID(userHelper.UserID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, 404, errors.New("user not found")
+		}
 		return nil, 500, err
 	}
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		userOrderedTtl = 0
+	if user.GetBalance() < partnerDrink.ProductPrice {
+		return nil, 428, errors.New("insufficient balance")
 	}
 
-	if uint(userOrderedTtl) >= cupsPerDay {
-		return nil, 422, errors.New("you have reached your daily drink limit")
+	//money from user for drink
+	addCredit := dto.AddCreditDTO{
+		UserID: user.ID,
+		Amount: partnerDrink.ProductPrice,
 	}
+	if err = s.userRepository.AddCredit(addCredit); err != nil {
+		return nil, 500, err
+	}
+	//end money from user for drink
 
 	vendor := utils.Vendor{}
 	vendor.Init(partner.Vendor, partner.VendorID, partner.VendorKey)
@@ -191,7 +216,7 @@ func (s *UserOrderServiceImpl) CreateOrder(data user_orders_request.CreateReques
 		Status:        "created",
 		Vendor:        partner.Vendor,
 		VendorOrderID: "",
-		ProductPrice:  partnerDrink.ProductPrice,
+		ProductPrice:  partnerDrink.VendorProductPrice,
 	}
 
 	err = s.userOrderRepository.CreateOrder(&userOrder)

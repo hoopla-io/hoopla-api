@@ -59,7 +59,7 @@ func (i *Iiko) CreateOrder(
 					"productId": partnerDrink.VendorProductID,
 					"type":      "Product",
 					"amount":    1,
-					"price":     partnerDrink.ProductPrice,
+					"price":     partnerDrink.VendorProductPrice,
 				},
 			},
 		},

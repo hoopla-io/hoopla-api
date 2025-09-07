@@ -156,9 +156,10 @@ func (s *ShopServiceImpl) ShopDetail(data shops_request.ShopRequest) (*shop_reso
 			pictureUrl = drink.Image.GetUrl()
 		}
 		partnerDrinks = append(partnerDrinks, partner_resource.DrinksCollection{
-			ID:         drink.ID,
-			Name:       drink.Name,
-			PictureUrl: pictureUrl,
+			ID:           drink.ID,
+			Name:         drink.Name,
+			PictureUrl:   pictureUrl,
+			ProductPrice: partnerDrink.ProductPrice,
 		})
 	}
 	shopResource.PartnerDrinks = &partnerDrinks
