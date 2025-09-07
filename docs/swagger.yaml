@@ -31,12 +31,12 @@ definitions:
     type: object
   user_orders_request.CreateRequest:
     properties:
-      addOnId:
-        type: string
       drinkId:
         type: integer
       shopId:
         type: integer
+      vendorAddOnId:
+        type: string
     type: object
   user_orders_request.ValidateOrderRequest:
     properties:

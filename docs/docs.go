@@ -521,14 +521,14 @@ const docTemplate = `{
         "user_orders_request.CreateRequest": {
             "type": "object",
             "properties": {
-                "addOnId": {
-                    "type": "string"
-                },
                 "drinkId": {
                     "type": "integer"
                 },
                 "shopId": {
                     "type": "integer"
+                },
+                "vendorAddOnId": {
+                    "type": "string"
                 }
             }
         },
