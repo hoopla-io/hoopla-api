@@ -159,8 +159,8 @@ func (s *UserOrderServiceImpl) ValidateOrder(data user_orders_request.ValidateOr
 	var drinkAddOns []user_order_resource.OrderAddOnsCollection
 	for _, item := range *partnerDrink.AddOns {
 		drinkAddOns = append(drinkAddOns, user_order_resource.OrderAddOnsCollection{
-			AddOn:         item.AddOn,
-			VendorAddOnId: item.VendorAddOnID,
+			AddOn:         item.Addon,
+			VendorAddOnId: item.VendorAddonID,
 		})
 	}
 	validateOrderResource.AddOns = &drinkAddOns
