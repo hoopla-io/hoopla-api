@@ -149,8 +149,10 @@ func (s *UserOrderServiceImpl) ValidateOrder(data user_orders_request.ValidateOr
 			Name: shop.Name,
 		},
 		Drink: user_order_resource.UserValidateOrderDrinkStruct{
-			ID:   partnerDrink.Drink.ID,
-			Name: partnerDrink.Drink.Name,
+			ID:       partnerDrink.Drink.ID,
+			Name:     partnerDrink.Drink.Name,
+			Amount:   partnerDrink.ProductPrice,
+			ImageURL: partnerDrink.Drink.Image.GetUrl(),
 		},
 		ValidatedAt:     time.Now(),
 		ValidatedAtUnix: time.Now().Unix(),

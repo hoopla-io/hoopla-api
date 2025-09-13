@@ -27,6 +27,8 @@ type UserValidateOrderShopStruct struct {
 }
 
 type UserValidateOrderDrinkStruct struct {
-	ID   uint   `json:"id"`
-	Name string `json:"name"`
+	ID       uint    `json:"id"`
+	Name     string  `json:"name"`
+	Amount   float64 `json:"amount"`
+	ImageURL *string `json:"imageUrl"`
 }

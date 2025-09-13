@@ -32,6 +32,7 @@ func (r PartnerDrinkRepositoryImpl) PartnerDrinkByDrinkId(partnerId uint, drinkI
 	var drink model.PartnerDrinkModel
 	err := r.db.Where("partner_id = ?", partnerId).
 		Preload("Drink").
+		Preload("Drink.Image").
 		Preload("AddOns").
 		Where("drink_id = ?", drinkId).
 		Find(&drink).Error

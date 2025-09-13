@@ -31,7 +31,7 @@ func (controller *OrderController) ValidateOrder(ctx *gin.Context) {
 	}
 
 	var userHelper utils.UserHelper
-	
+
 	userOrderResource, code, err := controller.userOrderService.ValidateOrder(request, &userHelper)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
