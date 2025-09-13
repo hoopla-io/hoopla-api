@@ -31,12 +31,7 @@ func (controller *OrderController) ValidateOrder(ctx *gin.Context) {
 	}
 
 	var userHelper utils.UserHelper
-	err := userHelper.Init(ctx)
-	if err != nil {
-		response.BadRequestResponse(ctx, "can not parse token")
-		return
-	}
-
+	
 	userOrderResource, code, err := controller.userOrderService.ValidateOrder(request, &userHelper)
 	if err != nil {
 		response.ErrorResponse(ctx, code, err.Error())
