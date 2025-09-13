@@ -46,7 +46,7 @@ func NewApiRoute(
 
 				user_orders := user.Group("/orders")
 				{
-					user_orders.POST("/validate-order", middleware.JwtMiddleware(), UserOrderController.ValidateOrder)
+					user_orders.POST("/validate-order", UserOrderController.ValidateOrder)
 					user_orders.POST("/create", middleware.JwtMiddleware(), UserOrderController.Create)
 					user_orders.GET("/orders-list", middleware.JwtMiddleware(), UserOrderController.Orders)
 					user_orders.GET("/drinks-stat", middleware.JwtMiddleware(), UserOrderController.DrinksStat)
